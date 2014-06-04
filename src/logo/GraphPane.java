@@ -1,6 +1,7 @@
 package logo;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
@@ -13,10 +14,22 @@ public class GraphPane extends JPanel {
 	int direction;
 	Color actualColor;
 	boolean isDrawing = true;
+	int actualMinX;
+	int actualMaxX;
+	int actualMinY;
+	int actualMaxY;
+	
+	
 	
 	public void paint( Graphics g ){
 		int[] lastPos;
 		int[] targetPos;
+		
+		// get the actual center of the graphPanel 
+		int xCenter = ( int ) ( this.getWidth() / 2.0 );
+		int yCenter = ( int ) ( this.getHeight() / 2.0 );
+		
+		
 		
 		// draw History
 		for( int i = 0; i < ( turtlePosHistory.size() - 1 ); i++ ){
@@ -27,7 +40,7 @@ public class GraphPane extends JPanel {
 				lastPos = turtlePosHistory.get( i );
 				targetPos = turtlePosHistory.get( i + 1 );
 				
-				g.drawLine( lastPos[0], lastPos[1], targetPos[0], targetPos[1] );
+				g.drawLine( ( xCenter + lastPos[0] ), ( yCenter + lastPos[1] ), ( xCenter + targetPos[0] ), (yCenter + targetPos[1]) );
 		
 			}
 		}
@@ -41,6 +54,7 @@ public class GraphPane extends JPanel {
 		turtlePosHistory = new ArrayList<int[]>();
 		turtleColorHistory = new ArrayList<Color>();
 		turtleVisibleHistory = new ArrayList<Boolean>();
+		this.setPreferredSize( new Dimension( 1000, 1000 ) );
 		this.repaint();
 	}
 	
@@ -54,6 +68,7 @@ public class GraphPane extends JPanel {
 		turtleColorHistory.add( actualColor );
 		turtleVisibleHistory.add( isDrawing );
 		this.direction = direction;
+		this.repaint();
 	}
 	
 	public void drawLine( boolean showLine ){
