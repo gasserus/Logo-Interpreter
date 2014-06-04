@@ -1,46 +1,84 @@
 package logo;
 
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 
-public class Gui extends JFrame {
-	int width = 800;
-	int height = 800;
+public class Gui extends JFrame implements ActionListener {
+	private final int MAXIMUM_SPEED = 10;
+	private final int MINIMUM_SPEED = 1; 
+	private final int AMOUNT_BUTTONS = 6;
+	private final String[] BUTTON_TEXT = new String[] { "New", "Load", "Save", "Reset", "Run", "Step" };
+	
+	private final Dimension WINDOW_SIZE = new Dimension( 800, 800 );
+	
 	GraphPane graph;
-	JPanel controlPanel;
+	JPanel controlPanel, controlButtonsPanel;
 	JTextArea editor;
-	JScrollPane scrollPanel;
+	JButton[] controlButton = new JButton[ AMOUNT_BUTTONS ];
+	JSlider speed;
+	JLabel errorOutput;
+	GuiListener buttonListener;
+	JFileChooser fileChooser;
 	
 	public Gui(){
 		
-		this.setSize( width, height );
+		//********************************************** Window
+		this.setSize( WINDOW_SIZE );
 		this.setDefaultCloseOperation( EXIT_ON_CLOSE );
-		 
 		this.getContentPane().setLayout( new GridLayout( 1 , 2 ) );
 		
-		graph = new GraphPane();
-		this.getContentPane().add( graph );
+		//********************************************** TurtleGraph
+		this.graph = new GraphPane();
+		this.getContentPane().add( this.graph );
 		
-		controlPanel = new JPanel();
-		controlPanel.setLayout( new GridLayout( 2, 1 ) );
-		this.getContentPane().add( controlPanel );
-				
-		editor = new JTextArea();
+		//********************************************** controlPanel
+		this.controlPanel = new JPanel();
+		this.controlPanel.setLayout( new GridLayout( 2, 1 ) );
+		this.getContentPane().add( this.controlPanel );
 		
+		//********************************************** Editor
+		this.editor = new JTextArea();
+		this.controlPanel.add( new JScrollPane( this.editor ) );
 		
-		scrollPanel = new JScrollPane();			// check again!!
-		scrollPanel.setAutoscrolls( true );
-		scrollPanel.setVerticalScrollBar( new JScrollBar() );
+		//********************************************** controlButtonsPanel
+		this.controlButtonsPanel = new JPanel();
+		this.controlPanel.add( controlButtonsPanel );
+		controlButtonsPanel.setLayout( new FlowLayout() );
 		
-		controlPanel.add( scrollPanel.add( editor ) );
+		//********************************************** initialise Buttons, Slider, Label
+		buttonListener = new GuiListener();
 		
+		for( int i = 0; i < AMOUNT_BUTTONS; i++ ){
+			this.controlButton[i] = new JButton();
+			this.controlButton[i].setText( this.BUTTON_TEXT[i] );
+			this.controlButton[i].addActionListener( this );
+			this.controlButtonsPanel.add( this.controlButton[i] );
+		}
+		
+		this.speed = new JSlider();
+		this.speed.setMaximum( this.MAXIMUM_SPEED );
+		this.speed.setMinimum( this.MINIMUM_SPEED );
+		
+		this.controlButtonsPanel.add( this.speed );
+		
+		this.errorOutput = new JLabel();
+
+		//********************************************** show
 		this.setVisible(true);
 	}
 
@@ -72,7 +110,59 @@ public class Gui extends JFrame {
 	
 	public void moveTurtle( int xPos, int yPos, int direction ){
 		int pos[] = new int[] { xPos, yPos };
-		graph.moveTurtle(pos, direction);
+		this.graph.moveTurtle( pos, direction );
 	}
 
+	public void setErrorOutput( String output ){
+		this.errorOutput.setText( output );
+	}
+	
+	public File openFileChooser( boolean saving ){
+		System.out.println( "Open File Chooser" );
+		fileChooser = new JFileChooser();
+		
+		if( saving ){
+			fileChooser.showSaveDialog( this.getParent() );
+		}
+		else{
+			fileChooser.showOpenDialog( this.getParent() );
+		}
+		return fileChooser.getSelectedFile();
+		    
+	}
+	
+	
+	
+	/**
+	 * 
+	 * @return Text of the Pressed Button (e.g. Save)
+	 */
+	public String awaitButtonClick(){
+		return this.buttonListener.awaitButtonClick();
+	}
+
+
+	public int getSpeed(){
+		return this.speed.getValue();
+	}
+	
+	public void setEditorText( String text ){
+		this.editor.setText( text );
+	}
+	
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		for( int i = 0; i < AMOUNT_BUTTONS; i++ ){
+			if( e.getSource().equals( this.controlButton[i] ) ){
+				this.buttonListener.setLastPressedButton( controlButton[i].getText() );
+				System.out.println(controlButton[i].getText()  );
+				synchronized( this.buttonListener ){
+					this.buttonListener.notifyAll();
+				}
+			}
+		}
+	}
+	
+	
 }
