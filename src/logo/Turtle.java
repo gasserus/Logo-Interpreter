@@ -14,8 +14,8 @@ public class Turtle {
 	
 	
 	public void move( int steps ){
-		this.xPos = ( int )( Math.cos( Math.PI/180 * degree ) * steps );
-		this.yPos = ( int )( Math.sin( Math.PI/180 * degree ) * steps );
+		this.xPos += ( int )( Math.cos( Math.PI/180 * degree ) * steps );
+		this.yPos += ( int )( Math.sin( Math.PI/180 * degree ) * steps );
 		
 		System.out.println( "Send Coords: y=" + this.yPos + "x=" + this.xPos );
 	}
