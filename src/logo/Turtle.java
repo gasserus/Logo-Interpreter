@@ -40,4 +40,11 @@ public class Turtle {
 		return turtleColor[ actualColor ];
 	}
 	
+	public void reset(){
+		this.xPos = 0;
+		this.yPos = 0;
+		this.actualColor = 0;
+		this.degree = 90;
+	}
+	
 }

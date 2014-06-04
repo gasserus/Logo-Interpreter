@@ -73,16 +73,14 @@ public class Gui extends JFrame implements ActionListener {
 		this.speed = new JSlider();
 		this.speed.setMaximum( this.MAXIMUM_SPEED );
 		this.speed.setMinimum( this.MINIMUM_SPEED );
-		
 		this.controlButtonsPanel.add( this.speed );
 		
 		this.errorOutput = new JLabel();
+		this.controlButtonsPanel.add( errorOutput );
 
 		//********************************************** show
 		this.setVisible(true);
 	}
-
-
 
 	public ArrayList<String> getEditorText(){
 		int startOffset;
@@ -109,7 +107,7 @@ public class Gui extends JFrame implements ActionListener {
 	}
 	
 	public void moveTurtle( int xPos, int yPos, int direction ){
-		int pos[] = new int[] { xPos, yPos };
+		int pos[] = new int[] { xPos, - yPos };
 		this.graph.moveTurtle( pos, direction );
 	}
 
@@ -118,7 +116,6 @@ public class Gui extends JFrame implements ActionListener {
 	}
 	
 	public File openFileChooser( boolean saving ){
-		System.out.println( "Open File Chooser" );
 		fileChooser = new JFileChooser();
 		
 		if( saving ){
@@ -127,8 +124,7 @@ public class Gui extends JFrame implements ActionListener {
 		else{
 			fileChooser.showOpenDialog( this.getParent() );
 		}
-		return fileChooser.getSelectedFile();
-		    
+		return fileChooser.getSelectedFile();	    
 	}
 	
 	
