@@ -16,6 +16,21 @@ public class Controller {
 		this.parser = new Parser();
 		this.turtle = new Turtle();
 		this.fileHandler = new FileHandler();
+		
+		this.runningLogoInterpreter();
+	}
+	
+	public void resetProgram(){
+		this.gui.setEditorText("");
+		this.gui.setErrorOutput("Everything is just fine." );
+		this.turtle.reset();
+	}
+	
+	public void runningLogoInterpreter(){
+		this.resetProgram();
+		
+		
+		// insert Program Routine here
 	}
 	
 	
@@ -43,7 +58,8 @@ public class Controller {
 	public static void main(String[] args) {
 		Controller control = new Controller();
 		
-		control.loadFile();
+		control.gui.moveTurtle( 0, 0, 1);
+		control.gui.moveTurtle( 10, -50, 1);
 //		
 //		ArrayList<ArrayList<String>> parsedCommands = control.parser.parse( testStrings );
 //		
