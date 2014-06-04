@@ -4,28 +4,39 @@ import java.util.ArrayList;
 
 public class Parser {
 	
-	public ArrayList<ArrayList<String>> parse( String[] input ){
-		int inputLength = input.length;
-		ArrayList<ArrayList<String>> output = new ArrayList<ArrayList<String>>();
+	/**
+	 * This method returns always an 2D ArrayList which contains only commands and values for the interpreters.
+	 * That means: no comments(;COMMENT) and no empty lines
+	 * 
+	 * @param input		is an array which contains one editor line in each element
+	 * @return			the output 2D ArrayList
+	 */
+	public ArrayList<ArrayList<String>> parse( String[] inputText ){
+		ArrayList<ArrayList<String>> outputCommandList = new ArrayList<ArrayList<String>>();
+		int inputTextLineNumber = inputText.length;
 		
-		for( int i = 0; i < inputLength; i++ ){
+		for( int line = 0; line < inputTextLineNumber; line++ ){
 			ArrayList<String> command = new ArrayList<String>();
 			
-			String parsedComment = input[ i ].split( ";" )[ 0 ];
+			// remove comments
+			inputText[ line ] = inputText[ line ].split( ";" )[ 0 ];
 			
-			String[] parsedCommand = parsedComment.split( " " );
+			// split command name form value
+			String[] parsedCommand = inputText[ line ].split( " " );
 			
-			for( int j = 0; j < parsedCommand.length; j++ ){
-				System.out.println(parsedCommand[ j ]);
-				command.add( parsedCommand[ j ] );
+			for( int i = 0; i < parsedCommand.length; i++ ){
+				// remove empty lines
+				if( !parsedCommand[ i ].equals( "" ) ){
+					command.add( parsedCommand[ i ] );
+				}
 			}
 			
-			
-			output.add( command );
-			
+			if( command.size() > 0 ){
+				outputCommandList.add( command );
+			}
 		}
 		
-		return output;
+		return outputCommandList;
 	}
 	
 

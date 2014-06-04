@@ -1,6 +1,6 @@
 package logo;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
 public class Controller {
 	Gui gui;
@@ -21,6 +21,14 @@ public class Controller {
 		this.turtle.move( steps );
 	}
 	
+	public void turn( int degree ){
+		this.turtle.turn( degree );
+	}
+	
+	public void changeColor( int colorChoice ){
+		this.turtle.changeColor( colorChoice );
+	}
+	
 	public void sendError( String errorText ){
 		System.out.println( errorText );
 	}
@@ -31,13 +39,12 @@ public class Controller {
 	 */
 	public static void main(String[] args) {
 		Controller control = new Controller();
-		
-		control.turtle.turn(-660);
-		control.turtle.move(20);
-//		
+
+//		Testing setup for the Parser and Interpreter (!!! uncomment import on top)
+//		String[] testStrings = { "let var 12" };
+//		String[] testStrings = { "repeat 16", "[", "forward 10", "left 20", "]" };
 //		ArrayList<ArrayList<String>> parsedCommands = control.parser.parse( testStrings );
-//		
-//		control.interpreter.interpret( parsedCommands );
+//		control.interpreter.startInterpreter( parsedCommands );
 		
 	}
 
