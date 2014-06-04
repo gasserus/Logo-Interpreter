@@ -32,11 +32,12 @@ public class Controller {
 	public static void main(String[] args) {
 		Controller control = new Controller();
 		
-		String[] testStrings = { "forward 1;blubahdlksahdlk", "backward 10" }; 
-		
-		ArrayList<ArrayList<String>> parsedCommands = control.parser.parse( testStrings );
-		
-		control.interpreter.interpret( parsedCommands );
+		control.turtle.turn(-660);
+		control.turtle.move(20);
+//		
+//		ArrayList<ArrayList<String>> parsedCommands = control.parser.parse( testStrings );
+//		
+//		control.interpreter.interpret( parsedCommands );
 		
 	}
 
