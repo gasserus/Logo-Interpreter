@@ -11,14 +11,15 @@ public class Parser {
 		for( int i = 0; i < inputLength; i++ ){
 			ArrayList<String> command = new ArrayList<String>();
 			
-			// remove comments
-			String parsedComment = input[ i ].split(";")[0];
+			String parsedComment = input[ i ].split( ";" )[ 0 ];
 			
-			String[] parsedCommand = parsedComment.split(" ");
+			String[] parsedCommand = parsedComment.split( " " );
 			
 			for( int j = 0; j < parsedCommand.length; j++ ){
+				System.out.println(parsedCommand[ j ]);
 				command.add( parsedCommand[ j ] );
 			}
+			
 			
 			output.add( command );
 			
@@ -26,5 +27,7 @@ public class Parser {
 		
 		return output;
 	}
+	
+
 
 }
