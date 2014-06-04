@@ -130,7 +130,15 @@ public class Interpreter {
 	private boolean forward( ArrayList<String> parameter ){
 		
 		if( parameter.size() == 2 ){
-			this.control.move( Integer.parseInt( parameter.get( 1 ) ) );
+			int setValue;
+			if( logoVariables.containsKey( parameter.get( 1 ) ) ){
+				setValue = logoVariables.get( parameter.get( 1 ) );
+			}
+			else {
+				setValue = Integer.parseInt( parameter.get( 1 ) );
+			}
+			
+			this.control.move( setValue );
 			return true;
 		}
 		return false;
@@ -140,7 +148,15 @@ public class Interpreter {
 
 		
 		if( parameter.size() == 2 ){
-			this.control.turn( Integer.parseInt( parameter.get( 1 ) ) );
+			int setValue;
+			if( logoVariables.containsKey( parameter.get( 1 ) ) ){
+				setValue = logoVariables.get( parameter.get( 1 ) );
+			}
+			else {
+				setValue = Integer.parseInt( parameter.get( 1 ) );
+			}
+			
+			this.control.turn( setValue );
 			return true;
 		}
 		return false;
@@ -148,7 +164,15 @@ public class Interpreter {
 	
 	private boolean right( ArrayList<String> parameter ){
 		if( parameter.size() == 2 ){
-			this.control.turn( - Integer.parseInt( parameter.get( 1 ) ) );
+			int setValue;
+			if( logoVariables.containsKey( parameter.get( 1 ) ) ){
+				setValue = logoVariables.get( parameter.get( 1 ) );
+			}
+			else {
+				setValue = Integer.parseInt( parameter.get( 1 ) );
+			}
+			
+			this.control.turn( - setValue );
 			return true;
 		}
 		return false;
@@ -157,7 +181,15 @@ public class Interpreter {
 	private boolean backward( ArrayList<String> parameter ){
 		
 		if( parameter.size() == 2 ){
-			this.control.move( - Integer.parseInt( parameter.get( 1 ) ) );
+			int setValue;
+			if( logoVariables.containsKey( parameter.get( 1 ) ) ){
+				setValue = logoVariables.get( parameter.get( 1 ) );
+			}
+			else {
+				setValue = Integer.parseInt( parameter.get( 1 ) );
+			}
+			
+			this.control.move( - setValue );
 			return true;
 		}
 		return false;
