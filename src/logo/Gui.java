@@ -127,8 +127,7 @@ public class Gui extends JFrame implements ActionListener {
 		else{
 			fileChooser.showOpenDialog( this.getParent() );
 		}
-		return fileChooser.getSelectedFile();
-		    
+		return fileChooser.getSelectedFile();	    
 	}
 	
 	
