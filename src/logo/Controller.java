@@ -7,6 +7,7 @@ public class Controller {
 	Interpreter interpreter;
 	Parser parser;
 	Turtle turtle;
+	FileHandler fileHandler;
 	
 	
 	public Controller(){
@@ -14,8 +15,18 @@ public class Controller {
 		this.interpreter = new Interpreter( this );
 		this.parser = new Parser();
 		this.turtle = new Turtle();
+		this.fileHandler = new FileHandler();
 	}
 	
+	
+	public void saveFile(){
+		this.fileHandler.writeFile( this.gui.openFileChooser( true ), this.gui.getEditorText() );
+	}
+	
+	public void loadFile(){
+		String content = this.fileHandler.loadFile( this.gui.openFileChooser( false ) );
+		this.gui.setEditorText( content );
+	}
 	
 	public void move( int steps ){
 		this.turtle.move( steps );
@@ -32,8 +43,7 @@ public class Controller {
 	public static void main(String[] args) {
 		Controller control = new Controller();
 		
-		control.turtle.turn(-660);
-		control.turtle.move(20);
+		control.loadFile();
 //		
 //		ArrayList<ArrayList<String>> parsedCommands = control.parser.parse( testStrings );
 //		
