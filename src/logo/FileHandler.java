@@ -33,11 +33,15 @@ public class FileHandler {
 	
 	public String loadFile( File f ){
 		String output = "";
+		String next;
 		if( f != null ){
 			try {
 				Scanner in = new Scanner(new FileReader( f ));
 				while( in.hasNext() ){
-					output = output + in.nextLine() + "\n";
+					next = in.nextLine();
+					if( !next.equals("") ){
+						output = output + next + "\n";
+					}
 				
 				}
 				in.close();
