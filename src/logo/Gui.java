@@ -52,7 +52,6 @@ public class Gui extends JFrame implements ActionListener {
 		//********************************************** TurtleGraph
 		this.graph = new GraphPane();
 		JScrollPane scrollGraph = new JScrollPane( this.graph );
-		//scrollGraph.getViewport().setScrollMode( JViewport.SIMPLE_SCROLL_MODE );
 		this.getContentPane().add( scrollGraph );
 		
 		//********************************************** controlPanel
