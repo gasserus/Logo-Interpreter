@@ -17,6 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
 import javax.swing.JViewport;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 
 public class Gui extends JFrame implements ActionListener {
@@ -91,11 +92,10 @@ public class Gui extends JFrame implements ActionListener {
 		this.setVisible(true);
 	}
 
-	public ArrayList<String> getEditorText(){
+	public String[] getEditorText(){
 		int startOffset;
 		int lengthText;
-		String textLine;
-		ArrayList<String> output = new ArrayList<String>();
+		String textLine[] = new String[editor.getLineCount()];
 		
 		for( int i = 0; i < editor.getLineCount(); i++ ){
 			
@@ -103,15 +103,14 @@ public class Gui extends JFrame implements ActionListener {
 				startOffset = editor.getLineStartOffset( i );
 				lengthText = editor.getLineEndOffset( i ) - startOffset ;
 				
-				textLine = editor.getText( startOffset, lengthText );
-				output.add( textLine );
+				textLine[i] = editor.getText( startOffset, lengthText );
 				
 			} catch (BadLocationException e) {
 				System.out.println( "Error at Reading out Editor Text" );
 				e.printStackTrace();
 			}
 		}
-		return output;
+		return textLine;
 		
 	}
 	
@@ -126,12 +125,13 @@ public class Gui extends JFrame implements ActionListener {
 	
 	public File openFileChooser( boolean saving ){
 		fileChooser = new JFileChooser();
+		fileChooser.setFileFilter( new FileNameExtensionFilter( "logo", "LOGO", "Logo" ) );
 		
 		if( saving ){
-			fileChooser.showSaveDialog( this.getParent() );
+			fileChooser.showSaveDialog(this.getFocusOwner() );
 		}
 		else{
-			fileChooser.showOpenDialog( this.getParent() );
+			fileChooser.showOpenDialog( this.getFocusOwner() );
 		}
 		return fileChooser.getSelectedFile();	    
 	}
