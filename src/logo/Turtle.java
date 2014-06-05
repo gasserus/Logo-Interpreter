@@ -9,6 +9,7 @@ public class Turtle {
 	private int yPos = 0;
 	private int degree = 90;
 	private int actualColor = 0;
+	private boolean isDrawing = true;
 	private Color[] turtleColor = new Color[] { Color.BLACK, Color.BLUE, Color.CYAN, Color.GREEN };
 	
 	
@@ -16,7 +17,6 @@ public class Turtle {
 	public void move( int steps ){
 		this.xPos += ( int )( Math.cos( Math.PI/180 * degree ) * steps );
 		this.yPos += ( int )( Math.sin( Math.PI/180 * degree ) * steps );
-		
 		System.out.println( "Send Coords: y=" + this.yPos + "x=" + this.xPos );
 	}
 	
@@ -37,8 +37,25 @@ public class Turtle {
 	}
 	
 	public Color getColor(){
-		return turtleColor[ actualColor ];
+		return this.turtleColor[ actualColor ];
 	}
+	
+	public boolean getVisible(){
+		return this.isDrawing;
+	}
+	
+	public int getXPos(){
+		return this.xPos;
+	}
+	
+	public int getYPos(){
+		return this.yPos;
+	}
+	
+	public int getDirection(){
+		return this.degree;
+	}
+	
 	
 	public void reset(){
 		this.xPos = 0;
