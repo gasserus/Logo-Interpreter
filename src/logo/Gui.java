@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
+import javax.swing.JViewport;
 import javax.swing.text.BadLocationException;
 
 public class Gui extends JFrame implements ActionListener {
@@ -44,7 +45,9 @@ public class Gui extends JFrame implements ActionListener {
 		
 		//********************************************** TurtleGraph
 		this.graph = new GraphPane();
-		this.getContentPane().add( this.graph );
+		JScrollPane scrollGraph = new JScrollPane( this.graph );
+		//scrollGraph.getViewport().setScrollMode( JViewport.SIMPLE_SCROLL_MODE );
+		this.getContentPane().add( scrollGraph );
 		
 		//********************************************** controlPanel
 		this.controlPanel = new JPanel();
@@ -53,7 +56,9 @@ public class Gui extends JFrame implements ActionListener {
 		
 		//********************************************** Editor
 		this.editor = new JTextArea();
+
 		this.controlPanel.add( new JScrollPane( this.editor ) );
+		
 		
 		//********************************************** controlButtonsPanel
 		this.controlButtonsPanel = new JPanel();

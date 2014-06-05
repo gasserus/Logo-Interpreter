@@ -8,20 +8,23 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 public class GraphPane extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	ArrayList<int[]> turtlePosHistory;
 	ArrayList<Color> turtleColorHistory;
 	ArrayList<Boolean> turtleVisibleHistory;
 	int direction;
 	Color actualColor;
 	boolean isDrawing = true;
-	int actualMinX;
-	int actualMaxX;
-	int actualMinY;
-	int actualMaxY;
+	int actualMax[] = new int[] { 100, 100 };
+	Dimension preferredDimension;
 	
 	
 	
-	public void paint( Graphics g ){
+	public void paintComponent( Graphics g ){
+		super.paintComponent( g );
 		int[] lastPos;
 		int[] targetPos;
 		
@@ -51,11 +54,13 @@ public class GraphPane extends JPanel {
 	}
 	
 	public GraphPane(){
-		turtlePosHistory = new ArrayList<int[]>();
-		turtleColorHistory = new ArrayList<Color>();
-		turtleVisibleHistory = new ArrayList<Boolean>();
-		this.setPreferredSize( new Dimension( 1000, 1000 ) );
-		this.repaint();
+		this.turtlePosHistory = new ArrayList<int[]>();
+		this.turtleColorHistory = new ArrayList<Color>();
+		this.turtleVisibleHistory = new ArrayList<Boolean>();
+		
+		this.adjustPreferredSize( actualMax );
+		
+		this.setVisible( true );
 	}
 	
 	/**
@@ -67,8 +72,20 @@ public class GraphPane extends JPanel {
 		turtlePosHistory.add( pos );
 		turtleColorHistory.add( actualColor );
 		turtleVisibleHistory.add( isDrawing );
+		this.adjustPreferredSize( pos );
 		this.direction = direction;
 		this.repaint();
+	}
+	
+	public void adjustPreferredSize( int[] pos ){
+		if( Math.abs( pos[0] ) > Math.abs( this.actualMax[0] ) ){
+			this.actualMax[0] = pos[0];
+		}
+		if( Math.abs( pos[1] ) > Math.abs( this.actualMax[1] ) ){
+			this.actualMax[1] = pos[1];
+		}
+
+		this.setPreferredSize( new Dimension( ( ( Math.abs( actualMax[0] ) * 2 ) + 10 ), ( ( Math.abs( actualMax[1] ) * 2 ) + 10 ) ) );
 	}
 	
 	public void drawLine( boolean showLine ){
