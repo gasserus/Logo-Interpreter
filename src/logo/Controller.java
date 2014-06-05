@@ -22,22 +22,32 @@ public class Controller {
 		this.runningLogoInterpreter();
 	}
 	
-	public void resetProgram(){
+	public void newProgram(){
 		this.gui.setEditorText("");
 		this.gui.setErrorOutput("Everything is just fine." );
 		this.turtle.reset();
 	}
 	
 	public void runningLogoInterpreter(){
-		this.resetProgram();
+		while ( true ){
+			switch( this.gui.awaitButtonClick() ){
+				case "Save": this.saveFile(); break;
+				case "Load": this.loadFile(); break;
+				case "Reset": this.newProgram(); break;
+				case "Run": this.startExecution(); break;
+				
+			}
 		
-		
-		
-		ArrayList<ArrayList<String>> parsedCommands = this.parser.parse( this.gui.getEditorText() );
-		this.interpreter.startInterpreter( parsedCommands );
+		}
 		// insert Program Routine here
 	}
-	
+
+	public void startExecution(){
+		ArrayList<ArrayList<String>> parsedCommands = this.parser.parse( this.gui.getEditorText() );
+		System.out.println( parsedCommands );
+		this.interpreter.startInterpreter( parsedCommands );
+
+	}
 	
 	public void saveFile(){
 		this.fileHandler.writeFile( this.gui.openFileChooser( true ), this.gui.getEditorText() );
@@ -49,7 +59,9 @@ public class Controller {
 	}
 	
 	public void move( int steps ){
+		System.out.println( steps );
 		this.turtle.move( steps );
+		this.gui.moveTurtle( this.turtle.getXPos(), this.turtle.getYPos(), this.turtle.getDirection() , this.turtle.getColor(), this.turtle.getVisible() );
 	}
 	
 	public void turn( int degree ){
