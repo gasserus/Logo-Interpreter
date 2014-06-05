@@ -1,5 +1,7 @@
 package logo;
 
+import java.util.ArrayList;
+
 //import java.util.ArrayList;
 
 public class Controller {
@@ -29,7 +31,10 @@ public class Controller {
 	public void runningLogoInterpreter(){
 		this.resetProgram();
 		
-		// this.interpreter.startInterpreter()
+		
+		
+		ArrayList<ArrayList<String>> parsedCommands = this.parser.parse( this.gui.getEditorText() );
+		this.interpreter.startInterpreter( parsedCommands );
 		// insert Program Routine here
 	}
 	
@@ -71,9 +76,11 @@ public class Controller {
 //		String[] testStrings = { "repeat 16", "[", "forward 10", "left 20", "]" };	
 //		ArrayList<ArrayList<String>> parsedCommands = control.parser.parse( testStrings );
 //		control.interpreter.startInterpreter( parsedCommands );
-		
-//		control.gui.moveTurtle( 0, 0, 1);
-//		control.gui.moveTurtle( 10, -50, 1);
+//		control.gui.setEditorText("asdsadsad\nsadasdasd");
+//		control.saveFile();
+//		control.gui.setEditorText("");
+//		control.loadFile();
+	
 		
 	}
 

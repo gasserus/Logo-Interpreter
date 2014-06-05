@@ -5,19 +5,19 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FileHandler {
 
 	
-	public void writeFile( File f, ArrayList<String> content ){
+	public void writeFile( File f, String[] content ){
 		if( f != null ){
 			PrintWriter writer;
+			
 			try {
-				writer = new PrintWriter( f.getPath(), "UTF-8" );
-				for( int i = 0; i < content.size(); i++ ){
-					writer.println( content.get( i ) );
+				writer = new PrintWriter( f.getPath() + ".logo", "UTF-8" );
+				for( int i = 0; i < content.length; i++ ){
+					writer.println( content[i] );
 				}
 				writer.close();
 				
