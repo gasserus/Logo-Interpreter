@@ -1,5 +1,6 @@
 package logo;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -114,9 +115,9 @@ public class Gui extends JFrame implements ActionListener {
 		
 	}
 	
-	public void moveTurtle( int xPos, int yPos, int direction ){
+	public void moveTurtle( int xPos, int yPos, int direction, Color c, boolean visible ){
 		int pos[] = new int[] { xPos, - yPos };
-		this.graph.moveTurtle( pos, direction );
+		this.graph.moveTurtle( pos, direction, c, visible );
 	}
 
 	public void setErrorOutput( String output ){

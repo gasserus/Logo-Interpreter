@@ -57,7 +57,9 @@ public class GraphPane extends JPanel {
 		this.turtlePosHistory = new ArrayList<int[]>();
 		this.turtleColorHistory = new ArrayList<Color>();
 		this.turtleVisibleHistory = new ArrayList<Boolean>();
-		
+		this.turtlePosHistory.add( new int[] { 0, 0 } );
+		this.turtleVisibleHistory.add( true );
+		this.turtleColorHistory.add( Color.black );
 		this.adjustPreferredSize( actualMax );
 		
 		this.setVisible( true );
@@ -68,10 +70,10 @@ public class GraphPane extends JPanel {
 	 * @param pos[]  pos[0] = xPos,  pos[1] = yPos
 	 * @param direction
 	 */
-	public void moveTurtle( int pos[], int direction ){
-		turtlePosHistory.add( pos );
-		turtleColorHistory.add( actualColor );
-		turtleVisibleHistory.add( isDrawing );
+	public void moveTurtle( int pos[], int direction, Color c, boolean visible ){
+		this.turtlePosHistory.add( pos );
+		this.turtleColorHistory.add( c );
+		this.turtleVisibleHistory.add( visible );
 		this.adjustPreferredSize( pos );
 		this.direction = direction;
 		this.repaint();
