@@ -56,6 +56,12 @@ public class Turtle {
 		return this.degree;
 	}
 	
+	public void setPen( boolean isDrawing ){
+		this.isDrawing = isDrawing;
+	}
+	
+	
+	
 	
 	public void reset(){
 		this.xPos = 0;
