@@ -24,8 +24,10 @@ public class Gui extends JFrame implements ActionListener {
 	private final int MINIMUM_SPEED = 1; 
 	private final int AMOUNT_BUTTONS = 6;
 	private final String[] BUTTON_TEXT = new String[] { "New", "Load", "Save", "Reset", "Run", "Step" };
+	private final String TITLE = "LOGO-Interpreter";
 	
 	private final Dimension WINDOW_SIZE = new Dimension( 800, 800 );
+	private final Dimension WINDOW_MINIMUM_SIZE = new Dimension( 420, 400 );
 	
 	GraphPane graph;
 	JPanel controlPanel, controlButtonsPanel;
@@ -42,6 +44,8 @@ public class Gui extends JFrame implements ActionListener {
 		this.setSize( WINDOW_SIZE );
 		this.setDefaultCloseOperation( EXIT_ON_CLOSE );
 		this.getContentPane().setLayout( new GridLayout( 1 , 2 ) );
+		this.setTitle( TITLE );
+		this.setMinimumSize( WINDOW_MINIMUM_SIZE );
 		
 		//********************************************** TurtleGraph
 		this.graph = new GraphPane();
