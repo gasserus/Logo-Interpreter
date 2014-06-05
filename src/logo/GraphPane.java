@@ -18,7 +18,7 @@ public class GraphPane extends JPanel {
 	int direction;
 	Color actualColor;
 	boolean isDrawing = true;
-	int actualMax[] = new int[] { 100, 100 };
+	int actualMax[] = new int[] { 80, 100 };
 	Dimension preferredDimension;
 	
 	
@@ -80,14 +80,25 @@ public class GraphPane extends JPanel {
 	}
 	
 	public void adjustPreferredSize( int[] pos ){
+		System.out.println(" test preferred " );
 		if( Math.abs( pos[0] ) > Math.abs( this.actualMax[0] ) ){
 			this.actualMax[0] = pos[0];
 		}
 		if( Math.abs( pos[1] ) > Math.abs( this.actualMax[1] ) ){
 			this.actualMax[1] = pos[1];
 		}
-
 		this.setPreferredSize( new Dimension( ( ( Math.abs( actualMax[0] ) * 2 ) + 10 ), ( ( Math.abs( actualMax[1] ) * 2 ) + 10 ) ) );
+		this.revalidate();
+	}
+	
+	public void resetGraph(){
+		this.turtleColorHistory.clear();
+		this.turtlePosHistory.clear();
+		this.turtleVisibleHistory.clear();
+		
+		this.turtleColorHistory.add( Color.black );
+		this.turtlePosHistory.add( new int[] { 0, 0 } );
+		this.turtleVisibleHistory.add( true );
 	}
 	
 	public void drawLine( boolean showLine ){

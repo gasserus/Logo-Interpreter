@@ -33,13 +33,19 @@ public class Controller {
 			switch( this.gui.awaitButtonClick() ){
 				case "Save": this.saveFile(); break;
 				case "Load": this.loadFile(); break;
-				case "Reset": this.newProgram(); break;
+				case "Reset": this.resetProgram(); break;
 				case "Run": this.startExecution(); break;
 				
 			}
 		
 		}
 		// insert Program Routine here
+	}
+	
+	public void resetProgram(){
+		this.gui.setErrorOutput("Everything is just fine." );
+		this.turtle.reset();
+		this.gui.resetGraph();
 	}
 
 	public void startExecution(){
@@ -92,7 +98,7 @@ public class Controller {
 //		control.saveFile();
 //		control.gui.setEditorText("");
 //		control.loadFile();
-	
+		
 		
 	}
 
