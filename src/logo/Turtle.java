@@ -10,8 +10,7 @@ public class Turtle {
 	private int degree = 90;
 	private int actualColor = 0;
 	private boolean isDrawing = true;
-	private Color[] turtleColor = new Color[] { Color.BLACK, Color.BLUE, Color.CYAN, Color.GREEN };
-	
+	private Color[] turtleColor = new Color[] { Color.BLACK, Color.BLUE, Color.RED, Color.YELLOW };
 	
 	
 	public void move( int steps ){
@@ -59,15 +58,12 @@ public class Turtle {
 	public void setPen( boolean isDrawing ){
 		this.isDrawing = isDrawing;
 	}
-	
-	
-	
+
 	
 	public void reset(){
 		this.xPos = 0;
 		this.yPos = 0;
-		this.actualColor = 0;
-		this.degree = 90;
+		//this.degree = 90;
 	}
 	
 }

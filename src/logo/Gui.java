@@ -155,8 +155,8 @@ public class Gui extends JFrame implements ActionListener {
 		this.editor.setText( text );
 	}
 	
-	public void resetGraph(){
-		this.graph.resetGraph();
+	public void clearGraph(){
+		this.graph.clearGraph();
 		this.repaint();
 	}
 	

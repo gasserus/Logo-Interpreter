@@ -39,7 +39,7 @@ public class GraphPane extends JPanel {
 			
 			if( turtleVisibleHistory.get( i ) ){
 				g.setColor( turtleColorHistory.get( i ) );
-				
+				System.out.println( turtleColorHistory.get( i ));
 				lastPos = turtlePosHistory.get( i );
 				targetPos = turtlePosHistory.get( i + 1 );
 				
@@ -91,7 +91,7 @@ public class GraphPane extends JPanel {
 		this.revalidate();
 	}
 	
-	public void resetGraph(){
+	public void clearGraph(){
 		this.turtleColorHistory.clear();
 		this.turtlePosHistory.clear();
 		this.turtleVisibleHistory.clear();

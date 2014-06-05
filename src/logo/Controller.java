@@ -33,25 +33,35 @@ public class Controller {
 			switch( this.gui.awaitButtonClick() ){
 				case "Save": this.saveFile(); break;
 				case "Load": this.loadFile(); break;
-				case "Reset": this.resetProgram(); break;
+				case "Reset": this.resetTurtle(); break;
 				case "Run": this.startExecution(); break;
-				
+				case "Step": this.stepExecution(); break;
+				case "Clear": this.clearProgram(); break;
 			}
 		
 		}
 		// insert Program Routine here
 	}
 	
-	public void resetProgram(){
-		this.gui.setErrorOutput("Everything is just fine." );
-		this.turtle.reset();
-		this.gui.resetGraph();
+	public void clearProgram(){
+		this.gui.clearGraph();
 	}
 
+	public void resetTurtle(){
+		this.turtle.reset();
+	}
+	
+	
+	public int stepExecution( ArrayList<ArrayList<String>> parsedCommands, int line ){
+		int position = this.interpreter.startInterpreter( parsedCommands, line );
+		return position;
+	}
+	
 	public void startExecution(){
 		ArrayList<ArrayList<String>> parsedCommands = this.parser.parse( this.gui.getEditorText() );
-		System.out.println( parsedCommands );
-		this.interpreter.startInterpreter( parsedCommands );
+		for( int i = 0; i < parsedCommands.size(); i++ ){
+			i = this.stepExecution(parsedCommands, i);
+		}
 
 	}
 	
@@ -82,6 +92,13 @@ public class Controller {
 		System.out.println( errorText );
 	}
 	
+	/**
+	 * 
+	 * @param isDrawing true is Drawing
+	 */
+	public void penDown( boolean isDrawing ){
+		this.turtle.setPen( isDrawing );
+	}
 	
 	/**
 	 * @param args
