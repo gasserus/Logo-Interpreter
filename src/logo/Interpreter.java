@@ -86,7 +86,6 @@ public class Interpreter {
 
 	
 	private boolean reset() {
-		this.control.resetProgram();
 		return true;
 	}
 

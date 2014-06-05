@@ -27,7 +27,7 @@ public class Parser {
 			for( int i = 0; i < parsedCommand.length; i++ ){
 				// remove empty lines
 				if( !parsedCommand[ i ].equals( "" ) ){
-					command.add( parsedCommand[ i ] );
+					command.add( parsedCommand[ i ].trim() );
 				}
 			}
 			
