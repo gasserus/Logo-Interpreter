@@ -18,8 +18,6 @@ public class GraphPane extends JPanel {
 	ArrayList<Boolean> turtleVisibleHistory;
 
 	int direction;
-	Color actualColor;
-	boolean isDrawing = true;
 	int actualMax[] = new int[] { 80, 100 };
 	Dimension preferredDimension;
 	
