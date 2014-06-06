@@ -114,4 +114,12 @@ public class GraphPane extends JPanel {
 		this.turtlePosHistory.add( STARTING_POSITION );
 	}
 	
+	/**
+	 * resets Turtle to its Starting position, without drawing a line
+	 */
+	public void turtleReset(){
+		this.turtlePosHistory.add( STARTING_POSITION );
+		this.turtleColorHistory.add( Color.BLACK );
+		this.turtleVisibleHistory.add( false );
+	}
 }
