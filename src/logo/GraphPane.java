@@ -95,10 +95,7 @@ public class GraphPane extends JPanel {
 		this.turtleColorHistory.clear();
 		this.turtlePosHistory.clear();
 		this.turtleVisibleHistory.clear();
-		
-		this.turtleColorHistory.add( Color.black );
 		this.turtlePosHistory.add( new int[] { 0, 0 } );
-		this.turtleVisibleHistory.add( true );
 	}
 	
 	public void drawLine( boolean showLine ){
