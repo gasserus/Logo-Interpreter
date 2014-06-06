@@ -12,17 +12,33 @@ public class GraphPane extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private final int[] STARTING_POSITION = new int[] { 0, 0 };
 	ArrayList<int[]> turtlePosHistory;
 	ArrayList<Color> turtleColorHistory;
 	ArrayList<Boolean> turtleVisibleHistory;
+
 	int direction;
 	Color actualColor;
 	boolean isDrawing = true;
 	int actualMax[] = new int[] { 80, 100 };
 	Dimension preferredDimension;
 	
+	/**
+	 * creates new Graphic, sets the starting pos to turtle
+	 */
+	public GraphPane(){
+		this.turtlePosHistory = new ArrayList<int[]>();
+		this.turtleColorHistory = new ArrayList<Color>();
+		this.turtleVisibleHistory = new ArrayList<Boolean>();
+		this.turtlePosHistory.add( STARTING_POSITION );
+		this.adjustPreferredSize( actualMax );
+		
+		this.setVisible( true );
+	}
 	
-	
+	/**
+	 * draws the whole turtle History
+	 */
 	public void paintComponent( Graphics g ){
 		super.paintComponent( g );
 		int[] lastPos;
@@ -53,22 +69,15 @@ public class GraphPane extends JPanel {
 		// draw Turtle
 	}
 	
-	public GraphPane(){
-		this.turtlePosHistory = new ArrayList<int[]>();
-		this.turtleColorHistory = new ArrayList<Color>();
-		this.turtleVisibleHistory = new ArrayList<Boolean>();
-		this.turtlePosHistory.add( new int[] { 0, 0 } );
-		this.turtleVisibleHistory.add( true );
-		this.turtleColorHistory.add( Color.black );
-		this.adjustPreferredSize( actualMax );
-		
-		this.setVisible( true );
-	}
+	
+	
 	
 	/**
-	 * 
-	 * @param pos[]  pos[0] = xPos,  pos[1] = yPos
+	 * creates new turtle movement in history, repaints graph
+	 * @param pos
 	 * @param direction
+	 * @param c
+	 * @param visible
 	 */
 	public void moveTurtle( int pos[], int direction, Color c, boolean visible ){
 		this.turtlePosHistory.add( pos );
@@ -79,6 +88,10 @@ public class GraphPane extends JPanel {
 		this.repaint();
 	}
 	
+	/**
+	 * For the ScrollPane, calculates the new preferred size of the graph.
+	 * @param pos
+	 */
 	public void adjustPreferredSize( int[] pos ){
 		System.out.println(" test preferred " );
 		if( Math.abs( pos[0] ) > Math.abs( this.actualMax[0] ) ){
@@ -91,14 +104,14 @@ public class GraphPane extends JPanel {
 		this.revalidate();
 	}
 	
+	/**
+	 * clears graph, deletes all history entrys and sets the turtle start Position back.
+	 */
 	public void clearGraph(){
 		this.turtleColorHistory.clear();
 		this.turtlePosHistory.clear();
 		this.turtleVisibleHistory.clear();
-		this.turtlePosHistory.add( new int[] { 0, 0 } );
+		this.turtlePosHistory.add( STARTING_POSITION );
 	}
 	
-	public void drawLine( boolean showLine ){
-		this.isDrawing = showLine;
-	}
 }
