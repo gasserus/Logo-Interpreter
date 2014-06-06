@@ -1,5 +1,6 @@
 package logo;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -29,10 +30,10 @@ public class Gui extends JFrame implements ActionListener {
 	private final String TITLE = "LOGO-Interpreter";
 	
 	private final Dimension WINDOW_SIZE = new Dimension( 800, 800 );
-	private final Dimension WINDOW_MINIMUM_SIZE = new Dimension( 420, 400 );
+	private final Dimension WINDOW_MINIMUM_SIZE = new Dimension( 740, 320 );
 	
 	GraphPane graph;
-	JPanel controlPanel, controlButtonsPanel;
+	JPanel controlPanel, controlButtonsPanel, fileButtonsPanel;
 	JTextArea editor;
 	JButton[] controlButton = new JButton[ AMOUNT_BUTTONS ];
 	JSlider speed;
@@ -44,10 +45,11 @@ public class Gui extends JFrame implements ActionListener {
 		
 		//********************************************** Window
 		this.setSize( WINDOW_SIZE );
+		this.setMinimumSize( WINDOW_MINIMUM_SIZE );
 		this.setDefaultCloseOperation( EXIT_ON_CLOSE );
 		this.getContentPane().setLayout( new GridLayout( 1 , 2 ) );
 		this.setTitle( TITLE );
-		this.setMinimumSize( WINDOW_MINIMUM_SIZE );
+		
 		
 		//********************************************** TurtleGraph
 		this.graph = new GraphPane();
@@ -56,28 +58,37 @@ public class Gui extends JFrame implements ActionListener {
 		
 		//********************************************** controlPanel
 		this.controlPanel = new JPanel();
-		this.controlPanel.setLayout( new GridLayout( 2, 1 ) );
+		this.controlPanel.setLayout( new BorderLayout() );
 		this.getContentPane().add( this.controlPanel );
 		
 		//********************************************** Editor
 		this.editor = new JTextArea();
-
-		this.controlPanel.add( new JScrollPane( this.editor ) );
+		this.controlPanel.add( new JScrollPane( this.editor ), BorderLayout.CENTER );
 		
 		
 		//********************************************** controlButtonsPanel
 		this.controlButtonsPanel = new JPanel();
-		this.controlPanel.add( controlButtonsPanel );
-		controlButtonsPanel.setLayout( new FlowLayout() );
+		this.controlPanel.add( this.controlButtonsPanel, BorderLayout.SOUTH );
+		this.controlButtonsPanel.setLayout( new FlowLayout() );
 		
-		//********************************************** initialise Buttons, Slider, Label
+		this.fileButtonsPanel = new JPanel();
+		this.controlPanel.add( this.fileButtonsPanel, BorderLayout.NORTH );
+		this.fileButtonsPanel.setLayout( new FlowLayout() );
+		
+		
+		//********************************************** initialise Buttons, Slider, Label -> add to Design
 		buttonListener = new GuiListener();
 		
 		for( int i = 0; i < AMOUNT_BUTTONS; i++ ){
 			this.controlButton[i] = new JButton();
 			this.controlButton[i].setText( this.BUTTON_TEXT[i] );
 			this.controlButton[i].addActionListener( this );
-			this.controlButtonsPanel.add( this.controlButton[i] );
+			if( i < 4 ){
+				this.fileButtonsPanel.add( this.controlButton[i] );
+			}
+			else{
+				this.controlButtonsPanel.add( this.controlButton[i] );
+			}
 		}
 		
 		this.speed = new JSlider();
