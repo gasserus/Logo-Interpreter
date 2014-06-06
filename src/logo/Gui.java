@@ -2,6 +2,7 @@ package logo;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -9,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -23,6 +25,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 
 public class Gui extends JFrame implements ActionListener {
+	private static final Component JTextPane = null;
 	private final int MAXIMUM_SPEED = 10;
 	private final int MINIMUM_SPEED = 1; 
 	private final int AMOUNT_BUTTONS = 6;
@@ -64,7 +67,7 @@ public class Gui extends JFrame implements ActionListener {
 		//********************************************** Editor
 		this.editor = new JTextArea();
 		this.controlPanel.add( new JScrollPane( this.editor ), BorderLayout.CENTER );
-		
+
 		
 		//********************************************** controlButtonsPanel
 		this.controlButtonsPanel = new JPanel();
@@ -76,7 +79,7 @@ public class Gui extends JFrame implements ActionListener {
 		this.fileButtonsPanel.setLayout( new FlowLayout() );
 		
 		
-		//********************************************** initialise Buttons, Slider, Label -> add to Design
+		//********************************************** initialise Buttons -> add to Design
 		buttonListener = new GuiListener();
 		
 		for( int i = 0; i < AMOUNT_BUTTONS; i++ ){
@@ -90,11 +93,20 @@ public class Gui extends JFrame implements ActionListener {
 				this.controlButtonsPanel.add( this.controlButton[i] );
 			}
 		}
-		
-		this.speed = new JSlider();
-		this.speed.setMaximum( this.MAXIMUM_SPEED );
-		this.speed.setMinimum( this.MINIMUM_SPEED );
+		 
+		//********************************************** add JSlider for Speed with Labels 
+		this.speed = new JSlider( JSlider.HORIZONTAL, this.MINIMUM_SPEED, this.MAXIMUM_SPEED, 10 );
+		this.speed.setMinorTickSpacing( 1 );
+		this.speed.setPaintTicks( true );
+		Hashtable<Integer, JLabel> labels = new Hashtable<Integer, JLabel>();
+        labels.put(1, new JLabel("1"));
+        labels.put(5, new JLabel("Speed"));
+        labels.put(10, new JLabel("10"));
+        this.speed.setLabelTable( labels );
+        this.speed.setPaintLabels( true );
 		this.controlButtonsPanel.add( this.speed );
+		
+		//********************************************** add error Output Label
 		
 		this.errorOutput = new JLabel();
 		this.controlButtonsPanel.add( errorOutput );
