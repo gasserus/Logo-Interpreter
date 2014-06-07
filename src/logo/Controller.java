@@ -2,7 +2,6 @@ package logo;
 
 import java.util.ArrayList;
 
-//import java.util.ArrayList;
 
 public class Controller {
 	Gui gui;
