@@ -34,8 +34,8 @@ public class Controller {
 				case "Save": this.saveFile(); break;
 				case "Load": this.loadFile(); break;
 				case "Reset": this.resetTurtle(); break;
-				case "Run": this.startExecution(); break;
-				case "Step": this.stepExecution(); break;
+				case "Run": this.startInterpreter( 100 ); break;
+				case "Step": this.startInterpreter( -1 ); break;
 				case "Clear": this.clearProgram(); break;
 			}
 		
@@ -52,17 +52,14 @@ public class Controller {
 	}
 	
 	
-	public int stepExecution( ArrayList<ArrayList<String>> parsedCommands, int line ){
-		int position = this.interpreter.startInterpreter( parsedCommands, line );
-		return position;
+	public void startInterpreter( int time ){
+		this.interpreter.interpret( time );
 	}
 	
-	public void startExecution(){
+	
+	public ArrayList<ArrayList<String>> parse(){
 		ArrayList<ArrayList<String>> parsedCommands = this.parser.parse( this.gui.getEditorText() );
-		for( int i = 0; i < parsedCommands.size(); i++ ){
-			i = this.stepExecution(parsedCommands, i);
-		}
-
+		return parsedCommands;
 	}
 	
 	public void saveFile(){
@@ -90,7 +87,7 @@ public class Controller {
 	
 	public void sendError( String errorText ){
 		System.out.println( errorText );
-	}
+	}	
 	
 	/**
 	 * 

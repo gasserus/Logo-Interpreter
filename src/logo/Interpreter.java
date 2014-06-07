@@ -6,53 +6,177 @@ import java.util.HashMap;
 
 
 public class Interpreter {
-	Controller control;
+	private Controller control;
+	private int currentLine = 0;
+	private ArrayList<ArrayList<String>> allCommands;
+	private ArrayList<ArrayList<Integer>> loops = new ArrayList<ArrayList<Integer>>();
 	private HashMap<String,Integer> logoVariables = new HashMap<String,Integer>();
-	
+	private int stepIndex = 0;
 	
 	public Interpreter( Controller control ){
 		this.control = control;
 	}
 	
+	public void interpret( int time ){
 
-	public void startInterpreter( ArrayList<ArrayList<String>> allCommands ){
-		logoVariables.clear();
-		this.interpret( allCommands );
-	}
-	
-	
-	private String interpret( ArrayList<ArrayList<String>> allCommands ){
-		for( int i = 0; i < allCommands.size(); i++ ){
-			String command = allCommands.get( i ).get( 0 );
-			
-			boolean success = false;
-			
-			// The command list for our logo interpreter
-			switch( command ){
-				case "forward": 	success = this.forward( allCommands.get( i ) ); break;
-				case "backward": 	success = this.backward( allCommands.get( i ) ); break;
-				case "left": 		success = this.left( allCommands.get( i ) ); break;
-				case "right": 		success = this.right( allCommands.get( i ) ); break;
-				case "repeat":		i = this.repeat( allCommands, i ); success=true; break;
-				case "reset": 		success = this.reset(); break;
-				case "clear": 		success = this.clear(); break;
-				case "pendown": 	success = this.pendown(); break;
-				case "penup": 		success = this.penup(); break;
-				case "setcolor": 	success = this.setcolor( allCommands.get( i ) ); break;
-				case "let":			success = this.let( allCommands.get( i ) ); break;
-				case "increment":	success = this.increment( allCommands.get( i ) ); break;
-				case "decrement":	success = this.decrement( allCommands.get( i ) ); break;
-				
-				default: control.sendError( "unknown Command: "+ command);
+		// step by step
+		if( time < 0 ){
+			if( currentLine == 0 ){
+				allCommands = control.parse();
+				currentLine = 0;
+				stepIndex = 0;
 			}
 			
-			if( success == false ){
-				this.control.sendError( "Error in line " + ( i + 1 ) );
+			if( stepIndex < allCommands.size() ){
+				currentLine = stepIndex;
+				checkLoops();
+				stepIndex = currentLine;
+
+				if( stepIndex < allCommands.size() ){
+					this.executeCommand( 0 );
+				}
+				stepIndex++;
+			}
+			else {
+				// start again
+				currentLine = 0;
 			}
 			
 		}
+		else {
+			allCommands = control.parse();
+			currentLine = 0;
+			
+			for( int index = 0; index < allCommands.size(); index++ ){
+				currentLine = index;
+				checkLoops();
+				index = currentLine;
+
+				if( index < allCommands.size() ){
+					this.executeCommand( time );
+				}
+				
+			}
+		}
 		
-		return "";
+	}
+	
+	private void checkLoops(){
+		System.out.println( "Loop empty: "+!loops.isEmpty() );
+		if( !loops.isEmpty() ){
+			
+			int amountLoops = loops.size() - 1;
+			
+			int loopStart = loops.get( amountLoops ).get( 0 );
+			int loopEnd = loops.get( amountLoops ).get( 1 );
+			int loopCount = loops.get( amountLoops ).get( 2 );
+			int loopPointer = loops.get( amountLoops ).get( 3 );
+			
+			if( currentLine < loopPointer ){
+				currentLine = loopPointer;
+			}
+
+			if( loopEnd == currentLine && ( loopCount - 1 ) <= 0 ){
+				loops.remove( amountLoops );
+				currentLine = loopEnd + 1;
+				
+				if( amountLoops > 0 ){
+					checkLoops();
+				}
+				
+			}
+			else if( loopEnd == currentLine && loopCount > 0 ){
+				currentLine = loopStart;
+				loops.get( amountLoops ).set( 2 , --loopCount );
+			}
+		}
+	}
+	
+	
+	private void executeCommand( int time ){
+		try {
+		    Thread.sleep( time );
+		} catch(InterruptedException ex) {
+		    Thread.currentThread().interrupt();
+		}
+		
+		String command = allCommands.get( currentLine ).get( 0 );
+		boolean success = false;
+		
+		switch( command ){
+		case "forward": 	success = this.forward( allCommands.get( currentLine ) ); break;
+		case "backward": 	success = this.backward( allCommands.get( currentLine ) ); break;
+		case "left": 		success = this.left( allCommands.get( currentLine ) ); break;
+		case "right": 		success = this.right( allCommands.get( currentLine ) ); break;
+		case "repeat":		success = this.repeat(); break;
+		case "reset": 		success = this.reset(); break;
+		case "clear": 		success = this.clear(); break;
+		case "pendown": 	success = this.pendown(); break;
+		case "penup": 		success = this.penup(); break;
+		case "setcolor": 	success = this.setcolor( allCommands.get( currentLine ) ); break;
+		case "let":			success = this.let( allCommands.get( currentLine ) ); break;
+		case "increment":	success = this.increment( allCommands.get( currentLine ) ); break;
+		case "decrement":	success = this.decrement( allCommands.get( currentLine ) ); break;
+		
+		default: control.sendError( currentLine + ". Line. Unknown Command: "+ command);
+		}
+		
+		if( success == false ){
+			control.sendError( currentLine + ". Line.Error with command " + command );
+		}
+		
+	}
+	
+	private boolean repeat(){
+
+		if( allCommands.get( currentLine ).size() < 2 ){
+			return false;
+		}
+		
+		int loopRuns = getValue( allCommands.get( currentLine ),  1 );
+		int loopStart = 0;
+		int loopEnd = 0;
+		
+		// next line after "repeat X"
+		currentLine++;
+		
+		int inLoop = 0;
+		do {
+			if( allCommands.get( currentLine ).get(0).equals( "[" ) ){
+				// count all [ because of innerloops
+				inLoop++;
+				if( inLoop == 1 ){
+					currentLine++;
+					loopStart = currentLine;
+				}
+			}
+			else if( inLoop > 0 && allCommands.get( currentLine ).get(0).equals( "]" ) ){
+				inLoop--;	
+				if( inLoop == 0 ){
+					loopEnd = currentLine;
+				}
+			}
+			
+			currentLine++;
+		}
+		while( inLoop > 0 && currentLine < allCommands.size() );
+		
+		if( loopStart == 0 || loopRuns == 0 ){
+			return false;
+		}
+		
+		ArrayList<Integer> loop = new ArrayList<Integer>();
+		
+		loop.add( loopStart );
+		loop.add( loopEnd );
+		loop.add( loopRuns );
+		loop.add( loopStart );
+		
+		loops.add( loop );
+				
+		System.out.println("ADD LOOP");
+		
+		return true;
 	}
 	
 	
@@ -71,21 +195,25 @@ public class Interpreter {
 
 
 	private boolean penup() {
-		return false;
+		this.control.penDown( false );
+		return true;
 	}
 
 
 	private boolean pendown() {
-		return false;
+		this.control.penDown( true );
+		return true;
 	}
 
 
 	private boolean clear() {
-		return false;
+		this.control.clearProgram();
+		return true;
 	}
 
 	
 	private boolean reset() {
+		this.control.resetTurtle();
 		return true;
 	}
 
@@ -185,54 +313,8 @@ public class Interpreter {
 		return false;
 	}
 	
-	
-	private int repeat( ArrayList<ArrayList<String>> allCommands, int actualPos ){
-		int startPos = actualPos;
-		
-		// if no amount of loops is defined skip the loop input
-		boolean skipLoop = false;
-		if( allCommands.get( startPos ).size() < 2 ){
-			skipLoop = true;
-		}
-		
-		actualPos++;
-		
-		ArrayList<ArrayList<String>> loopArray =  new ArrayList<ArrayList<String>>();
-		
-		int inLoop = 0;
-		// if loop isn't closed repeat all form bracket open till end
-		do {
-			if( allCommands.get( actualPos ).get(0).equals( "[" ) ){
-				// count all [ because of innerloops
-				inLoop++;
-				if( inLoop == 1 ){
-					actualPos++;
-				}
-			}
-			else if( inLoop > 0 && allCommands.get( actualPos ).get(0).equals( "]" ) ){
-				inLoop--;
-			}
-			
-			if( inLoop > 0 && skipLoop == false ){
-				loopArray.add( allCommands.get( actualPos ) );
-			}
-			
-			actualPos++;
-		}
-		while( inLoop > 0 && actualPos < allCommands.size() );
-		
-		if( skipLoop == false ){
-			if( loopArray.size() > 0 ){
-				for( int l = 0; l < Integer.parseInt( allCommands.get( startPos ).get( 1 ) ); l++){
-					this.interpret( loopArray );
-				}
-			}
-			else {
-				actualPos -= 2;
-			}
-		}
-			
-		return actualPos;
+	public int getCurrentPosition(){
+		return currentLine;
 	}
-	
+
 }
