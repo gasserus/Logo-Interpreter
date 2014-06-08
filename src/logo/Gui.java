@@ -125,8 +125,8 @@ public class Gui extends JFrame implements ActionListener {
 	 * @param c
 	 * @param visible
 	 */
-	public void moveTurtle( int xPos, int yPos, int direction, Color c, boolean visible ){
-		int pos[] = new int[] { xPos, - yPos };
+	public void moveTurtle( double xPos, double yPos, int direction, Color c, boolean visible ){
+		double pos[] = new double[] { xPos, - yPos };
 		this.graph.moveTurtle( pos, direction, c, visible );
 	}
 

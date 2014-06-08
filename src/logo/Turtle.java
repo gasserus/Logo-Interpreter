@@ -5,8 +5,8 @@ import java.awt.Color;
 public class Turtle {
 	private final int CIRCLE_DEGREES = 360;
 	
-	private int xPos = 0;
-	private int yPos = 0;
+	private double xPos = 0;
+	private double yPos = 0;
 	private int degree = 90;
 	private int actualColor = 0;
 	private boolean isDrawing = true;
@@ -14,8 +14,8 @@ public class Turtle {
 	
 	
 	public void move( int steps ){
-		this.xPos += ( int )( Math.cos( Math.PI/180 * degree ) * steps );
-		this.yPos += ( int )( Math.sin( Math.PI/180 * degree ) * steps );
+		this.xPos += ( Math.cos( Math.PI/180 * degree ) * steps );
+		this.yPos += ( Math.sin( Math.PI/180 * degree ) * steps );
 		System.out.println( "Send Coords: y=" + this.yPos + "x=" + this.xPos );
 	}
 	
@@ -43,11 +43,11 @@ public class Turtle {
 		return this.isDrawing;
 	}
 	
-	public int getXPos(){
+	public double getXPos(){
 		return this.xPos;
 	}
 	
-	public int getYPos(){
+	public double getYPos(){
 		return this.yPos;
 	}
 	
