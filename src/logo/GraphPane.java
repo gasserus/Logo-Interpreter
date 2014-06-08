@@ -23,7 +23,7 @@ public class GraphPane extends JPanel {
 	
 	
 	int direction;
-	int actualMax[] = new int[] { 80, 100 };
+	int actualMax[] = new int[] { 0, 0 };
 	Dimension preferredDimension;
 	
 	/**
@@ -95,8 +95,6 @@ public class GraphPane extends JPanel {
 	 */
 	public void moveTurtle( double pos[], int direction, Color c, boolean visible ){
 		int posInt[] = new int[2];
-		
-		
 		posInt[0] = ( int ) pos[0];
 		posInt[1] = ( int ) pos[1];
 		
@@ -131,6 +129,9 @@ public class GraphPane extends JPanel {
 		this.turtleColorHistory.clear();
 		this.turtlePosHistory.clear();
 		this.turtleVisibleHistory.clear();
+		actualMax[0] = 0;
+		actualMax[1] = 0;
+		this.adjustPreferredSize( actualMax );
 	}
 	
 	/**

@@ -24,8 +24,9 @@ public class Controller {
 	public void newProgram(){
 		this.gui.setEditorText("");
 		this.gui.setErrorOutput("Everything is just fine." );
+		this.gui.graph.clearGraph();
 		this.turtle = new Turtle();
-		this.gui.moveTurtle( this.turtle.getXPos(), this.turtle.getYPos(), this.turtle.getDirection() , this.turtle.getColor(), this.turtle.getVisible() );
+		this.moveTurtle();
 		
 		
 	}
@@ -35,10 +36,11 @@ public class Controller {
 			switch( this.gui.awaitButtonClick() ){
 				case "Save": this.saveFile(); break;
 				case "Load": this.loadFile(); break;
-				case "Reset": this.resetTurtle(); break;
+				case "Reset": this.resetProgram(); break;
 				case "Run": this.startInterpreter( 100 ); break;
 				case "Step": this.startInterpreter( -1 ); break;
-				case "Clear": this.clearProgram(); break;
+				case "Clear": this.gui.clearGraph(); break;
+				case "New": this.newProgram(); break;
 				
 			}
 		
@@ -47,9 +49,20 @@ public class Controller {
 	}
 	
 	public void clearProgram(){
-		this.gui.clearGraph();
+		
 	}
 
+	public void resetProgram(){
+		this.gui.graph.clearGraph();
+		this.resetTurtle();
+		this.moveTurtle();
+	}
+	
+	public void moveTurtle(){
+		this.gui.moveTurtle( this.turtle.getXPos(), this.turtle.getYPos(), this.turtle.getDirection() , this.turtle.getColor(), this.turtle.getVisible() );
+	}
+	
+	
 	public void resetTurtle(){
 		this.turtle.reset();
 	}
@@ -77,12 +90,12 @@ public class Controller {
 	public void move( int steps ){
 		System.out.println( steps );
 		this.turtle.move( steps );
-		this.gui.moveTurtle( this.turtle.getXPos(), this.turtle.getYPos(), this.turtle.getDirection() , this.turtle.getColor(), this.turtle.getVisible() );
+		this.moveTurtle();
 	}
 	
 	public void turn( int degree ){
 		this.turtle.turn( degree );
-		this.gui.moveTurtle( this.turtle.getXPos(), this.turtle.getYPos(), this.turtle.getDirection() , this.turtle.getColor(), this.turtle.getVisible() );
+		this.moveTurtle();
 	}
 	
 	public void changeColor( int colorChoice ){

@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -31,6 +32,7 @@ public class Gui extends JFrame implements ActionListener {
 	private final Dimension WINDOW_SIZE = new Dimension( 800, 800 );
 	private final Dimension WINDOW_MINIMUM_SIZE = new Dimension( 740, 320 );
 	
+	JScrollPane scrollGraph;
 	GraphPane graph;
 	JPanel controlPanel, controlButtonsPanel, fileButtonsPanel;
 	JTextArea editor;
@@ -56,7 +58,7 @@ public class Gui extends JFrame implements ActionListener {
 		
 		//********************************************** TurtleGraph
 		this.graph = new GraphPane();
-		JScrollPane scrollGraph = new JScrollPane( this.graph );
+		scrollGraph = new JScrollPane( this.graph );
 		this.getContentPane().add( scrollGraph );
 		
 		//********************************************** controlPanel
@@ -128,6 +130,7 @@ public class Gui extends JFrame implements ActionListener {
 	public void moveTurtle( double xPos, double yPos, int direction, Color c, boolean visible ){
 		double pos[] = new double[] { xPos, - yPos };
 		this.graph.moveTurtle( pos, direction, c, visible );
+		
 	}
 
 	/**

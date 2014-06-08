@@ -72,9 +72,9 @@ public class Turtle {
 
 	
 	public void reset(){
-		this.xPos = 0;
-		this.yPos = 0;
-		//this.degree = 90;
+		this.xPos = STARTING_POSITION[0];
+		this.yPos = STARTING_POSITION[1];
+		this.degree = STARTING_DEGREE;
 	}
 	
 }
