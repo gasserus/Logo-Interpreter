@@ -4,13 +4,24 @@ import java.awt.Color;
 
 public class Turtle {
 	private final int CIRCLE_DEGREES = 360;
+	private final int[] STARTING_POSITION = new int[] { 0, 0 };
+	private final int STARTING_DEGREE = 90;
+	private final Color[] TURTLE_COLOR = new Color[] { Color.BLACK, Color.BLUE, Color.RED, Color.YELLOW };
 	
-	private double xPos = 0;
-	private double yPos = 0;
-	private int degree = 90;
-	private int actualColor = 0;
-	private boolean isDrawing = true;
-	private Color[] turtleColor = new Color[] { Color.BLACK, Color.BLUE, Color.RED, Color.YELLOW };
+	private double xPos;
+	private double yPos;
+	private int degree;
+	private int actualColor;
+	private boolean isDrawing;
+	
+	
+	public Turtle(){
+		this.xPos = STARTING_POSITION[0];
+		this.yPos = STARTING_POSITION[1];
+		this.degree = STARTING_DEGREE;
+		this.actualColor = 0;
+		this.isDrawing = true;
+	}
 	
 	
 	public void move( int steps ){
@@ -36,7 +47,7 @@ public class Turtle {
 	}
 	
 	public Color getColor(){
-		return this.turtleColor[ actualColor ];
+		return this.TURTLE_COLOR[ actualColor ];
 	}
 	
 	public boolean getVisible(){

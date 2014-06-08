@@ -13,15 +13,15 @@ public class GraphPane extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private final int[] STARTING_POSITION = new int[] { 0, 0 };
 	private final int TURTLE_SIZE = 35;
 
-	Image turtleImg = null;
+	private Image turtleImg = null;
+
 	ArrayList<int[]> turtlePosHistory;
 	ArrayList<Color> turtleColorHistory;
 	ArrayList<Boolean> turtleVisibleHistory;
 	
-
+	
 	int direction;
 	int actualMax[] = new int[] { 80, 100 };
 	Dimension preferredDimension;
@@ -33,10 +33,8 @@ public class GraphPane extends JPanel {
 		this.turtlePosHistory = new ArrayList<int[]>();
 		this.turtleColorHistory = new ArrayList<Color>();
 		this.turtleVisibleHistory = new ArrayList<Boolean>();
-		this.turtlePosHistory.add( STARTING_POSITION );
 		this.adjustPreferredSize( actualMax );
-		turtleImg = getToolkit().getImage( "icons/turtle.png" );
-		
+		turtleImg = getToolkit().createImage( "icons/turtle.png" );
 		this.setVisible( true );
 	}
 	
@@ -70,17 +68,17 @@ public class GraphPane extends JPanel {
 		
 		// draw Turtle
 		
-//		if( turtleImg != null  ){
-//			Graphics2D g2d=(Graphics2D)g;
-//			// direction from degree to radians
-//			int directionRadians = (int) ( this.direction * ( Math.PI / 180 ) );
-//			
-//			
-//			targetPos = this.turtlePosHistory.get( this.turtlePosHistory.size() -1 );
-//			g2d.rotate( directionRadians );
-//			//g2d.drawImage( turtleImg,  ( int ) ( targetPos[0] + xCenter - ( 0.5 *  TURTLE_SIZE ) ), ( int ) ( targetPos[1] + yCenter - ( 0.5 *  TURTLE_SIZE ) ), TURTLE_SIZE, TURTLE_SIZE, this );
-//			g2d.drawImage( turtleImg, 5, 5 , 50, 50, this);
-//		}
+		if( turtleImg != null  ){
+			Graphics2D g2d=(Graphics2D)g;
+			targetPos = this.turtlePosHistory.get( this.turtlePosHistory.size() -1 );
+			
+			int rotationXCenter =  (int) ( targetPos[0] + xCenter  );
+			int rotationYCenter = (int) ( targetPos[1] + yCenter  );
+			
+			g2d.rotate( Math.toRadians( -direction ), rotationXCenter, rotationYCenter );
+			g2d.drawImage( turtleImg,  ( int ) ( targetPos[0] + xCenter - ( 0.5 *  TURTLE_SIZE ) ), ( int ) ( targetPos[1] + yCenter - ( 0.5 *  TURTLE_SIZE ) ), TURTLE_SIZE, TURTLE_SIZE, this );
+			
+		}
 		
 		
 	}
@@ -132,14 +130,12 @@ public class GraphPane extends JPanel {
 		this.turtleColorHistory.clear();
 		this.turtlePosHistory.clear();
 		this.turtleVisibleHistory.clear();
-		this.turtlePosHistory.add( STARTING_POSITION );
 	}
 	
 	/**
 	 * resets Turtle to its Starting position, without drawing a line
 	 */
 	public void turtleReset(){
-		this.turtlePosHistory.add( STARTING_POSITION );
 		this.turtleColorHistory.add( Color.BLACK );
 		this.turtleVisibleHistory.add( false );
 	}

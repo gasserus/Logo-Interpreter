@@ -15,16 +15,19 @@ public class Controller {
 		this.gui = new Gui();
 		this.interpreter = new Interpreter( this );
 		this.parser = new Parser();
-		this.turtle = new Turtle();
 		this.fileHandler = new FileHandler();
 		
+		this.newProgram();
 		this.runningLogoInterpreter();
 	}
 	
 	public void newProgram(){
 		this.gui.setEditorText("");
 		this.gui.setErrorOutput("Everything is just fine." );
-		this.turtle.reset();
+		this.turtle = new Turtle();
+		this.gui.moveTurtle( this.turtle.getXPos(), this.turtle.getYPos(), this.turtle.getDirection() , this.turtle.getColor(), this.turtle.getVisible() );
+		
+		
 	}
 	
 	public void runningLogoInterpreter(){
@@ -78,6 +81,7 @@ public class Controller {
 	
 	public void turn( int degree ){
 		this.turtle.turn( degree );
+		this.gui.moveTurtle( this.turtle.getXPos(), this.turtle.getYPos(), this.turtle.getDirection() , this.turtle.getColor(), this.turtle.getVisible() );
 	}
 	
 	public void changeColor( int colorChoice ){
