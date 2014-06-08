@@ -17,10 +17,10 @@ public class Interpreter {
 		this.control = control;
 	}
 	
-	public void interpret( int time ){
+	public void interpret( boolean step ){
 
 		// step by step
-		if( time < 0 ){
+		if( step == true ){
 			if( currentLine == 0 ){
 				allCommands = control.parse();
 				currentLine = 0;
@@ -53,7 +53,7 @@ public class Interpreter {
 				index = currentLine;
 
 				if( index < allCommands.size() ){
-					this.executeCommand( time );
+					this.executeCommand( this.control.getProgrammSpeedinMs() );
 				}
 				
 			}

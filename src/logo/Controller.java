@@ -31,14 +31,18 @@ public class Controller {
 		
 	}
 	
+	public int getProgrammSpeedinMs(){
+		return this.gui.getSpeed() * 100;
+	}
+	
 	public void runningLogoInterpreter(){
 		while ( true ){
 			switch( this.gui.awaitButtonClick() ){
 				case "Save": this.saveFile(); break;
 				case "Load": this.loadFile(); break;
 				case "Reset": this.resetProgram(); break;
-				case "Run": this.startInterpreter( 100 ); break;
-				case "Step": this.startInterpreter( -1 ); break;
+				case "Run": this.startInterpreter( false ); break;
+				case "Step": this.startInterpreter( true ); break;
 				case "Clear": this.gui.clearGraph(); break;
 				case "New": this.newProgram(); break;
 				
@@ -68,8 +72,8 @@ public class Controller {
 	}
 	
 	
-	public void startInterpreter( int time ){
-		this.interpreter.interpret( time );
+	public void startInterpreter( boolean step ){
+		this.interpreter.interpret( step );
 	}
 	
 	
