@@ -22,35 +22,44 @@ public class Interpreter {
 		// step by step
 		if( step == true ){
 			if( currentLine == 0 ){
+				System.out.println( "RESET STEPPER" );
 				allCommands = control.parse();
+				this.logoVariables.clear();
 				currentLine = 0;
 				stepIndex = 0;
 			}
 			
-			if( stepIndex < allCommands.size() ){
+			System.out.println( "STEPINDEX: " + stepIndex );
+			
+			if( stepIndex <= allCommands.size() - 1  ){
+				currentLine = stepIndex;
 				checkLoops();
 				stepIndex = currentLine;
-
+				System.out.println( stepIndex + " < " + allCommands.size() );
 				if( stepIndex < allCommands.size() ){
 					this.executeCommand( 0 );
 				}
+				
+				stepIndex++;
 				currentLine++;
 			}
 			else {
 				// start again
 				currentLine = 0;
+				interpret( true );
 			}
 			
 		}
 		else {
 			allCommands = control.parse();
+			this.logoVariables.clear();
 			currentLine = 0;
 			
 			for( int index = 0; index < allCommands.size(); index++ ){
 				currentLine = index;
 				checkLoops();
 				index = currentLine;
-
+				System.out.println( index + " < " + allCommands.size() );
 				if( index < allCommands.size() ){
 					this.executeCommand( this.control.getProgrammSpeedinMs() );
 				}
