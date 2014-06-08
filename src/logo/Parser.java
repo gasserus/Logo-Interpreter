@@ -1,6 +1,7 @@
 package logo;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Parser {
 	
@@ -26,7 +27,7 @@ public class Parser {
 			
 			for( int i = 0; i < parsedCommand.length; i++ ){
 				// remove empty lines
-				if( !parsedCommand[ i ].equals( "" ) ){
+				if( !parsedCommand[ i ].trim().equals( "" ) ){
 					command.add( parsedCommand[ i ].trim() );
 				}
 			}

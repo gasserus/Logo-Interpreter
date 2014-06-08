@@ -28,14 +28,13 @@ public class Interpreter {
 			}
 			
 			if( stepIndex < allCommands.size() ){
-				currentLine = stepIndex;
 				checkLoops();
 				stepIndex = currentLine;
 
 				if( stepIndex < allCommands.size() ){
 					this.executeCommand( 0 );
 				}
-				stepIndex++;
+				currentLine++;
 			}
 			else {
 				// start again
