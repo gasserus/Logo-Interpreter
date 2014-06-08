@@ -96,6 +96,7 @@ public class GraphPane extends JPanel {
 	public void moveTurtle( double pos[], int direction, Color c, boolean visible ){
 		int posInt[] = new int[2];
 		
+		
 		posInt[0] = ( int ) pos[0];
 		posInt[1] = ( int ) pos[1];
 		
