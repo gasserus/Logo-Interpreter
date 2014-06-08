@@ -185,7 +185,7 @@ public class Gui extends JFrame implements ActionListener {
 	}
 	
 	/**
-	 * returns actual editor text. Attention return array still has newLine commands
+	 * returns actual editor text.
 	 * @return String[] - Each line in a new array field
 	 */
 	public String[] getEditorText(){
@@ -200,6 +200,7 @@ public class Gui extends JFrame implements ActionListener {
 				lengthText = editor.getLineEndOffset( i ) - startOffset ;
 				
 				textLine[i] = editor.getText( startOffset, lengthText );
+				textLine[i].trim();
 				
 			} catch (BadLocationException e) {
 				System.out.println( "Error at Reading out Editor Text" );
