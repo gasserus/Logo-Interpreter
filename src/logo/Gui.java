@@ -24,7 +24,7 @@ import javax.swing.text.BadLocationException;
 
 public class Gui extends JFrame implements ActionListener {
 	private final int MAXIMUM_SPEED = 10;
-	private final int MINIMUM_SPEED = 1; 
+	private final int MINIMUM_SPEED = 0; 
 	private final int AMOUNT_BUTTONS = 6;
 	private final String[] BUTTON_TEXT = new String[] { "New", "Load", "Save", "Reset", "Run", "Step" };
 	private final String TITLE = "LOGO-Interpreter";
@@ -108,9 +108,9 @@ public class Gui extends JFrame implements ActionListener {
 		this.speed.setMinorTickSpacing( 1 );
 		this.speed.setPaintTicks( true );
 		Hashtable<Integer, JLabel> labels = new Hashtable<Integer, JLabel>();
-        labels.put(1, new JLabel("1"));
-        labels.put(5, new JLabel("Speed"));
-        labels.put(10, new JLabel("10"));
+        labels.put(0, new JLabel("0"));
+        labels.put(5, new JLabel("Millisec/Step"));
+        labels.put(10, new JLabel("1000"));
         this.speed.setLabelTable( labels );
         this.speed.setPaintLabels( true );
 		this.controlButtonsPanel.add( this.speed );
@@ -135,6 +135,8 @@ public class Gui extends JFrame implements ActionListener {
 	public void moveTurtle( double xPos, double yPos, int direction, Color c, boolean visible ){
 		double pos[] = new double[] { xPos, - yPos };
 		this.graph.moveTurtle( pos, direction, c, visible );
+		scrollGraph.getHorizontalScrollBar().setValue( ( int ) xPos );
+		scrollGraph.getVerticalScrollBar().setValue( ( int ) yPos );
 		
 	}
 
