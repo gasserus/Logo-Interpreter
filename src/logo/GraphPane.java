@@ -23,6 +23,7 @@ public class GraphPane extends JPanel {
 	
 	
 	int direction;
+	int actualCenter[] = new int [] { 0, 0};
 	int actualMax[] = new int[] { 0, 0 };
 	Dimension preferredDimension;
 	
@@ -48,8 +49,8 @@ public class GraphPane extends JPanel {
 		int[] targetPos;
 		
 		// get the actual center of the graphPanel 
-		int xCenter = ( int ) ( this.getWidth() / 2.0 );
-		int yCenter = ( int ) ( this.getHeight() / 2.0 );
+		actualCenter[0] = ( int ) ( this.getWidth() / 2.0 );
+		actualCenter[1] = ( int ) ( this.getHeight() / 2.0 );
 		
 		
 		
@@ -61,7 +62,7 @@ public class GraphPane extends JPanel {
 				lastPos = turtlePosHistory.get( i - 1 );
 				targetPos = turtlePosHistory.get( i );
 				
-				g.drawLine( ( xCenter + lastPos[0] ), ( yCenter + lastPos[1] ), ( xCenter + targetPos[0] ), (yCenter + targetPos[1]) );
+				g.drawLine( ( actualCenter[0] + lastPos[0] ), ( actualCenter[1] + lastPos[1] ), ( actualCenter[0] + targetPos[0] ), (actualCenter[1] + targetPos[1]) );
 		
 			}
 		}
@@ -72,11 +73,11 @@ public class GraphPane extends JPanel {
 			Graphics2D g2d=(Graphics2D)g;
 			targetPos = this.turtlePosHistory.get( this.turtlePosHistory.size() -1 );
 			
-			int rotationXCenter =  (int) ( targetPos[0] + xCenter  );
-			int rotationYCenter = (int) ( targetPos[1] + yCenter  );
+			int rotationXCenter =  (int) ( targetPos[0] + actualCenter[0]  );
+			int rotationYCenter = (int) ( targetPos[1] + actualCenter[1]  );
 			
 			g2d.rotate( Math.toRadians( -direction ), rotationXCenter, rotationYCenter );
-			g2d.drawImage( turtleImg,  ( int ) ( targetPos[0] + xCenter - ( 0.5 *  TURTLE_SIZE ) ), ( int ) ( targetPos[1] + yCenter - ( 0.5 *  TURTLE_SIZE ) ), TURTLE_SIZE, TURTLE_SIZE, this );
+			g2d.drawImage( turtleImg,  ( int ) ( targetPos[0] + actualCenter[0] - ( 0.5 *  TURTLE_SIZE ) ), ( int ) ( targetPos[1] + actualCenter[1] - ( 0.5 *  TURTLE_SIZE ) ), TURTLE_SIZE, TURTLE_SIZE, this );
 			
 		}
 		
@@ -111,7 +112,6 @@ public class GraphPane extends JPanel {
 	 * @param pos
 	 */
 	public void adjustPreferredSize( int[] pos ){
-		System.out.println(" test preferred " );
 		if( Math.abs( pos[0] ) > Math.abs( this.actualMax[0] ) ){
 			this.actualMax[0] = pos[0];
 		}
@@ -135,6 +135,14 @@ public class GraphPane extends JPanel {
 	}
 	
 	/**
+	 * 
+	 * @return the center in relation to the size of the pane
+	 */
+	public int[] getActualCenter(){
+		return actualCenter;
+	}
+	
+	/**
 	 * resets Turtle to its Starting position, without drawing a line
 	 */
 	public void turtleReset(){
@@ -142,3 +150,5 @@ public class GraphPane extends JPanel {
 		this.turtleVisibleHistory.add( false );
 	}
 }
+
+	
