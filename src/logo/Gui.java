@@ -34,7 +34,7 @@ public class Gui extends JFrame implements ActionListener {
 	
 	JScrollPane scrollGraph;
 	GraphPane graph;
-	JPanel controlPanel, controlButtonsPanel, fileButtonsPanel;
+	JPanel controlPanel, controlButtonsPanel, fileButtonsPanel, graphOutputPanel;
 	JTextArea editor;
 	JButton[] controlButton = new JButton[ AMOUNT_BUTTONS ];
 	JSlider speed;
@@ -55,11 +55,19 @@ public class Gui extends JFrame implements ActionListener {
 		this.getContentPane().setLayout( new GridLayout( 1 , 2 ) );
 		this.setTitle( TITLE );
 		
+		//********************************************** LeftPanel
+		graphOutputPanel = new JPanel();
+		graphOutputPanel.setLayout( new BorderLayout() );
+		this.getContentPane().add( graphOutputPanel );
 		
 		//********************************************** TurtleGraph
 		this.graph = new GraphPane();
 		scrollGraph = new JScrollPane( this.graph );
-		this.getContentPane().add( scrollGraph );
+		graphOutputPanel.add( scrollGraph, BorderLayout.CENTER );
+		
+		//********************************************** add error Output Label
+		this.errorOutput = new JLabel();
+		this.graphOutputPanel.add( errorOutput, BorderLayout.SOUTH );
 		
 		//********************************************** controlPanel
 		this.controlPanel = new JPanel();
@@ -107,10 +115,7 @@ public class Gui extends JFrame implements ActionListener {
         this.speed.setPaintLabels( true );
 		this.controlButtonsPanel.add( this.speed );
 		
-		//********************************************** add error Output Label
 		
-		this.errorOutput = new JLabel();
-		this.controlButtonsPanel.add( errorOutput );
 
 		//********************************************** show
 		this.setVisible(true);

@@ -118,7 +118,7 @@ public class GraphPane extends JPanel {
 		if( Math.abs( pos[1] ) > Math.abs( this.actualMax[1] ) ){
 			this.actualMax[1] = pos[1];
 		}
-		this.setPreferredSize( new Dimension( ( int ) ( ( Math.abs( actualMax[0] ) * 2 ) + 10 ), ( int )( ( Math.abs( actualMax[1] ) * 2 ) + 10 ) ) );
+		this.setPreferredSize( new Dimension( ( int ) ( ( Math.abs( actualMax[0] ) * 2 ) + TURTLE_SIZE ), ( int )( ( Math.abs( actualMax[1] ) * 2 ) + TURTLE_SIZE ) ) );
 		this.revalidate();
 	}
 	
