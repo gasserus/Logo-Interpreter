@@ -54,12 +54,12 @@ public class GraphPane extends JPanel {
 		
 		
 		// draw History
-		for( int i = 0; i < ( turtlePosHistory.size() - 1 ); i++ ){
+		for( int i = 1; i < ( turtlePosHistory.size() ); i++ ){
 			
 			if( turtleVisibleHistory.get( i ) ){
 				g.setColor( turtleColorHistory.get( i ) );
-				lastPos = turtlePosHistory.get( i );
-				targetPos =   turtlePosHistory.get( i + 1 );
+				lastPos = turtlePosHistory.get( i - 1 );
+				targetPos = turtlePosHistory.get( i );
 				
 				g.drawLine( ( xCenter + lastPos[0] ), ( yCenter + lastPos[1] ), ( xCenter + targetPos[0] ), (yCenter + targetPos[1]) );
 		
