@@ -75,6 +75,7 @@ public class Turtle {
 		this.xPos = STARTING_POSITION[0];
 		this.yPos = STARTING_POSITION[1];
 		this.degree = STARTING_DEGREE;
+		this.actualColor = 0;
 	}
 	
 }

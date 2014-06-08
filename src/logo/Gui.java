@@ -136,8 +136,9 @@ public class Gui extends JFrame implements ActionListener {
 	public void moveTurtle( double xPos, double yPos, int direction, Color c, boolean visible ){
 		double pos[] = new double[] { xPos, - yPos };
 		this.graph.moveTurtle( pos, direction, c, visible );
-		scrollGraph.getHorizontalScrollBar().setValue( ( int ) xPos );
-		scrollGraph.getVerticalScrollBar().setValue( ( int ) yPos );
+
+		scrollGraph.getHorizontalScrollBar().setValue( ( int ) ( this.graph.getActualCenter()[0] + xPos ) );
+		scrollGraph.getVerticalScrollBar().setValue( ( int ) ( this.graph.getActualCenter()[1] - yPos ) );
 		
 	}
 
