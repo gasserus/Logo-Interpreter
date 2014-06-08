@@ -56,6 +56,10 @@ public class FileHandler {
 				e.printStackTrace();
 			}
 		}
+		else{
+			return "No File Selected";
+		}
+		
 		return output;
 	}
 }

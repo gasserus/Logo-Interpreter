@@ -84,7 +84,10 @@ public class Controller {
 	
 	public void loadFile(){
 		String content = this.fileHandler.loadFile( this.gui.openFileChooser( false ) );
-		this.gui.setEditorText( content );
+		
+		if( !content.equals("No File Selected") ){ 
+			this.gui.setEditorText( content );
+		}
 	}
 	
 	public void move( int steps ){
