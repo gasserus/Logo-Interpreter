@@ -76,6 +76,7 @@ public class Gui extends JFrame implements ActionListener {
 		
 		//********************************************** Editor
 		this.editor = new JTextArea();
+		this.editor.setTabSize( 2 );
 		this.controlPanel.add( new JScrollPane( this.editor ), BorderLayout.CENTER );
 		
 		//********************************************** controlButtonsPanel
