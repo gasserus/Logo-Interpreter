@@ -39,6 +39,7 @@ public class Controller {
 				case "Run": this.startInterpreter( 100 ); break;
 				case "Step": this.startInterpreter( -1 ); break;
 				case "Clear": this.clearProgram(); break;
+				
 			}
 		
 		}
