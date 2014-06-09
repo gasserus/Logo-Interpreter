@@ -90,10 +90,11 @@ public class Controller {
 	}
 	
 	public void loadFile(){
-		String content = this.fileHandler.loadFile( this.gui.openFileChooser( false ) );
-		
-		if( !content.equals("No File Selected") ){ 
+		try{
+			String content = this.fileHandler.loadFile( this.gui.openFileChooser( false ) );
 			this.gui.setEditorText( content );
+		}catch( NullPointerException ex ){
+			System.out.println( "No file selected - No Action will be done");
 		}
 	}
 	

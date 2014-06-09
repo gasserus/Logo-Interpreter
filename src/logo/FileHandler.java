@@ -52,12 +52,12 @@ public class FileHandler {
 				}
 				in.close();
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
+				System.out.println( "File not Found - should not happen" );
 				e.printStackTrace();
 			}
 		}
 		else{
-			return "No File Selected";
+			throw new NullPointerException();
 		}
 		
 		return output;
