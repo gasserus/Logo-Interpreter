@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -143,11 +142,22 @@ public class Gui extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Sets output as new content of the ErrorOutputLabel, overwrites previous content 
+	 * Sets output as new content of the ErrorOutputLabel, overwrites previous content.
+	 * Critical output will be displayed in White on Red Background
+	 * @param critical
 	 * @param output
 	 */
-	public void setErrorOutput( String output ){
+	public void setErrorOutput( String output, boolean critical ){
 		this.errorOutput.setText( output );
+		
+		if( critical ){
+			this.graphOutputPanel.setBackground( Color.RED );
+			this.errorOutput.setForeground( Color.WHITE );
+		}else{
+			this.graphOutputPanel.setBackground( null );
+			this.errorOutput.setForeground( Color.BLACK );
+		}
+		
 	}
 	
 	/**

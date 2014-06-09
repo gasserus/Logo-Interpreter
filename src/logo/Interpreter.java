@@ -130,7 +130,7 @@ public class Interpreter {
 		}
 		
 		if( success == false ){
-			control.sendError( currentLine + ". Line.Error with command " + command );
+			control.sendError( currentLine + ". Line. Error with command: " + command );
 		}
 		
 	}

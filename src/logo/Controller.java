@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 
 public class Controller {
+	private final String NO_ERROR_STRING = "Everything is just fine.";
+	
 	Gui gui;
 	Interpreter interpreter;
 	Parser parser;
@@ -23,7 +25,7 @@ public class Controller {
 	
 	public void newProgram(){
 		this.gui.setEditorText("");
-		this.gui.setErrorOutput("Everything is just fine." );
+		this.removeError();
 		this.gui.graph.clearGraph();
 		this.turtle = new Turtle();
 		this.moveTurtle();
@@ -73,6 +75,7 @@ public class Controller {
 	
 	
 	public void startInterpreter( boolean step ){
+		this.removeError();
 		this.interpreter.interpret( step );
 	}
 	
@@ -110,8 +113,12 @@ public class Controller {
 	}
 	
 	public void sendError( String errorText ){
-		System.out.println( errorText );
+		this.gui.setErrorOutput( errorText, true);
 	}	
+	
+	public void removeError(){
+		this.gui.setErrorOutput( NO_ERROR_STRING , false);
+	}
 	
 	/**
 	 * 
