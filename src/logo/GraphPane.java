@@ -14,14 +14,14 @@ public class GraphPane extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	private final int TURTLE_SIZE = 35;
-
+	private final String TURTLE_IMAGE_PATH = "icons/turtle.png";
 	private Image turtleImg = null;
 
 	ArrayList<int[]> turtlePosHistory;
 	ArrayList<Color> turtleColorHistory;
 	ArrayList<Boolean> turtleVisibleHistory;
 	
-	
+	double zoomFactor = 1.0;
 	int direction;
 	int actualCenter[] = new int [] { 0, 0};
 	int actualMax[] = new int[] { 0, 0 };
@@ -37,7 +37,7 @@ public class GraphPane extends JPanel {
 		this.turtleColorHistory = new ArrayList<Color>();
 		this.turtleVisibleHistory = new ArrayList<Boolean>();
 		this.adjustPreferredSize( actualMax[0], actualMax[1] );
-		this.turtleImg = getToolkit().createImage( "icons/turtle.png" );
+		this.turtleImg = getToolkit().createImage( TURTLE_IMAGE_PATH );
 		
 		this.zoomPreference = new Dimension( 0, 0 );
 		this.visibleSize = new Dimension( 0, 0);
@@ -55,23 +55,18 @@ public class GraphPane extends JPanel {
 		int[] lastPos;
 		int[] targetPos;
 		
-		// get the actual center of the graphPanel 
-		actualCenter[0] = ( int ) ( this.getWidth() / 2.0 );
-		actualCenter[1] = ( int ) ( this.getHeight() / 2.0 );
-		
+		//**************************************************************************** scaling Output
 		if ( isScaling ){
-			System.out.println( this.zoomPreference );
-			double zoomFactor = (double) this.visibleSize.width / this.getPreferredSize().width;
-			
-			if ( zoomFactor > ( (double) this.visibleSize.height / this.getPreferredSize().height ) ){
-				zoomFactor =  (double) this.visibleSize.height / this.getPreferredSize().height;
-			}
-			System.out.println( zoomFactor );
 			g2d.scale( zoomFactor, zoomFactor);
-			this.setPreferredSize( this.zoomPreference );
+			this.setPreferredSize( this.visibleSize );
+			//this.setSize( this.visibleSize );
 		}
+	
+		//**************************************************************************** get the actual center of the graphPanel 
 		
-		// draw History
+		actualCenter[0] = ( int ) ( ( this.getWidth() / 2.0 ) * ( 1 / this.zoomFactor ) );
+		actualCenter[1] = ( int ) ( ( this.getHeight() / 2.0 ) * ( 1 / this.zoomFactor ) );
+		//**************************************************************************** draw History
 		for( int i = 1; i < ( turtlePosHistory.size() ); i++ ){
 			
 			if( turtleVisibleHistory.get( i ) ){
@@ -84,7 +79,7 @@ public class GraphPane extends JPanel {
 			}
 		}
 		
-		// draw Turtle
+		//**************************************************************************** draw Turtle
 		
 		if( turtleImg != null  ){
 			
@@ -97,8 +92,6 @@ public class GraphPane extends JPanel {
 			g2d.drawImage( turtleImg,  ( int ) ( targetPos[0] + actualCenter[0] - ( 0.5 *  TURTLE_SIZE ) ), ( int ) ( targetPos[1] + actualCenter[1] - ( 0.5 *  TURTLE_SIZE ) ), TURTLE_SIZE, TURTLE_SIZE, this );
 			
 		}
-		
-		
 	}
 	
 	
@@ -168,19 +161,34 @@ public class GraphPane extends JPanel {
 	}
 	
 	public void setVisibleSize( Dimension size ){
-		this.visibleSize = size.getSize();
+		this.visibleSize = new Dimension( ( int ) ( size.getWidth() - 10 ), ( int ) ( size.getHeight() - 10 ) );
 	}
 	
-	public void toggleZoom( Dimension zoom ){
-		System.out.println( "asd as " + zoom );
-		this.adjustPreferredSize( zoom.width, zoom.height );
-		this.zoomPreference.setSize( zoom );
+	
+	
+	public void toggleZoom(){
+		System.out.println( "Not yet implemented");
 		if( this.isScaling ){
 			this.isScaling = false;
-		}else{
+			this.zoomFactor = 1;
+			for( int i = 0; i < this.turtlePosHistory.size(); i++ ){
+				this.adjustPreferredSize( this.turtlePosHistory.get( i )[0], this.turtlePosHistory.get( i )[1] );
+			}
+			System.out.println( "Preferred Size adjusted" );
+			
+		}
+		else{
+			System.out.println( "visible: " + this.visibleSize + " - actual: " + this.getPreferredSize() );
+			zoomFactor = (double) this.visibleSize.getWidth() / this.getSize().getWidth();
+			
+			if ( zoomFactor > ( (double) this.visibleSize.getHeight() / this.getSize().getHeight() ) ){
+				zoomFactor =  (double) this.visibleSize.getHeight() / this.getSize().getHeight() ;
+			}
+			System.out.println( "ZoomFactor:" + this.zoomFactor );
 			this.isScaling = true;
 		}
 		this.repaint();
+		this.revalidate();
 	}
 }
 

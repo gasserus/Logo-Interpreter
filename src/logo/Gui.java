@@ -143,8 +143,7 @@ public class Gui extends JFrame implements ActionListener {
 
 		scrollGraph.getHorizontalScrollBar().setValue( ( int ) ( this.graph.getActualCenter()[0] + xPos ) );
 		scrollGraph.getVerticalScrollBar().setValue( ( int ) ( this.graph.getActualCenter()[1] - yPos ) );
-		
-		System.out.println( this.graph.getSize() );
+
 		
 	}
 
@@ -245,12 +244,12 @@ public class Gui extends JFrame implements ActionListener {
 	}
 	
 	public void toggleZoom(){
-		this.graph.toggleZoom( this.graph.getSize() );
+		this.graph.toggleZoom();
 	}
 	
 	public void paint( Graphics g ){
 		super.paintComponents( g );
-		this.graph.setVisibleSize( this.graph.getSize() );
+		this.graph.setVisibleSize( this.scrollGraph.getSize() );
 		
 	}
 	@Override
