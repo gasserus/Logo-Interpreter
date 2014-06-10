@@ -143,8 +143,6 @@ public class Gui extends JFrame implements ActionListener {
 
 		scrollGraph.getHorizontalScrollBar().setValue( ( int ) ( this.graph.getActualCenter()[0] + xPos ) );
 		scrollGraph.getVerticalScrollBar().setValue( ( int ) ( this.graph.getActualCenter()[1] - yPos ) );
-
-		
 	}
 
 	/**

@@ -59,7 +59,6 @@ public class GraphPane extends JPanel {
 		if ( isScaling ){
 			g2d.scale( zoomFactor, zoomFactor);
 			this.setPreferredSize( this.visibleSize );
-			//this.setSize( this.visibleSize );
 		}
 	
 		//**************************************************************************** get the actual center of the graphPanel 
@@ -112,6 +111,11 @@ public class GraphPane extends JPanel {
 		this.turtlePosHistory.add( posInt );
 		this.turtleColorHistory.add( c );
 		this.turtleVisibleHistory.add( visible );
+		
+		if( this.isScaling ){
+			this.toggleZoom();
+		}
+		
 		this.adjustPreferredSize( posInt[0], posInt[1] );
 		this.direction = direction;
 		this.repaint();
@@ -152,13 +156,6 @@ public class GraphPane extends JPanel {
 		return actualCenter;
 	}
 	
-	/**
-	 * resets Turtle to its Starting position, without drawing a line
-	 */
-	public void turtleReset(){
-		this.turtleColorHistory.add( Color.BLACK );
-		this.turtleVisibleHistory.add( false );
-	}
 	
 	/**
 	 * sets the intern Variable, needed for correct zooming. You might want to task this method on the parents paint method
