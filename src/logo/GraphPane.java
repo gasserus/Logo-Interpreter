@@ -167,7 +167,6 @@ public class GraphPane extends JPanel {
 	
 	
 	public void toggleZoom(){
-		System.out.println( "Not yet implemented");
 		if( this.isScaling ){
 			this.isScaling = false;
 			this.zoomFactor = 1;
@@ -178,7 +177,6 @@ public class GraphPane extends JPanel {
 			
 		}
 		else{
-			System.out.println( "visible: " + this.visibleSize + " - actual: " + this.getPreferredSize() );
 			zoomFactor = (double) this.visibleSize.getWidth() / this.getSize().getWidth();
 			
 			if ( zoomFactor > ( (double) this.visibleSize.getHeight() / this.getSize().getHeight() ) ){
