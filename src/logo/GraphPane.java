@@ -160,12 +160,18 @@ public class GraphPane extends JPanel {
 		this.turtleVisibleHistory.add( false );
 	}
 	
+	/**
+	 * sets the intern Variable, needed for correct zooming. You might want to task this method on the parents paint method
+	 * @param size
+	 */
 	public void setVisibleSize( Dimension size ){
 		this.visibleSize = new Dimension( ( int ) ( size.getWidth() - 10 ), ( int ) ( size.getHeight() - 10 ) );
 	}
 	
 	
-	
+	/**
+	 *  Calculates the ZoomFactor or restores the PreferredSize and zoomFactor. Toggles the isScaling boolean
+	 */
 	public void toggleZoom(){
 		if( this.isScaling ){
 			this.isScaling = false;

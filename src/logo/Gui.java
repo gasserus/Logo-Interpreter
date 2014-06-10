@@ -243,10 +243,16 @@ public class Gui extends JFrame implements ActionListener {
 		this.repaint();
 	}
 	
+	/**
+	 * toggles the zoom (unzoomed or fit-on-Size zoom)
+	 */
 	public void toggleZoom(){
 		this.graph.toggleZoom();
 	}
 	
+	/**
+	 * draws all Component and gives the graph the "new" size it can use.
+	 */
 	public void paint( Graphics g ){
 		super.paintComponents( g );
 		this.graph.setVisibleSize( this.scrollGraph.getSize() );
