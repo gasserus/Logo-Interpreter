@@ -88,9 +88,14 @@ public class Controller {
 		this.gui.moveTurtle( this.turtle.getXPos(), this.turtle.getYPos(), this.turtle.getDirection() , this.turtle.getColor(), this.turtle.getVisible() );
 	}
 	
-	
+	/**
+	 * resets Turtle to its Starting Position, without Drawing (restores also Color 0 and the StartingDirection of the turtle).
+	 */
 	public void resetTurtle(){
 		this.turtle.reset();
+		this.turtle.setPen( false );
+		this.moveTurtle();
+		this.turtle.setPen( true );
 	}
 	
 		
