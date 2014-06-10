@@ -39,8 +39,11 @@ public class Controller {
 	}
 	
 	public void runningLogoInterpreter(){
+		String button;
 		while ( true ){
-			switch( this.gui.awaitButtonClick() ){
+			button = this.gui.awaitButtonClick();
+			
+			switch( button ){
 				case "Save":	this.saveFile(); break;
 				case "Load":	this.loadFile(); break;
 				case "Reset":	this.resetProgram(); break;
@@ -62,9 +65,9 @@ public class Controller {
 									System.out.println( e.getMessage() );
 								}
 								break;
-				case "Clear":	this.gui.clearGraph(); break;
 				case "New":		this.newProgram(); break;
-				
+				case "Toggle Zoom": this.gui.toggleZoom(); break;
+				default: System.out.println( "Button: '" + button + "' is not yet Implemented.");
 			}
 		
 		}

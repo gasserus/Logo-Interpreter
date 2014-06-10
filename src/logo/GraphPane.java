@@ -25,7 +25,8 @@ public class GraphPane extends JPanel {
 	int direction;
 	int actualCenter[] = new int [] { 0, 0};
 	int actualMax[] = new int[] { 0, 0 };
-	Dimension preferredDimension;
+	Dimension zoomPreference;
+	boolean isScaling;
 	
 	/**
 	 * creates new Graphic, sets the starting pos to turtle
@@ -34,8 +35,13 @@ public class GraphPane extends JPanel {
 		this.turtlePosHistory = new ArrayList<int[]>();
 		this.turtleColorHistory = new ArrayList<Color>();
 		this.turtleVisibleHistory = new ArrayList<Boolean>();
-		this.adjustPreferredSize( actualMax );
-		turtleImg = getToolkit().createImage( "icons/turtle.png" );
+		this.adjustPreferredSize( actualMax[0], actualMax[1] );
+		this.turtleImg = getToolkit().createImage( "icons/turtle.png" );
+		
+		this.zoomPreference = new Dimension( 0, 0 );
+		
+		this.isScaling = false;
+		
 		this.setVisible( true );
 	}
 	
@@ -44,7 +50,7 @@ public class GraphPane extends JPanel {
 	 */
 	public void paintComponent( Graphics g ){
 		super.paintComponent( g );
-		
+		Graphics2D g2d=(Graphics2D)g;
 		int[] lastPos;
 		int[] targetPos;
 		
@@ -52,17 +58,27 @@ public class GraphPane extends JPanel {
 		actualCenter[0] = ( int ) ( this.getWidth() / 2.0 );
 		actualCenter[1] = ( int ) ( this.getHeight() / 2.0 );
 		
-		
+//		if ( isScaling ){
+//			System.out.println( this.zoomPreference );
+//			double zoomFactor = (double) this.zoomPreference.width / this.getPreferredSize().width;
+//			
+//			if ( zoomFactor > ( (double) this.zoomPreference.height / this.getPreferredSize().height ) ){
+//				zoomFactor =  (double) this.zoomPreference.height / this.getPreferredSize().height;
+//			}
+//			System.out.println( zoomFactor );
+//			g2d.scale( zoomFactor, zoomFactor);
+//			this.setPreferredSize( this.zoomPreference );
+//		}
 		
 		// draw History
 		for( int i = 1; i < ( turtlePosHistory.size() ); i++ ){
 			
 			if( turtleVisibleHistory.get( i ) ){
-				g.setColor( turtleColorHistory.get( i ) );
+				g2d.setColor( turtleColorHistory.get( i ) );
 				lastPos = turtlePosHistory.get( i - 1 );
 				targetPos = turtlePosHistory.get( i );
 				
-				g.drawLine( ( actualCenter[0] + lastPos[0] ), ( actualCenter[1] + lastPos[1] ), ( actualCenter[0] + targetPos[0] ), (actualCenter[1] + targetPos[1]) );
+				g2d.drawLine( ( actualCenter[0] + lastPos[0] ), ( actualCenter[1] + lastPos[1] ), ( actualCenter[0] + targetPos[0] ), (actualCenter[1] + targetPos[1]) );
 		
 			}
 		}
@@ -70,7 +86,7 @@ public class GraphPane extends JPanel {
 		// draw Turtle
 		
 		if( turtleImg != null  ){
-			Graphics2D g2d=(Graphics2D)g;
+			
 			targetPos = this.turtlePosHistory.get( this.turtlePosHistory.size() -1 );
 			
 			int rotationXCenter =  (int) ( targetPos[0] + actualCenter[0]  );
@@ -102,7 +118,7 @@ public class GraphPane extends JPanel {
 		this.turtlePosHistory.add( posInt );
 		this.turtleColorHistory.add( c );
 		this.turtleVisibleHistory.add( visible );
-		this.adjustPreferredSize( posInt );
+		this.adjustPreferredSize( posInt[0], posInt[1] );
 		this.direction = direction;
 		this.repaint();
 	}
@@ -111,12 +127,12 @@ public class GraphPane extends JPanel {
 	 * For the ScrollPane, calculates the new preferred size of the graph.
 	 * @param pos
 	 */
-	public void adjustPreferredSize( int[] pos ){
-		if( Math.abs( pos[0] ) > Math.abs( this.actualMax[0] ) ){
-			this.actualMax[0] = pos[0];
+	public void adjustPreferredSize( int xPos, int yPos ){
+		if( Math.abs( xPos ) > Math.abs( this.actualMax[0] ) ){
+			this.actualMax[0] = xPos;
 		}
-		if( Math.abs( pos[1] ) > Math.abs( this.actualMax[1] ) ){
-			this.actualMax[1] = pos[1];
+		if( Math.abs( yPos ) > Math.abs( this.actualMax[1] ) ){
+			this.actualMax[1] = yPos;
 		}
 		this.setPreferredSize( new Dimension( ( int ) ( ( Math.abs( actualMax[0] ) * 2 ) + TURTLE_SIZE ), ( int )( ( Math.abs( actualMax[1] ) * 2 ) + TURTLE_SIZE ) ) );
 		this.revalidate();
@@ -131,7 +147,7 @@ public class GraphPane extends JPanel {
 		this.turtleVisibleHistory.clear();
 		actualMax[0] = 0;
 		actualMax[1] = 0;
-		this.adjustPreferredSize( actualMax );
+		this.adjustPreferredSize( actualMax[0], actualMax[1] );
 	}
 	
 	/**
@@ -148,6 +164,18 @@ public class GraphPane extends JPanel {
 	public void turtleReset(){
 		this.turtleColorHistory.add( Color.BLACK );
 		this.turtleVisibleHistory.add( false );
+	}
+	
+	public void toggleZoom( Dimension zoom ){
+		System.out.println( "asd as " + zoom );
+		this.adjustPreferredSize( zoom.width, zoom.height );
+		this.zoomPreference.setSize( zoom );
+		if( this.isScaling ){
+			this.isScaling = false;
+		}else{
+			this.isScaling = true;
+		}
+		this.repaint();
 	}
 }
 

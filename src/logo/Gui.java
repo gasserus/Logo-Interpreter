@@ -25,8 +25,7 @@ import javax.swing.text.BadLocationException;
 public class Gui extends JFrame implements ActionListener {
 	private final int MAXIMUM_SPEED = 10;
 	private final int MINIMUM_SPEED = 0; 
-	private final int AMOUNT_BUTTONS = 6;
-	private final String[] BUTTON_TEXT = new String[] { "New", "Load", "Save", "Reset", "Run", "Step" };
+	private final String[] CONTROL_BUTTONS = new String[] { "New", "Load", "Save", "Save Image", "Toggle Zoom", "Reset", "Run", "Step" };
 	private final String TITLE = "LOGO-Interpreter";
 	
 	private final Dimension WINDOW_SIZE = new Dimension( 800, 800 );
@@ -34,9 +33,9 @@ public class Gui extends JFrame implements ActionListener {
 	
 	JScrollPane scrollGraph;
 	GraphPane graph;
-	JPanel controlPanel, controlButtonsPanel, fileButtonsPanel, graphOutputPanel;
+	JPanel controlPanel, controlButtonsPanel, fileButtonsPanel, graphOutputPanel, centerPane;
 	JTextArea editor;
-	JButton[] controlButton = new JButton[ AMOUNT_BUTTONS ];
+	JButton[] controlButton;
 	JSlider speed;
 	JLabel errorOutput;
 	GuiListener buttonListener;
@@ -52,18 +51,28 @@ public class Gui extends JFrame implements ActionListener {
 		this.setSize( WINDOW_SIZE );
 		this.setMinimumSize( WINDOW_MINIMUM_SIZE );
 		this.setDefaultCloseOperation( EXIT_ON_CLOSE );
-		this.getContentPane().setLayout( new GridLayout( 1 , 2 ) );
+		this.getContentPane().setLayout( new BorderLayout() );
 		this.setTitle( TITLE );
 		
-		//********************************************** LeftPanel
+		//********************************************** FileButtonsPane
+		this.fileButtonsPanel = new JPanel();
+		this.getContentPane().add( this.fileButtonsPanel, BorderLayout.NORTH );
+		this.fileButtonsPanel.setLayout( new FlowLayout( FlowLayout.LEFT ) );
+		
+		//********************************************** CenterPanel (Graphic, editor, programflow buttons	
+		this.centerPane = new JPanel();
+		this.centerPane.setLayout( new GridLayout( 1, 2 ) );
+		this.getContentPane().add( this.centerPane, BorderLayout.CENTER );
+		
+		//********************************************** GraphicsPanel		
 		graphOutputPanel = new JPanel();
 		graphOutputPanel.setLayout( new BorderLayout() );
-		this.getContentPane().add( graphOutputPanel );
-		
+		this.centerPane.add( this.graphOutputPanel );
+				
 		//********************************************** TurtleGraph
 		this.graph = new GraphPane();
 		scrollGraph = new JScrollPane( this.graph );
-		graphOutputPanel.add( scrollGraph, BorderLayout.CENTER );
+		graphOutputPanel.add( this.scrollGraph, BorderLayout.CENTER );
 		
 		//********************************************** add error Output Label
 		this.errorOutput = new JLabel();
@@ -72,7 +81,7 @@ public class Gui extends JFrame implements ActionListener {
 		//********************************************** controlPanel
 		this.controlPanel = new JPanel();
 		this.controlPanel.setLayout( new BorderLayout() );
-		this.getContentPane().add( this.controlPanel );
+		this.centerPane.add( this.controlPanel );
 		
 		//********************************************** Editor
 		this.editor = new JTextArea();
@@ -82,21 +91,18 @@ public class Gui extends JFrame implements ActionListener {
 		//********************************************** controlButtonsPanel
 		this.controlButtonsPanel = new JPanel();
 		this.controlPanel.add( this.controlButtonsPanel, BorderLayout.SOUTH );
-		this.controlButtonsPanel.setLayout( new FlowLayout() );
+		this.controlButtonsPanel.setLayout( new FlowLayout(  ) );
 		
-		this.fileButtonsPanel = new JPanel();
-		this.controlPanel.add( this.fileButtonsPanel, BorderLayout.NORTH );
-		this.fileButtonsPanel.setLayout( new FlowLayout() );
-		
-		
+
 		//********************************************** initialise Buttons -> add to Design
+		this.controlButton = new JButton[ CONTROL_BUTTONS.length ];
 		buttonListener = new GuiListener();
 		
-		for( int i = 0; i < AMOUNT_BUTTONS; i++ ){
+		for( int i = 0; i < CONTROL_BUTTONS.length; i++ ){
 			this.controlButton[i] = new JButton();
-			this.controlButton[i].setText( this.BUTTON_TEXT[i] );
+			this.controlButton[i].setText( this.CONTROL_BUTTONS[i] );
 			this.controlButton[i].addActionListener( this );
-			if( i < 4 ){
+			if( i < 5 ){
 				this.fileButtonsPanel.add( this.controlButton[i] );
 			}
 			else{
@@ -105,7 +111,7 @@ public class Gui extends JFrame implements ActionListener {
 		}
 		 
 		//********************************************** add JSlider for Speed with Labels 
-		this.speed = new JSlider( JSlider.HORIZONTAL, this.MINIMUM_SPEED, this.MAXIMUM_SPEED, 10 );
+		this.speed = new JSlider( JSlider.HORIZONTAL, this.MINIMUM_SPEED, this.MAXIMUM_SPEED, 10 );;
 		this.speed.setMinorTickSpacing( 1 );
 		this.speed.setPaintTicks( true );
 		Hashtable<Integer, JLabel> labels = new Hashtable<Integer, JLabel>();
@@ -114,10 +120,7 @@ public class Gui extends JFrame implements ActionListener {
         labels.put(10, new JLabel("1000"));
         this.speed.setLabelTable( labels );
         this.speed.setPaintLabels( true );
-		this.controlButtonsPanel.add( this.speed );
-		
-		
-
+		this.fileButtonsPanel.add( this.speed );
 		//********************************************** show
 		this.setVisible(true);
 	}
@@ -139,6 +142,8 @@ public class Gui extends JFrame implements ActionListener {
 
 		scrollGraph.getHorizontalScrollBar().setValue( ( int ) ( this.graph.getActualCenter()[0] + xPos ) );
 		scrollGraph.getVerticalScrollBar().setValue( ( int ) ( this.graph.getActualCenter()[1] - yPos ) );
+		
+		System.out.println( this.graph.getSize() );
 		
 	}
 
@@ -238,10 +243,14 @@ public class Gui extends JFrame implements ActionListener {
 		this.repaint();
 	}
 	
+	public void toggleZoom(){
+		this.graph.toggleZoom( this.graph.getSize() );
+	}
+	
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		for( int i = 0; i < AMOUNT_BUTTONS; i++ ){
+		for( int i = 0; i < CONTROL_BUTTONS.length; i++ ){
 			if( e.getSource().equals( this.controlButton[i] ) ){
 				this.buttonListener.setLastPressedButton( controlButton[i].getText() );
 				synchronized( this.buttonListener ){
