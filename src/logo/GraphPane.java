@@ -26,6 +26,7 @@ public class GraphPane extends JPanel {
 	int actualCenter[] = new int [] { 0, 0};
 	int actualMax[] = new int[] { 0, 0 };
 	Dimension zoomPreference;
+	Dimension visibleSize;
 	boolean isScaling;
 	
 	/**
@@ -39,7 +40,7 @@ public class GraphPane extends JPanel {
 		this.turtleImg = getToolkit().createImage( "icons/turtle.png" );
 		
 		this.zoomPreference = new Dimension( 0, 0 );
-		
+		this.visibleSize = new Dimension( 0, 0);
 		this.isScaling = false;
 		
 		this.setVisible( true );
@@ -58,17 +59,17 @@ public class GraphPane extends JPanel {
 		actualCenter[0] = ( int ) ( this.getWidth() / 2.0 );
 		actualCenter[1] = ( int ) ( this.getHeight() / 2.0 );
 		
-//		if ( isScaling ){
-//			System.out.println( this.zoomPreference );
-//			double zoomFactor = (double) this.zoomPreference.width / this.getPreferredSize().width;
-//			
-//			if ( zoomFactor > ( (double) this.zoomPreference.height / this.getPreferredSize().height ) ){
-//				zoomFactor =  (double) this.zoomPreference.height / this.getPreferredSize().height;
-//			}
-//			System.out.println( zoomFactor );
-//			g2d.scale( zoomFactor, zoomFactor);
-//			this.setPreferredSize( this.zoomPreference );
-//		}
+		if ( isScaling ){
+			System.out.println( this.zoomPreference );
+			double zoomFactor = (double) this.visibleSize.width / this.getPreferredSize().width;
+			
+			if ( zoomFactor > ( (double) this.visibleSize.height / this.getPreferredSize().height ) ){
+				zoomFactor =  (double) this.visibleSize.height / this.getPreferredSize().height;
+			}
+			System.out.println( zoomFactor );
+			g2d.scale( zoomFactor, zoomFactor);
+			this.setPreferredSize( this.zoomPreference );
+		}
 		
 		// draw History
 		for( int i = 1; i < ( turtlePosHistory.size() ); i++ ){
@@ -164,6 +165,10 @@ public class GraphPane extends JPanel {
 	public void turtleReset(){
 		this.turtleColorHistory.add( Color.BLACK );
 		this.turtleVisibleHistory.add( false );
+	}
+	
+	public void setVisibleSize( Dimension size ){
+		this.visibleSize = size.getSize();
 	}
 	
 	public void toggleZoom( Dimension zoom ){

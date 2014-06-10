@@ -47,8 +47,8 @@ public class Controller {
 				case "Save":	this.saveFile(); break;
 				case "Load":	this.loadFile(); break;
 				case "Reset":	this.resetProgram(); break;
-				case "Run":		this.startInterpreter(); 
-								try {
+				case "Run":		try {
+									this.startInterpreter(); 
 									interpreter.run();
 								}
 								catch (InterpreterException e) {
@@ -56,8 +56,8 @@ public class Controller {
 									System.out.println( e.getMessage() );
 								}
 								break;
-				case "Step":	this.startInterpreter();
-								try {
+				case "Step":	try {
+									this.startInterpreter();
 									interpreter.step();
 								}
 								catch (InterpreterException e) {
@@ -94,9 +94,10 @@ public class Controller {
 	}
 	
 		
-	public void startInterpreter(){
+	public void startInterpreter() throws InterpreterException{
 		ArrayList<ArrayList<String>> parsedCommands;
 		try {
+			System.out.println( "Active: " + interpreter.isActive() );
 			if( ! interpreter.isActive() ){
 				this.removeError();
 				parsedCommands = this.parser.parse( this.gui.getEditorText() );

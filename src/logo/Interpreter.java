@@ -9,6 +9,7 @@ public class Interpreter {
 	private ArrayList<Object> loop = new ArrayList<Object>();
 	private HashMap<String,Integer> variables = new HashMap<String,Integer>();
 	private int currentLine = 0;
+	private int globalLinePosition = 0;
 	private boolean active = false;
 	private Controller control;
 	
@@ -16,8 +17,9 @@ public class Interpreter {
 	/**
 	 * @param control
 	 * @param parsedCommands
+	 * @throws InterpreterException 
 	 */
-	public Interpreter( Controller control, ArrayList<ArrayList<String>> parsedCommands ){
+	public Interpreter( Controller control, ArrayList<ArrayList<String>> parsedCommands ) throws InterpreterException{
 		this.setParsedCommands( parsedCommands );
 		this.control = control;
 		this.setActive( true );
@@ -49,7 +51,9 @@ public class Interpreter {
 			
 			Interpreter loopInterpreter = (Interpreter) loop.get( 0 );
 			loopInterpreter.variables = this.variables;
+			
 			loopInterpreter.step();
+			
 			this.variables = loopInterpreter.variables;
 
 			if( ! loopInterpreter.isActive() ){
@@ -72,9 +76,17 @@ public class Interpreter {
 		else {
 			int line = this.getCurrentLine();
 			
-			this.executeCommand( this.getParsedCommands().get( line ) );
-						
+			try{
+				this.executeCommand( this.getParsedCommands().get( line ) );
+			}
+			catch (Throwable t) {
+				this.setActive( false );
+				throw new InterpreterException( t.getMessage() ); 
+			} 
+			
+		
 			int lineAfterExec = this.getCurrentLine();
+			
 			
 			line++;
 			// check if a repeat has manipulated the position
@@ -116,6 +128,9 @@ public class Interpreter {
 			case "let":			this.let( parameters ); break;
 			case "increment":	this.increment( parameters ); break;
 			case "decrement":	this.decrement( parameters ); break;
+			
+			default: throw new InterpreterException( "Command " + commandName + " unknown." );
+					 
 		}
 	}
 	
@@ -190,11 +205,18 @@ public class Interpreter {
 			
 			int line = this.getCurrentLine();
 			
+			
 			ArrayList<ArrayList<String>> allCommands = this.getParsedCommands();
 			ArrayList<ArrayList<String>> loopCommands = new ArrayList<ArrayList<String>>();
 		
 			int loopStart = 0;
 			// next line after "repeat X"
+			
+			if( ( allCommands.size() - 1 ) <= ( line + 1 ) ){
+				throw new InterpreterException( "Unknown looptype at line " + ( this.globalLinePosition + this.getCurrentLine() + 1 ) );
+			}
+			
+			
 			line++;
 			
 			int inLoop = 0;
@@ -220,14 +242,15 @@ public class Interpreter {
 			while( inLoop > 0 && line < allCommands.size() );
 			
 			if( loopStart < 1 ){
-				throw new InterpreterException( "Can't find start of loop." );
+				throw new InterpreterException( "Can't find start of loop." + ( this.globalLinePosition + this.getCurrentLine() + 1 ) );
 			}
 			else if( ( line - 1 ) == loopStart ){
-				throw new InterpreterException( "Empty Loop" );
+				throw new InterpreterException( "Empty loop error at line " + ( this.globalLinePosition + this.getCurrentLine() + 1 ) );
 			}
 			
-			Interpreter loopInterpreter = new Interpreter( this.control, loopCommands );
 			
+			Interpreter loopInterpreter = new Interpreter( this.control, loopCommands );
+			loopInterpreter.globalLinePosition = loopStart + this.globalLinePosition;
 			this.loop.add( loopInterpreter );
 			this.loop.add( loopRuns );
 			
@@ -312,10 +335,10 @@ public class Interpreter {
 				return true;
 		}
 		else if( parameterSize > size ){
-			throw new InterpreterException( "Too many parameters in Line " + ( this.getCurrentLine() + 1 ) );
+			throw new InterpreterException( "Too many parameters at line" + this.getCurrentPosition() );
 		}
 		else {
-			throw new InterpreterException( "Too less parameters in Line " + ( this.getCurrentLine() + 1 ) );
+			throw new InterpreterException( "Too less parameters at line" + this.getCurrentPosition() );
 		}
 	}
 	
@@ -326,11 +349,17 @@ public class Interpreter {
 	 * @throws InterpreterException
 	 */
 	private void addVariable( String key, int value ) throws InterpreterException {
-		if( ! variables.containsKey( key ) && ! isNumeric( key ) ){
-			variables.put( key, value );
+		if( ! isNumeric( key ) ){
+			if( ! variables.containsKey( key ) ){
+				variables.put( key, value );
+			}
+			else {
+				updateVariableValue( key, value );
+			}
+			
 		}
 		else {
-			throw new InterpreterException( "Variable exists or your name is a number. Line " + ( this.getCurrentLine() + 1 ) );
+			throw new InterpreterException( "Variable exists or your name is a number. Line " + this.getCurrentPosition() );
 		}
 	}
 	
@@ -345,7 +374,7 @@ public class Interpreter {
 			return variables.get( key );
 		}
 		else {
-			throw new InterpreterException( "No Variable with " + key + " found. Line " + ( this.getCurrentLine() + 1 ) );
+			throw new InterpreterException( "No Variable with " + key + " found. Line " + this.getCurrentPosition() );
 		}
 	}
 	
@@ -364,7 +393,7 @@ public class Interpreter {
 				return Integer.parseInt( value );
 			}
 			catch( NumberFormatException e ){
-				throw new InterpreterException( "Value is no Number. Line " + ( this.getCurrentLine() + 1 ) );
+				throw new InterpreterException( "Value is no Number. Line " + this.getCurrentPosition() );
 			}
 		}
 	}
@@ -380,7 +409,7 @@ public class Interpreter {
 			this.variables.put( key, value );
 		}
 		else {
-			throw new InterpreterException( "No Variable with " + key + " found. Line " + ( this.getCurrentLine() + 1 ) );
+			throw new InterpreterException( "No Variable with " + key + " found. Line " + this.getCurrentPosition() );
 		}
 	}
 	
@@ -391,7 +420,7 @@ public class Interpreter {
 	 */
 	public static boolean isNumeric( String value ){  
 		try {  
-			Double.parseDouble( value );  
+			Double.parseDouble( value );
 		}  
 		catch( NumberFormatException nfe ) {  
 			return false;  
@@ -400,8 +429,12 @@ public class Interpreter {
 	}
 	
 
-	public int getCurrentLine() {
+	private int getCurrentLine() {
 		return currentLine;
+	}
+	
+	public int getCurrentPosition(){
+		return ( this.globalLinePosition + this.getCurrentLine() ) + 1;
 	}
 	
 	
@@ -424,8 +457,13 @@ public class Interpreter {
 	}
 
 	
-	private void setParsedCommands( ArrayList<ArrayList<String>> parsedCommands ) {
-		this.parsedCommands = parsedCommands;
+	private void setParsedCommands( ArrayList<ArrayList<String>> parsedCommands ) throws InterpreterException {
+		if( parsedCommands.size() > 0 ){
+			this.parsedCommands = parsedCommands;
+		}
+		else {
+			throw new InterpreterException( "Error: Empty File" );
+		}
 	}
 
 	
@@ -443,7 +481,7 @@ public class Interpreter {
 		String output = "";
 		output += "Interpreter:\n"
 				+ "Active: " + this.isActive() + "\n"
-				+ "Current Line: " + this.getCurrentLine() + "\n"
+				+ "Current Line: " + this.getCurrentPosition() + "\n"
 				+ "Commands: " + this.getParsedCommands() + "\n";
 		
 		return output;

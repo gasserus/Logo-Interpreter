@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -111,7 +112,7 @@ public class Gui extends JFrame implements ActionListener {
 		}
 		 
 		//********************************************** add JSlider for Speed with Labels 
-		this.speed = new JSlider( JSlider.HORIZONTAL, this.MINIMUM_SPEED, this.MAXIMUM_SPEED, 10 );;
+		this.speed = new JSlider( JSlider.HORIZONTAL, this.MINIMUM_SPEED, this.MAXIMUM_SPEED, 0 );
 		this.speed.setMinorTickSpacing( 1 );
 		this.speed.setPaintTicks( true );
 		Hashtable<Integer, JLabel> labels = new Hashtable<Integer, JLabel>();
@@ -247,7 +248,11 @@ public class Gui extends JFrame implements ActionListener {
 		this.graph.toggleZoom( this.graph.getSize() );
 	}
 	
-
+	public void paint( Graphics g ){
+		super.paintComponents( g );
+		this.graph.setVisibleSize( this.graph.getSize() );
+		
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		for( int i = 0; i < CONTROL_BUTTONS.length; i++ ){
