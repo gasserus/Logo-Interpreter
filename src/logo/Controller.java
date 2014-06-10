@@ -15,7 +15,6 @@ public class Controller {
 	
 	public Controller(){
 		this.gui = new Gui();
-		this.interpreter = new Interpreter( this );
 		this.parser = new Parser();
 		this.fileHandler = new FileHandler();
 		
@@ -43,8 +42,8 @@ public class Controller {
 				case "Save": this.saveFile(); break;
 				case "Load": this.loadFile(); break;
 				case "Reset": this.resetProgram(); break;
-				case "Run": this.startInterpreter( false ); break;
-				case "Step": this.startInterpreter( true ); break;
+				case "Run": this.startInterpreter(); interpreter.run(); break;
+				case "Step": this.startInterpreter(); interpreter.step(); break;
 				case "Clear": this.gui.clearGraph(); break;
 				case "New": this.newProgram(); break;
 				
@@ -73,10 +72,21 @@ public class Controller {
 		this.turtle.reset();
 	}
 	
-	
-	public void startInterpreter( boolean step ){
-		this.removeError();
-		this.interpreter.interpret( step );
+		
+	public void startInterpreter(){
+		ArrayList<ArrayList<String>> parsedCommands;
+		try {
+			if( ! interpreter.isActive() ){
+				this.removeError();
+				parsedCommands = this.parser.parse( this.gui.getEditorText() );
+				interpreter = new Interpreter( this, parsedCommands );
+			}
+		}
+		catch( NullPointerException e ){
+			this.removeError();
+			parsedCommands = this.parser.parse( this.gui.getEditorText() );
+			interpreter = new Interpreter( this, parsedCommands );
+		}
 	}
 	
 	

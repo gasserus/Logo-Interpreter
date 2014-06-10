@@ -4,325 +4,337 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-
 public class Interpreter {
-	private Controller control;
+	private ArrayList<ArrayList<String>> parsedCommands;
+	private ArrayList<Object> loop = new ArrayList<Object>();
+	private HashMap<String,Integer> variables = new HashMap<String,Integer>();
 	private int currentLine = 0;
-	private ArrayList<ArrayList<String>> allCommands;
-	private ArrayList<ArrayList<Integer>> loops = new ArrayList<ArrayList<Integer>>();
-	private HashMap<String,Integer> logoVariables = new HashMap<String,Integer>();
-	private int stepIndex = 0;
+	private boolean active = false;
+	private Controller control;
 	
-	public Interpreter( Controller control ){
+	public Interpreter( Controller control, ArrayList<ArrayList<String>> parsedCommands ){
+		this.setParsedCommands( parsedCommands );
 		this.control = control;
+		this.setActive( true );
 	}
 	
-	public void interpret( boolean step ){
+	public void run() {
+		while( this.isActive() ){
+			this.step();
+		}
+	}
+	
+	public void step( ) {
 
-		// step by step
-		if( step == true ){
-			if( currentLine == 0 ){
-				System.out.println( "RESET STEPPER" );
-				allCommands = control.parse();
-				this.logoVariables.clear();
-				currentLine = 0;
-				stepIndex = 0;
+		if( ! this.loop.isEmpty() ){
+			int runs = (Integer) loop.get( 1 );
+			
+			Interpreter loopInterpreter = (Interpreter) loop.get( 0 );
+			loopInterpreter.variables = this.variables;
+			loopInterpreter.step();
+			this.variables = loopInterpreter.variables;
+
+			if( ! loopInterpreter.isActive() ){
+				runs--;
+				loopInterpreter.setActive( true );
 			}
-			
-			System.out.println( "STEPINDEX: " + stepIndex );
-			
-			if( stepIndex <= allCommands.size() - 1  ){
-				currentLine = stepIndex;
-				checkLoops();
-				stepIndex = currentLine;
-				System.out.println( stepIndex + " < " + allCommands.size() );
-				if( stepIndex < allCommands.size() ){
-					this.executeCommand( 0 );
-				}
 				
-				stepIndex++;
-				currentLine++;
-			}
+			if( runs < 1 ){
+				// loop is finished
+				loop.clear();
+				if( this.getCurrentLine() == 0 ){
+					this.setActive( false );
+				}
+			} 
 			else {
-				// start again
-				currentLine = 0;
-				interpret( true );
+				// save new runs
+				loop.set( 1, runs );
 			}
-			
 		}
 		else {
-			allCommands = control.parse();
-			this.logoVariables.clear();
-			currentLine = 0;
+			int line = this.getCurrentLine();
 			
-			for( int index = 0; index < allCommands.size(); index++ ){
-				currentLine = index;
-				checkLoops();
-				index = currentLine;
-				System.out.println( index + " < " + allCommands.size() );
-				if( index < allCommands.size() ){
-					this.executeCommand( this.control.getProgrammSpeedinMs() );
+			this.executeCommand( this.getParsedCommands().get( line ) );
+						
+			int lineAfterExec = this.getCurrentLine();
+			
+			line++;
+			// check if a repeat has manipulated the position
+			if( lineAfterExec > line ){
+				this.setCurrentLine( lineAfterExec +1 );
+				this.setActive( true );
+			}
+			else {
+				this.setCurrentLine( line );
+			}
+		}
+	}
+	
+	
+	public void executeCommand( ArrayList<String> command ) {
+		// get the first element, because this should be the command
+		String commandName = command.get( 0 );
+		ArrayList<String> parameters = (ArrayList<String>) command.clone();
+		parameters.remove( 0 );
+		
+		System.out.println( "COMMAND: " + commandName );
+		
+		switch( commandName ){
+			case "forward": 	this.forward( parameters ); break;
+			case "backward": 	this.backward( parameters ); break;
+			case "left": 		this.left( parameters ); break;
+			case "right": 		this.right( parameters ); break;
+			case "reset": 		this.reset(); break;
+			case "clear": 		this.clear(); break;
+			case "pendown": 	this.pendown(); break;
+			case "penup": 		this.penup(); break;
+			case "setcolor": 	this.setcolor( parameters ); break;
+			case "repeat":		this.repeat( parameters ); break;
+			case "let":			this.let( parameters ); break;
+			case "increment":	this.increment( parameters ); break;
+			case "decrement":	this.decrement( parameters ); break;
+		}
+	}
+	
+	
+	private void forward( ArrayList<String> parameter ) {
+		if( checkParameterSize( parameter, 1 ) ){
+				int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
+				this.control.move( parameterValue );
+		}
+	}
+	
+	
+	private void backward( ArrayList<String> parameter ){
+		if( checkParameterSize( parameter, 1 ) ){
+				int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
+				this.control.move( - parameterValue );
+		}
+	}
+	
+	
+	private void left( ArrayList<String> parameter ){
+		if( checkParameterSize( parameter, 1 ) ){
+				int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
+				this.control.turn( parameterValue );
+		}
+	}
+	
+	
+	private void right( ArrayList<String> parameter ){
+		if( checkParameterSize( parameter, 1 ) ){
+				int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
+				this.control.turn( - parameterValue );
+		}
+	}
+	
+	
+	private void setcolor( ArrayList<String> parameter ) {
+		if( checkParameterSize( parameter, 1 ) ){
+				int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
+				this.control.changeColor( parameterValue );
+		}
+	}
+	
+	
+	private void repeat( ArrayList<String> parameter ){
+		if( checkParameterSize( parameter, 1 ) ){
+			int loopRuns = this.parseValueForVariables( parameter.get( 0 ) );
+			
+			int line = this.getCurrentLine();
+			
+			ArrayList<ArrayList<String>> allCommands = this.getParsedCommands();
+			ArrayList<ArrayList<String>> loopCommands = new ArrayList<ArrayList<String>>();
+		
+			// next line after "repeat X"
+			line++;
+			
+			int inLoop = 0;
+			do {
+				if( allCommands.get( line ).get(0).equals( "[" ) ){
+					// count all [ because of innerloops
+					inLoop++;
+					if( inLoop == 1 ){
+						line++;
+					}
+				}
+				else if( inLoop > 0 && allCommands.get( line ).get(0).equals( "]" ) ){
+					inLoop--;
 				}
 				
-			}
-		}
-		
-	}
-	
-	private void checkLoops(){
-		System.out.println( "Loop empty: "+!loops.isEmpty() );
-		if( !loops.isEmpty() ){
-			
-			int amountLoops = loops.size() - 1;
-			
-			int loopStart = loops.get( amountLoops ).get( 0 );
-			int loopEnd = loops.get( amountLoops ).get( 1 );
-			int loopCount = loops.get( amountLoops ).get( 2 );
-			int loopPointer = loops.get( amountLoops ).get( 3 );
-			
-			if( currentLine < loopPointer ){
-				currentLine = loopPointer;
-			}
-
-			if( loopEnd == currentLine && ( loopCount - 1 ) <= 0 ){
-				loops.remove( amountLoops );
-				currentLine = loopEnd + 1;
-				
-				if( amountLoops > 0 ){
-					checkLoops();
+				if( inLoop > 0 ){
+					loopCommands.add( allCommands.get( line ) );
 				}
 				
+				line++;
 			}
-			else if( loopEnd == currentLine && loopCount > 0 ){
-				currentLine = loopStart;
-				loops.get( amountLoops ).set( 2 , --loopCount );
-			}
-		}
-	}
-	
-	
-	private void executeCommand( int time ){
-		try {
-		    Thread.sleep( time );
-		} catch(InterruptedException ex) {
-		    Thread.currentThread().interrupt();
-		}
-		
-		String command = allCommands.get( currentLine ).get( 0 );
-		boolean success = false;
-		
-		switch( command ){
-		case "forward": 	success = this.forward( allCommands.get( currentLine ) ); break;
-		case "backward": 	success = this.backward( allCommands.get( currentLine ) ); break;
-		case "left": 		success = this.left( allCommands.get( currentLine ) ); break;
-		case "right": 		success = this.right( allCommands.get( currentLine ) ); break;
-		case "repeat":		success = this.repeat(); break;
-		case "reset": 		success = this.reset(); break;
-		case "clear": 		success = this.clear(); break;
-		case "pendown": 	success = this.pendown(); break;
-		case "penup": 		success = this.penup(); break;
-		case "setcolor": 	success = this.setcolor( allCommands.get( currentLine ) ); break;
-		case "let":			success = this.let( allCommands.get( currentLine ) ); break;
-		case "increment":	success = this.increment( allCommands.get( currentLine ) ); break;
-		case "decrement":	success = this.decrement( allCommands.get( currentLine ) ); break;
-		
-		default: control.sendError( currentLine + ". Line. Unknown Command: "+ command);
-		}
-		
-		if( success == false ){
-			control.sendError( currentLine + ". Line. Error with command: " + command );
-		}
-		
-	}
-	
-	private boolean repeat(){
-
-		if( allCommands.get( currentLine ).size() < 2 ){
-			return false;
-		}
-		
-		int loopRuns = getValue( allCommands.get( currentLine ),  1 );
-		int loopStart = 0;
-		int loopEnd = 0;
-		
-		// next line after "repeat X"
-		currentLine++;
-		
-		int inLoop = 0;
-		do {
-			if( allCommands.get( currentLine ).get(0).equals( "[" ) ){
-				// count all [ because of innerloops
-				inLoop++;
-				if( inLoop == 1 ){
-					currentLine++;
-					loopStart = currentLine;
-				}
-			}
-			else if( inLoop > 0 && allCommands.get( currentLine ).get(0).equals( "]" ) ){
-				inLoop--;	
-				if( inLoop == 0 ){
-					loopEnd = currentLine;
-				}
-			}
+			while( inLoop > 0 && line < allCommands.size() );
 			
-			currentLine++;
+			Interpreter loopInterpreter = new Interpreter( this.control, loopCommands );
+			
+			this.loop.add( loopInterpreter );
+			this.loop.add( loopRuns );
+			
+
+			
+			// set line pointer to ] of loop
+			this.setCurrentLine( line - 1);
+			this.setActive( true );
 		}
-		while( inLoop > 0 && currentLine < allCommands.size() );
-		
-		if( loopStart == 0 || loopRuns == 0 ){
-			return false;
-		}
-		
-		ArrayList<Integer> loop = new ArrayList<Integer>();
-		
-		loop.add( loopStart );
-		loop.add( loopEnd );
-		loop.add( loopRuns );
-		loop.add( loopStart );
-		
-		loops.add( loop );
-				
-		System.out.println("ADD LOOP");
-		
-		return true;
 	}
 	
 	
-	private boolean setcolor( ArrayList<String> parameter ) {
-		
-		if( parameter.size() == 2 ){
-			int setValue = getValue( parameter, 1 );
-			if( setValue >= 0 && setValue <= 3 ){
-				this.control.changeColor( setValue );
-				return true;
-			}
+	private void let( ArrayList<String> parameter ){
+		if( checkParameterSize( parameter, 2 ) ){
+				String name = parameter.get( 0 );
+				int value = this.parseValueForVariables( parameter.get( 1 ) );
+				this.addVariable( name, value );
 		}
-		
-		return false;
+	}
+	
+
+	private void increment( ArrayList<String> parameter ){
+		if( checkParameterSize( parameter, 2 ) ){
+				String name = parameter.get( 0 );
+				int value = this.parseValueForVariables( parameter.get( 1 ) );
+				int variableValue = getVariableValue( name );
+				updateVariableValue( name, ( variableValue + value ) );
+		}
+	}
+	
+	
+	private void decrement( ArrayList<String> parameter ){
+		if( checkParameterSize( parameter, 2 ) ){
+				String name = parameter.get( 0 );
+				int value = this.parseValueForVariables( parameter.get( 1 ) );
+				int variableValue = getVariableValue( name );
+				this.updateVariableValue( name, ( variableValue - value ) );
+		}
 	}
 
 
-	private boolean penup() {
+	private void penup() {
 		this.control.penDown( false );
-		return true;
 	}
 
 
-	private boolean pendown() {
+	private void pendown() {
 		this.control.penDown( true );
-		return true;
 	}
 
 
-	private boolean clear() {
+	private void clear() {
 		this.control.clearProgram();
-		return true;
 	}
 
 	
-	private boolean reset() {
+	private void reset() {
 		this.control.resetTurtle();
-		return true;
 	}
-
 	
-	private boolean let( ArrayList<String> parameter ){
+	
+	private boolean checkParameterSize( ArrayList<String> parameter, int size ) {
+		int parameterSize = parameter.size();
 		
-		if( parameter.size() == 3 && !logoVariables.containsKey( parameter.get( 1 ) ) ){
-
-			logoVariables.put( parameter.get( 1 ) , getValue( parameter, 2 ) );
-			
-			return true;
+		if( parameterSize == size ){
+				return true;
+		}
+		else if( parameterSize > size ){
+			// throw exception
+		}
+		else {
+			// throw exception
 		}
 		return false;
 	}
 	
-	private int getValue( ArrayList<String> parameter, int index ){
-		
-		int setValue;
-		if( logoVariables.containsKey( parameter.get( index ) ) ){
-			setValue = logoVariables.get( parameter.get( index ) );
+	
+	private void addVariable( String key, int value ) {
+		if( ! variables.containsKey( key ) && ! isNumeric( key ) ){
+			variables.put( key, value );
+		}
+		else {
+			// throw error
+		}
+	}
+	
+
+	private int getVariableValue( String key ){
+		if( variables.containsKey( key ) ){
+			return variables.get( key );
+		}
+		else {
+			// throw error
+		}
+		return 0;
+	}
+	
+	private int parseValueForVariables( String value ){
+		if( this.variables.containsKey( value ) ){
+			return this.variables.get( value );
 		}
 		else {
 			try {
-				setValue = Integer.parseInt( parameter.get( index ) );
+				return Integer.parseInt( value );
 			}
 			catch( NumberFormatException e ){
-				setValue = 0;
+				// throw error
+				return 0;
 			}
 		}
-		
-		return setValue;
+	}
+	
+	private void updateVariableValue( String key, int value ) {
+		if( this.variables.containsKey( key ) ){
+			this.variables.put( key, value );
+			System.out.println( variables );
+		}
+		else {
+			// throw error
+		}
 	}
 	
 	
-	private boolean increment( ArrayList<String> parameter ){
-		
-		if( parameter.size() == 3 && logoVariables.containsKey( parameter.get( 1 ) ) ){
+	public static boolean isNumeric( String value ){  
+		try {  
+			double d = Double.parseDouble( value );  
+		}  
+		catch( NumberFormatException nfe ) {  
+			return false;  
+		}  
+		return true;  
+	}
+	
 
-			int actualValue = logoVariables.get( parameter.get( 1 ) );
-			
-			logoVariables.put( parameter.get( 1 ) , actualValue + getValue( parameter, 2 ) );
-			
-			return true;
-		}
-		return false;
-	}
-	
-	
-	private boolean decrement( ArrayList<String> parameter ){
-		
-		if( parameter.size() == 3 && logoVariables.containsKey( parameter.get( 1 ) ) ){
-			
-			int actualValue = logoVariables.get( parameter.get( 1 ) );
-			
-			logoVariables.put( parameter.get( 1 ) , actualValue - getValue( parameter, 2 ) );
-			
-			return true;
-		}
-		return false;
-	}
-
-	private boolean forward( ArrayList<String> parameter ){
-		
-		if( parameter.size() == 2 ){
-			this.control.move( getValue( parameter, 1 ) );
-			return true;
-		}
-		return false;
-	}
-	
-	
-	private boolean left( ArrayList<String> parameter ){
-
-		
-		if( parameter.size() == 2 ){
-			this.control.turn( getValue( parameter, 1 ) );
-			return true;
-		}
-		return false;
-	}
-	
-	private boolean right( ArrayList<String> parameter ){
-		if( parameter.size() == 2 ){
-			this.control.turn( - getValue( parameter, 1 ) );
-			return true;
-		}
-		return false;
-	}
-	
-	
-	private boolean backward( ArrayList<String> parameter ){
-		
-		if( parameter.size() == 2 ){		
-			this.control.move( - getValue( parameter, 1 ) );
-			return true;
-		}
-		return false;
-	}
-	
-	public int getCurrentPosition(){
+	public int getCurrentLine() {
 		return currentLine;
 	}
+	
+	public void setCurrentLine( int newCurrentLine ){
+		if( this.getParsedCommands().size() > newCurrentLine ){
+			this.currentLine = newCurrentLine;
+		}
+		else {
+			this.currentLine = 0;
+			this.setActive( false );
+		}
+	}
+
+	private ArrayList<ArrayList<String>> getParsedCommands() {
+		return parsedCommands;
+	}
+
+	private void setParsedCommands( ArrayList<ArrayList<String>> parsedCommands ) {
+		this.parsedCommands = parsedCommands;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+	
+	private void setActive( boolean active ) {
+		this.active = active;
+	}
+	
 
 }
