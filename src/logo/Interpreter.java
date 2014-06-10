@@ -12,19 +12,37 @@ public class Interpreter {
 	private boolean active = false;
 	private Controller control;
 	
+	
+	/**
+	 * @param control
+	 * @param parsedCommands
+	 */
 	public Interpreter( Controller control, ArrayList<ArrayList<String>> parsedCommands ){
 		this.setParsedCommands( parsedCommands );
 		this.control = control;
 		this.setActive( true );
 	}
 	
-	public void run() {
+	
+	/**
+	 * @throws InterpreterException
+	 */
+	public void run() throws InterpreterException{
 		while( this.isActive() ){
+			try {
+			    Thread.sleep( this.control.getProgrammSpeedinMs() );
+			} catch(InterruptedException ex) {
+			    Thread.currentThread().interrupt();
+			}
 			this.step();
 		}
 	}
 	
-	public void step( ) {
+	
+	/**
+	 * @throws InterpreterException
+	 */
+	public void step() throws InterpreterException{
 
 		if( ! this.loop.isEmpty() ){
 			int runs = (Integer) loop.get( 1 );
@@ -71,10 +89,17 @@ public class Interpreter {
 	}
 	
 	
-	public void executeCommand( ArrayList<String> command ) {
+	/**
+	 * @param command
+	 * @throws InterpreterException
+	 */
+	public void executeCommand( ArrayList<String> command ) throws InterpreterException{
 		// get the first element, because this should be the command
 		String commandName = command.get( 0 );
+		
+		@SuppressWarnings("unchecked")
 		ArrayList<String> parameters = (ArrayList<String>) command.clone();
+		
 		parameters.remove( 0 );
 		
 		System.out.println( "COMMAND: " + commandName );
@@ -97,7 +122,11 @@ public class Interpreter {
 	}
 	
 	
-	private void forward( ArrayList<String> parameter ) {
+	/**
+	 * @param parameter
+	 * @throws InterpreterException
+	 */
+	private void forward( ArrayList<String> parameter ) throws InterpreterException{
 		if( checkParameterSize( parameter, 1 ) ){
 				int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
 				this.control.move( parameterValue );
@@ -105,7 +134,11 @@ public class Interpreter {
 	}
 	
 	
-	private void backward( ArrayList<String> parameter ){
+	/**
+	 * @param parameter
+	 * @throws InterpreterException
+	 */
+	private void backward( ArrayList<String> parameter ) throws InterpreterException{
 		if( checkParameterSize( parameter, 1 ) ){
 				int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
 				this.control.move( - parameterValue );
@@ -113,7 +146,11 @@ public class Interpreter {
 	}
 	
 	
-	private void left( ArrayList<String> parameter ){
+	/**
+	 * @param parameter
+	 * @throws InterpreterException
+	 */
+	private void left( ArrayList<String> parameter ) throws InterpreterException{
 		if( checkParameterSize( parameter, 1 ) ){
 				int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
 				this.control.turn( parameterValue );
@@ -121,7 +158,11 @@ public class Interpreter {
 	}
 	
 	
-	private void right( ArrayList<String> parameter ){
+	/**
+	 * @param parameter
+	 * @throws InterpreterException
+	 */
+	private void right( ArrayList<String> parameter ) throws InterpreterException{
 		if( checkParameterSize( parameter, 1 ) ){
 				int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
 				this.control.turn( - parameterValue );
@@ -129,7 +170,11 @@ public class Interpreter {
 	}
 	
 	
-	private void setcolor( ArrayList<String> parameter ) {
+	/**
+	 * @param parameter
+	 * @throws InterpreterException
+	 */
+	private void setcolor( ArrayList<String> parameter ) throws InterpreterException{
 		if( checkParameterSize( parameter, 1 ) ){
 				int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
 				this.control.changeColor( parameterValue );
@@ -137,7 +182,11 @@ public class Interpreter {
 	}
 	
 	
-	private void repeat( ArrayList<String> parameter ){
+	/**
+	 * @param parameter
+	 * @throws InterpreterException
+	 */
+	private void repeat( ArrayList<String> parameter ) throws InterpreterException{
 		if( checkParameterSize( parameter, 1 ) ){
 			int loopRuns = this.parseValueForVariables( parameter.get( 0 ) );
 			
@@ -146,6 +195,7 @@ public class Interpreter {
 			ArrayList<ArrayList<String>> allCommands = this.getParsedCommands();
 			ArrayList<ArrayList<String>> loopCommands = new ArrayList<ArrayList<String>>();
 		
+			int loopStart = 0;
 			// next line after "repeat X"
 			line++;
 			
@@ -156,6 +206,7 @@ public class Interpreter {
 					inLoop++;
 					if( inLoop == 1 ){
 						line++;
+						loopStart = line;
 					}
 				}
 				else if( inLoop > 0 && allCommands.get( line ).get(0).equals( "]" ) ){
@@ -170,12 +221,14 @@ public class Interpreter {
 			}
 			while( inLoop > 0 && line < allCommands.size() );
 			
+			if( loopStart < 1 ){
+				throw new InterpreterException( "Can't find start of loop." );
+			}
+			
 			Interpreter loopInterpreter = new Interpreter( this.control, loopCommands );
 			
 			this.loop.add( loopInterpreter );
 			this.loop.add( loopRuns );
-			
-
 			
 			// set line pointer to ] of loop
 			this.setCurrentLine( line - 1);
@@ -184,7 +237,11 @@ public class Interpreter {
 	}
 	
 	
-	private void let( ArrayList<String> parameter ){
+	/**
+	 * @param parameter
+	 * @throws InterpreterException
+	 */
+	private void let( ArrayList<String> parameter ) throws InterpreterException{
 		if( checkParameterSize( parameter, 2 ) ){
 				String name = parameter.get( 0 );
 				int value = this.parseValueForVariables( parameter.get( 1 ) );
@@ -193,7 +250,11 @@ public class Interpreter {
 	}
 	
 
-	private void increment( ArrayList<String> parameter ){
+	/**
+	 * @param parameter
+	 * @throws InterpreterException
+	 */
+	private void increment( ArrayList<String> parameter ) throws InterpreterException{
 		if( checkParameterSize( parameter, 2 ) ){
 				String name = parameter.get( 0 );
 				int value = this.parseValueForVariables( parameter.get( 1 ) );
@@ -203,7 +264,11 @@ public class Interpreter {
 	}
 	
 	
-	private void decrement( ArrayList<String> parameter ){
+	/**
+	 * @param parameter
+	 * @throws InterpreterException
+	 */
+	private void decrement( ArrayList<String> parameter ) throws InterpreterException{
 		if( checkParameterSize( parameter, 2 ) ){
 				String name = parameter.get( 0 );
 				int value = this.parseValueForVariables( parameter.get( 1 ) );
@@ -233,43 +298,63 @@ public class Interpreter {
 	}
 	
 	
-	private boolean checkParameterSize( ArrayList<String> parameter, int size ) {
+	/**
+	 * @param parameter
+	 * @param size
+	 * @return
+	 * @throws InterpreterException
+	 */
+	private boolean checkParameterSize( ArrayList<String> parameter, int size ) throws InterpreterException {
 		int parameterSize = parameter.size();
 		
 		if( parameterSize == size ){
 				return true;
 		}
 		else if( parameterSize > size ){
-			// throw exception
+			throw new InterpreterException( "Too many parameters in Line " + ( this.getCurrentLine() + 1 ) );
 		}
 		else {
-			// throw exception
+			throw new InterpreterException( "Too less parameters in Line " + ( this.getCurrentLine() + 1 ) );
 		}
-		return false;
 	}
 	
 	
-	private void addVariable( String key, int value ) {
+	/**
+	 * @param key
+	 * @param value
+	 * @throws InterpreterException
+	 */
+	private void addVariable( String key, int value ) throws InterpreterException {
 		if( ! variables.containsKey( key ) && ! isNumeric( key ) ){
 			variables.put( key, value );
 		}
 		else {
-			// throw error
+			throw new InterpreterException( "Variable exists or your name is a number. Line " + ( this.getCurrentLine() + 1 ) );
 		}
 	}
 	
 
-	private int getVariableValue( String key ){
+	/**
+	 * @param key
+	 * @return
+	 * @throws InterpreterException
+	 */
+	private int getVariableValue( String key ) throws InterpreterException{
 		if( variables.containsKey( key ) ){
 			return variables.get( key );
 		}
 		else {
-			// throw error
+			throw new InterpreterException( "No Variable with " + key + " found. Line " + ( this.getCurrentLine() + 1 ) );
 		}
-		return 0;
 	}
 	
-	private int parseValueForVariables( String value ){
+	
+	/**
+	 * @param value
+	 * @return
+	 * @throws InterpreterException
+	 */
+	private int parseValueForVariables( String value ) throws InterpreterException{
 		if( this.variables.containsKey( value ) ){
 			return this.variables.get( value );
 		}
@@ -278,26 +363,35 @@ public class Interpreter {
 				return Integer.parseInt( value );
 			}
 			catch( NumberFormatException e ){
-				// throw error
-				return 0;
+				throw new InterpreterException( "Value is no Number. Line " + ( this.getCurrentLine() + 1 ) );
 			}
 		}
 	}
 	
-	private void updateVariableValue( String key, int value ) {
+	
+	/**
+	 * @param key
+	 * @param value
+	 * @throws InterpreterException
+	 */
+	private void updateVariableValue( String key, int value ) throws InterpreterException {
 		if( this.variables.containsKey( key ) ){
 			this.variables.put( key, value );
 			System.out.println( variables );
 		}
 		else {
-			// throw error
+			throw new InterpreterException( "No Variable with " + key + " found. Line " + ( this.getCurrentLine() + 1 ) );
 		}
 	}
 	
 	
+	/**
+	 * @param value
+	 * @return
+	 */
 	public static boolean isNumeric( String value ){  
 		try {  
-			double d = Double.parseDouble( value );  
+			Double.parseDouble( value );  
 		}  
 		catch( NumberFormatException nfe ) {  
 			return false;  
@@ -310,6 +404,10 @@ public class Interpreter {
 		return currentLine;
 	}
 	
+	
+	/**
+	 * @param newCurrentLine
+	 */
 	public void setCurrentLine( int newCurrentLine ){
 		if( this.getParsedCommands().size() > newCurrentLine ){
 			this.currentLine = newCurrentLine;
@@ -320,21 +418,44 @@ public class Interpreter {
 		}
 	}
 
+	
 	private ArrayList<ArrayList<String>> getParsedCommands() {
 		return parsedCommands;
 	}
 
+	
 	private void setParsedCommands( ArrayList<ArrayList<String>> parsedCommands ) {
 		this.parsedCommands = parsedCommands;
 	}
 
+	
 	public boolean isActive() {
 		return active;
 	}
+	
 	
 	private void setActive( boolean active ) {
 		this.active = active;
 	}
 	
+	
+	public String toString(){
+		String output = "";
+		output += "Interpreter:\n"
+				+ "Active: " + this.isActive() + "\n"
+				+ "Current Line: " + this.getCurrentLine() + "\n"
+				+ "Commands: " + this.getParsedCommands() + "\n";
+		
+		return output;
+	}
+	
 
+	
+	@SuppressWarnings("serial")
+	public static class InterpreterException extends Exception {
+		public InterpreterException( String msg ){
+			super( msg );
+		}
+	}
+	
 }

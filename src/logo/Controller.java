@@ -2,6 +2,8 @@ package logo;
 
 import java.util.ArrayList;
 
+import logo.Interpreter.InterpreterException;
+
 
 public class Controller {
 	private final String NO_ERROR_STRING = "Everything is just fine.";
@@ -39,13 +41,28 @@ public class Controller {
 	public void runningLogoInterpreter(){
 		while ( true ){
 			switch( this.gui.awaitButtonClick() ){
-				case "Save": this.saveFile(); break;
-				case "Load": this.loadFile(); break;
-				case "Reset": this.resetProgram(); break;
-				case "Run": this.startInterpreter(); interpreter.run(); break;
-				case "Step": this.startInterpreter(); interpreter.step(); break;
-				case "Clear": this.gui.clearGraph(); break;
-				case "New": this.newProgram(); break;
+				case "Save":	this.saveFile(); break;
+				case "Load":	this.loadFile(); break;
+				case "Reset":	this.resetProgram(); break;
+				case "Run":		this.startInterpreter(); 
+								try {
+									interpreter.run();
+								}
+								catch (InterpreterException e) {
+									this.sendError( e.getMessage() );
+								}
+								break;
+				case "Step":	this.startInterpreter();
+								try {
+									interpreter.step();
+								}
+								catch (InterpreterException e) {
+									this.sendError( e.getMessage() );
+								}
+								System.out.println( interpreter );
+								break;
+				case "Clear":	this.gui.clearGraph(); break;
+				case "New":		this.newProgram(); break;
 				
 			}
 		
@@ -143,19 +160,8 @@ public class Controller {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Controller control = new Controller();
-
-//		Testing setup for the Parser and Interpreter (!!! uncomment import on top)
-//		String[] testStrings = { "let var 12" };
-//		String[] testStrings = { "repeat 16", "[", "forward 10", "left 20", "]" };	
-//		ArrayList<ArrayList<String>> parsedCommands = control.parser.parse( testStrings );
-//		control.interpreter.startInterpreter( parsedCommands );
-//		control.gui.setEditorText("asdsadsad\nsadasdasd");
-//		control.saveFile();
-//		control.gui.setEditorText("");
-//		control.loadFile();
-		
-		
+		@SuppressWarnings("unused")
+		Controller control = new Controller();		
 	}
 
 }
