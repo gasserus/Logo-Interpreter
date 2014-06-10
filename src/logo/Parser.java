@@ -1,7 +1,6 @@
 package logo;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Parser {
 	
@@ -40,6 +39,4 @@ public class Parser {
 		return outputCommandList;
 	}
 	
-
-
 }

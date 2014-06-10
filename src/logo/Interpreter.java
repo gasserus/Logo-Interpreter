@@ -224,6 +224,9 @@ public class Interpreter {
 			if( loopStart < 1 ){
 				throw new InterpreterException( "Can't find start of loop." );
 			}
+			else if( ( line - 1 ) == loopStart ){
+				throw new InterpreterException( "Empty Loop" );
+			}
 			
 			Interpreter loopInterpreter = new Interpreter( this.control, loopCommands );
 			

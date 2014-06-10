@@ -1,0 +1,61 @@
+; LOGO COMMANDS
+
+
+
+; the turtle moves 100 pixel forward
+
+forward 100
+
+; 100 px backward
+
+backward 100
+
+; turns 90 degree left
+
+left 90
+
+; turns right
+
+right 90
+
+; reset the turtle to the start point
+
+reset
+
+; clear screen
+
+clear
+
+; pen down (to draw)
+
+pendown
+
+; pen up
+
+penup
+
+; Set color values (0 - 3)
+
+setcolor 1
+
+; repeat something 5(x) times
+
+repeat 5
+
+[
+
+	; do sth.
+
+]
+
+; create a variable
+
+let variable 0
+
+; increment the "variable" 
+
+increment variable 10
+
+; decrement the variable
+
+decrement variable 5
