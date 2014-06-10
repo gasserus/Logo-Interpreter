@@ -50,6 +50,7 @@ public class Controller {
 								}
 								catch (InterpreterException e) {
 									this.sendError( e.getMessage() );
+									System.out.println( e.getMessage() );
 								}
 								break;
 				case "Step":	this.startInterpreter();
@@ -58,8 +59,8 @@ public class Controller {
 								}
 								catch (InterpreterException e) {
 									this.sendError( e.getMessage() );
+									System.out.println( e.getMessage() );
 								}
-								System.out.println( interpreter );
 								break;
 				case "Clear":	this.gui.clearGraph(); break;
 				case "New":		this.newProgram(); break;
@@ -126,7 +127,6 @@ public class Controller {
 	}
 	
 	public void move( int steps ){
-		System.out.println( steps );
 		this.turtle.move( steps );
 		this.moveTurtle();
 	}

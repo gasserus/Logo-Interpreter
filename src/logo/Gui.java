@@ -21,6 +21,7 @@ import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 
+@SuppressWarnings("serial")
 public class Gui extends JFrame implements ActionListener {
 	private final int MAXIMUM_SPEED = 10;
 	private final int MINIMUM_SPEED = 0; 
@@ -243,7 +244,6 @@ public class Gui extends JFrame implements ActionListener {
 		for( int i = 0; i < AMOUNT_BUTTONS; i++ ){
 			if( e.getSource().equals( this.controlButton[i] ) ){
 				this.buttonListener.setLastPressedButton( controlButton[i].getText() );
-				System.out.println(controlButton[i].getText()  );
 				synchronized( this.buttonListener ){
 					this.buttonListener.notifyAll();
 				}

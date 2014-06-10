@@ -27,14 +27,14 @@ public class Turtle {
 	public void move( int steps ){
 		this.xPos += ( Math.cos( Math.PI/180 * degree ) * steps );
 		this.yPos += ( Math.sin( Math.PI/180 * degree ) * steps );
-		System.out.println( "Send Coords: y=" + this.yPos + "x=" + this.xPos );
+		System.out.println( "Turtle :: move\ny=" + this.yPos + "\nx=" + this.xPos + "\n" );
 	}
 	
 	public void turn( int degree ){
 		this.degree = this.degree + degree;
 		this.degree = this.degree % CIRCLE_DEGREES;
 		
-		System.out.println( "Send direction =" + this.degree );
+		System.out.println( "Turtle :: turn\n" + this.degree + "\n" );
 	}
 	
 	public boolean changeColor( int choice){

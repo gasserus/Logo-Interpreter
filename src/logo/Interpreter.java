@@ -102,8 +102,6 @@ public class Interpreter {
 		
 		parameters.remove( 0 );
 		
-		System.out.println( "COMMAND: " + commandName );
-		
 		switch( commandName ){
 			case "forward": 	this.forward( parameters ); break;
 			case "backward": 	this.backward( parameters ); break;
@@ -380,7 +378,6 @@ public class Interpreter {
 	private void updateVariableValue( String key, int value ) throws InterpreterException {
 		if( this.variables.containsKey( key ) ){
 			this.variables.put( key, value );
-			System.out.println( variables );
 		}
 		else {
 			throw new InterpreterException( "No Variable with " + key + " found. Line " + ( this.getCurrentLine() + 1 ) );
