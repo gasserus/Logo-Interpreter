@@ -28,6 +28,7 @@ public class Gui extends JFrame implements ActionListener {
 	private final int MAXIMUM_SPEED = 10;
 	private final int MINIMUM_SPEED = 0; 
 	private final String[] CONTROL_BUTTONS = new String[] { "New", "Load", "Save", "Save Image", "Toggle Zoom", "Reset", "Run", "Step" };
+	private final int SPLITTING_BUTTONS_AT = 5;
 	private final String TITLE = "LOGO-Interpreter";
 	
 	private final Dimension WINDOW_SIZE = new Dimension( 800, 800 );
@@ -104,7 +105,7 @@ public class Gui extends JFrame implements ActionListener {
 			this.controlButton[i] = new JButton();
 			this.controlButton[i].setText( this.CONTROL_BUTTONS[i] );
 			this.controlButton[i].addActionListener( this );
-			if( i < 5 ){
+			if( i < SPLITTING_BUTTONS_AT ){
 				this.fileButtonsPanel.add( this.controlButton[i] );
 			}
 			else{
