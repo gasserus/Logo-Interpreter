@@ -1,14 +1,19 @@
 package logo;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
+import javax.imageio.ImageIO;
 
 public class FileHandler {
-	private final String FILE_EXTENSION = ".logo";
+	private final String LOGO_EXTENSION = ".logo";
+	private final String IMAGE_EXTENSION = ".jpg";
+	private final String[] LOGO_EXTENSIONS = new String[] { "logo", "LOGO", "Logo" };
+	private final String[] IMAGE_EXTENSIONS = new String[] { "jpg", "JPG", "Jpg" };
 	
 	public void writeFile( File f, String[] content ){
 		if( f != null ){
@@ -16,10 +21,10 @@ public class FileHandler {
 			
 			try {
 				
-				if( f.getName().endsWith( FILE_EXTENSION ) ){
+				if( f.getName().endsWith( LOGO_EXTENSION ) ){
 					writer = new PrintWriter( f.getPath(), "UTF-8" );
 				}else{
-					writer = new PrintWriter( f.getPath() + FILE_EXTENSION, "UTF-8" );
+					writer = new PrintWriter( f.getPath() + LOGO_EXTENSION, "UTF-8" );
 				}
 				
 				for( int i = 0; i < content.length; i++ ){
@@ -61,5 +66,25 @@ public class FileHandler {
 		}
 		
 		return output;
+	}
+
+	public void saveImage( File f, BufferedImage bImage ){
+		if ( f != null ){
+			try{
+					ImageIO.write( bImage, IMAGE_EXTENSION, f );
+					System.out.println( "save Image" );	
+			}catch (Exception ex){
+				System.out.println( "Failed to Save Image ");
+			}
+		}
+	}
+	
+	
+	public String[] getLogoExtensions() {
+		return LOGO_EXTENSIONS;
+	}
+
+	public String[] getImageExtensions() {
+		return IMAGE_EXTENSIONS;
 	}
 }

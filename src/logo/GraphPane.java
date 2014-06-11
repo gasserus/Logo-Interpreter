@@ -5,7 +5,11 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 public class GraphPane extends JPanel {
@@ -48,8 +52,7 @@ public class GraphPane extends JPanel {
 	public void paintComponent( Graphics g ){
 		super.paintComponent( g );
 		Graphics2D g2d=(Graphics2D)g;
-		int[] lastPos;
-		int[] targetPos;
+
 		
 		//**************************************************************************** scaling Output
 		Dimension needed = this.getNeededSize( this.turtlePosHistory );
@@ -63,11 +66,23 @@ public class GraphPane extends JPanel {
 		}else{
 			this.setPreferredSize( this.getNeededSize( this.turtlePosHistory ) );
 		}
-	
+		
 		//**************************************************************************** get the actual center of the graphPanel 
 		
 		actualCenter[0] = ( int ) ( ( this.getWidth() / 2.0 ) * ( 1 / zoomFactor ) );
 		actualCenter[1] = ( int ) ( ( this.getHeight() / 2.0 ) * ( 1 / zoomFactor ) );
+		
+		//**************************************************************************** draw
+		
+		this.drawImage( g2d );
+		
+		this.revalidate();
+	}
+	
+	
+	public void drawImage( Graphics2D g2d ){
+		int[] lastPos;
+		int[] targetPos;
 		//**************************************************************************** draw History
 		for( int i = 1; i < ( turtlePosHistory.size() ); i++ ){
 			
@@ -80,7 +95,6 @@ public class GraphPane extends JPanel {
 		
 			}
 		}
-		
 		//**************************************************************************** draw Turtle
 		
 		if( turtleImg != null  ){
@@ -92,12 +106,9 @@ public class GraphPane extends JPanel {
 			
 			g2d.rotate( Math.toRadians( -direction ), rotationXCenter, rotationYCenter );
 			g2d.drawImage( turtleImg,  ( int ) ( targetPos[0] + actualCenter[0] - ( 0.5 *  TURTLE_SIZE ) ), ( int ) ( targetPos[1] + actualCenter[1] - ( 0.5 *  TURTLE_SIZE ) ), TURTLE_SIZE, TURTLE_SIZE, this );
-			
+				
 		}
-		this.revalidate();
 	}
-	
-	
 	
 	
 	/**
@@ -203,6 +214,17 @@ public class GraphPane extends JPanel {
 		System.out.println( "ZoomFactor:" + zoom );
 		return zoom; 
 	}
+	
+	public BufferedImage saveImage(){
+		Dimension size = this.getNeededSize( this.turtlePosHistory );
+		BufferedImage bImage = new BufferedImage( ( int ) size.getWidth(), ( int ) size.getHeight(), BufferedImage.TYPE_INT_RGB);
+		Graphics2D g2d = bImage.createGraphics();
+	    this.drawImage( g2d );
+	    g2d.dispose();
+	    return bImage;
+	}
+
 }
 
+	
 	

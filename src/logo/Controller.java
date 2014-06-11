@@ -67,12 +67,20 @@ public class Controller {
 								break;
 				case "New":		this.newProgram(); break;
 				case "Toggle Zoom": this.gui.toggleZoom(); break;
+				case "Save Image": this.saveImage(); break;
 				default: System.out.println( "Button: '" + button + "' is not yet Implemented.");
 			}
 		
 		}
 		// insert Program Routine here
 	}
+	
+	public void saveImage(){
+		
+		this.fileHandler.saveImage( this.gui.openFileChooser( true, this.fileHandler.getImageExtensions() ), this.gui.getImage() );
+		
+	}
+	
 	
 	public void clearProgram(){
 		
@@ -123,12 +131,12 @@ public class Controller {
 	}
 	
 	public void saveFile(){
-		this.fileHandler.writeFile( this.gui.openFileChooser( true ), this.gui.getEditorText() );
+		this.fileHandler.writeFile( this.gui.openFileChooser( true, this.fileHandler.getLogoExtensions() ), this.gui.getEditorText() );
 	}
 	
 	public void loadFile(){
 		try{
-			String content = this.fileHandler.loadFile( this.gui.openFileChooser( false ) );
+			String content = this.fileHandler.loadFile( this.gui.openFileChooser( false, this.fileHandler.getLogoExtensions() ) );
 			this.gui.setEditorText( content );
 		}catch( NullPointerException ex ){
 			System.out.println( "No file selected - No Action will be done");
@@ -170,7 +178,8 @@ public class Controller {
 	 */
 	public static void main(String[] args) {
 		@SuppressWarnings("unused")
-		Controller control = new Controller();		
+		
+	Controller control = new Controller();
 	}
 
 }

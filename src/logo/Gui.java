@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Hashtable;
 
@@ -169,9 +170,9 @@ public class Gui extends JFrame implements ActionListener {
 	 * @param saving (true: Save, false: Load) 
 	 * @return selectedFile or null if nothing selected
 	 */
-	public File openFileChooser( boolean saving ){
+	public File openFileChooser( boolean saving, String[] extensions ){
 		fileChooser = new JFileChooser();
-		fileChooser.setFileFilter( new FileNameExtensionFilter( "logo", "LOGO", "Logo" ) );
+		fileChooser.setFileFilter( new FileNameExtensionFilter( extensions[0], extensions[1], extensions[2] ) );
 		
 		if( saving ){
 			fileChooser.showSaveDialog(this.getFocusOwner() );
@@ -256,6 +257,12 @@ public class Gui extends JFrame implements ActionListener {
 		this.graph.setVisibleSize( this.scrollGraph.getSize() );
 		
 	}
+	
+	public BufferedImage getImage(){
+		return this.graph.saveImage();
+	}
+	
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		for( int i = 0; i < CONTROL_BUTTONS.length; i++ ){
