@@ -21,11 +21,9 @@ public class GraphPane extends JPanel {
 	ArrayList<Color> turtleColorHistory;
 	ArrayList<Boolean> turtleVisibleHistory;
 	
-	double zoomFactor = 1.0;
 	int direction;
 	int actualCenter[] = new int [] { 0, 0};
-	int actualMax[] = new int[] { 0, 0 };
-	Dimension zoomPreference;
+	int actualMax[] = new int[] { 0, 0 };;
 	Dimension visibleSize;
 	boolean isScaling;
 	
@@ -36,10 +34,8 @@ public class GraphPane extends JPanel {
 		this.turtlePosHistory = new ArrayList<int[]>();
 		this.turtleColorHistory = new ArrayList<Color>();
 		this.turtleVisibleHistory = new ArrayList<Boolean>();
-		this.adjustPreferredSize( actualMax[0], actualMax[1] );
 		this.turtleImg = getToolkit().createImage( TURTLE_IMAGE_PATH );
 		
-		this.zoomPreference = new Dimension( 0, 0 );
 		this.visibleSize = new Dimension( 0, 0);
 		this.isScaling = false;
 		
@@ -56,15 +52,22 @@ public class GraphPane extends JPanel {
 		int[] targetPos;
 		
 		//**************************************************************************** scaling Output
-		if ( isScaling ){
-			g2d.scale( zoomFactor, zoomFactor);
+		Dimension needed = this.getNeededSize( this.turtlePosHistory );
+		double zoomFactor = this.calculateZoom( this.visibleSize, needed, this.isScaling);
+		
+		
+		g2d.scale( zoomFactor, zoomFactor);
+		
+		if( this.isScaling ) {
 			this.setPreferredSize( this.visibleSize );
+		}else{
+			this.setPreferredSize( this.getNeededSize( this.turtlePosHistory ) );
 		}
 	
 		//**************************************************************************** get the actual center of the graphPanel 
 		
-		actualCenter[0] = ( int ) ( ( this.getWidth() / 2.0 ) * ( 1 / this.zoomFactor ) );
-		actualCenter[1] = ( int ) ( ( this.getHeight() / 2.0 ) * ( 1 / this.zoomFactor ) );
+		actualCenter[0] = ( int ) ( ( this.getWidth() / 2.0 ) * ( 1 / zoomFactor ) );
+		actualCenter[1] = ( int ) ( ( this.getHeight() / 2.0 ) * ( 1 / zoomFactor ) );
 		//**************************************************************************** draw History
 		for( int i = 1; i < ( turtlePosHistory.size() ); i++ ){
 			
@@ -91,6 +94,7 @@ public class GraphPane extends JPanel {
 			g2d.drawImage( turtleImg,  ( int ) ( targetPos[0] + actualCenter[0] - ( 0.5 *  TURTLE_SIZE ) ), ( int ) ( targetPos[1] + actualCenter[1] - ( 0.5 *  TURTLE_SIZE ) ), TURTLE_SIZE, TURTLE_SIZE, this );
 			
 		}
+		this.revalidate();
 	}
 	
 	
@@ -111,29 +115,8 @@ public class GraphPane extends JPanel {
 		this.turtlePosHistory.add( posInt );
 		this.turtleColorHistory.add( c );
 		this.turtleVisibleHistory.add( visible );
-		
-		if( this.isScaling ){
-			this.toggleZoom();
-		}
-		
-		this.adjustPreferredSize( posInt[0], posInt[1] );
 		this.direction = direction;
 		this.repaint();
-	}
-	
-	/**
-	 * For the ScrollPane, calculates the new preferred size of the graph.
-	 * @param pos
-	 */
-	public void adjustPreferredSize( int xPos, int yPos ){
-		if( Math.abs( xPos ) > Math.abs( this.actualMax[0] ) ){
-			this.actualMax[0] = xPos;
-		}
-		if( Math.abs( yPos ) > Math.abs( this.actualMax[1] ) ){
-			this.actualMax[1] = yPos;
-		}
-		this.setPreferredSize( new Dimension( ( int ) ( ( Math.abs( actualMax[0] ) * 2 ) + TURTLE_SIZE ), ( int )( ( Math.abs( actualMax[1] ) * 2 ) + TURTLE_SIZE ) ) );
-		this.revalidate();
 	}
 	
 	/**
@@ -145,7 +128,7 @@ public class GraphPane extends JPanel {
 		this.turtleVisibleHistory.clear();
 		actualMax[0] = 0;
 		actualMax[1] = 0;
-		this.adjustPreferredSize( actualMax[0], actualMax[1] );
+		this.setPreferredSize( this.getNeededSize( this.turtlePosHistory ) );
 	}
 	
 	/**
@@ -162,7 +145,7 @@ public class GraphPane extends JPanel {
 	 * @param size
 	 */
 	public void setVisibleSize( Dimension size ){
-		this.visibleSize = new Dimension( ( int ) ( size.getWidth() - 10 ), ( int ) ( size.getHeight() - 10 ) );
+		this.visibleSize = new Dimension( ( int ) ( size.getWidth() - 20 ), ( int ) ( size.getHeight() - 20 ) );
 	}
 	
 	
@@ -172,24 +155,53 @@ public class GraphPane extends JPanel {
 	public void toggleZoom(){
 		if( this.isScaling ){
 			this.isScaling = false;
-			this.zoomFactor = 1;
-			for( int i = 0; i < this.turtlePosHistory.size(); i++ ){
-				this.adjustPreferredSize( this.turtlePosHistory.get( i )[0], this.turtlePosHistory.get( i )[1] );
-			}
-			System.out.println( "Preferred Size adjusted" );
-			
-		}
-		else{
-			zoomFactor = (double) this.visibleSize.getWidth() / this.getSize().getWidth();
-			
-			if ( zoomFactor > ( (double) this.visibleSize.getHeight() / this.getSize().getHeight() ) ){
-				zoomFactor =  (double) this.visibleSize.getHeight() / this.getSize().getHeight() ;
-			}
-			System.out.println( "ZoomFactor:" + this.zoomFactor );
+		}else{
 			this.isScaling = true;
 		}
+		
 		this.repaint();
 		this.revalidate();
+	}
+	
+	/**
+	 * 
+	 * @param posHistory
+	 * @return Dimension that is needed to display all Lines and keep the center in the middle of the pane
+	 */
+	public Dimension getNeededSize( ArrayList<int[]> posHistory ){
+		int max[] = new int[] { 0 ,0 };
+		
+		for( int i = 0; i < posHistory.size(); i++ ){
+			if( Math.abs( posHistory.get( i )[0] ) > Math.abs( max[0] ) ){
+				max[0] = posHistory.get( i )[0];
+			}
+			if( Math.abs( posHistory.get( i )[1] ) > Math.abs( max[1] ) ){
+				max[1] = posHistory.get( i )[1];
+			}
+		}
+		return new Dimension( ( int ) ( ( Math.abs( max[0] ) * 2 ) + TURTLE_SIZE ), ( int )( ( Math.abs( max[1] ) * 2 ) + TURTLE_SIZE ) );	
+	}
+	
+	/**
+	 * 
+	 * @param visible
+	 * @param needed
+	 * @param zooming
+	 * @return zoomingfactor to fit all on the given visible Size (if zooming is false always 1.0 ). 
+	 */
+	public double calculateZoom( Dimension visible, Dimension needed, boolean zooming ){
+		double zoom = 1.0;
+	
+		
+		if( zooming ){
+			zoom = (double) visible.getWidth() / needed.getWidth();
+			
+			if ( zoom > ( (double) ( visible.getHeight() ) / needed.getHeight() ) ){
+				zoom =  (double) ( visible.getHeight() ) / needed.getHeight() ;
+			}
+		}
+		System.out.println( "ZoomFactor:" + zoom );
+		return zoom; 
 	}
 }
 
