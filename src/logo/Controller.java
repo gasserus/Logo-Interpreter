@@ -8,6 +8,7 @@ import logo.Interpreter.InterpreterException;
 public class Controller {
 	private final String NO_ERROR_STRING = "Everything is just fine.";
 	private final String[] CONTROL_COMMANDS = new String[] { "New", "Load", "Save", "Save Image", "Reset", "Run", "Step" };
+	private final double[] STARTING_POSITION = new double[] { 0.0, 0.0 };
 	
 	Gui gui;
 	Interpreter interpreter;
@@ -29,9 +30,8 @@ public class Controller {
 		this.gui.setEditorText("");
 		this.removeError();
 		this.gui.graph.clearGraph();
-		this.turtle = new Turtle();
+		this.turtle = new Turtle( STARTING_POSITION[0], STARTING_POSITION[1] );
 		this.moveTurtle();
-		
 		
 	}
 	
