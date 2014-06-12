@@ -190,6 +190,9 @@ public class Interpreter {
 	private void setcolor( ArrayList<String> parameter ) throws InterpreterException{
 		if( checkParameterSize( parameter, 1 ) ){
 				int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
+			if( parameterValue < 0 || parameterValue > 3 ){
+				throw new InterpreterException( "Unknown color " + parameterValue +" (0-3) at line " + ( this.globalLinePosition + this.getCurrentLine() + 1 ) );
+			}
 				this.control.changeColor( parameterValue );
 		}
 	}
