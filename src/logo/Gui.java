@@ -27,18 +27,26 @@ import javax.swing.text.BadLocationException;
 public class Gui extends JFrame implements ActionListener {
 	private final int MAXIMUM_SPEED = 10;
 	private final int MINIMUM_SPEED = 0; 
-	private final String[] CONTROL_BUTTONS = new String[] { "New", "Load", "Save", "Save Image", "Toggle Zoom", "Reset", "Run", "Step" };
-	private final int SPLITTING_BUTTONS_AT = 5;
+
+	private final String[] GUI_BUTTONS = new String[] { "Toggle Zoom" };
+	
+	private final int SPLITTING_CONTROL_BUTTONS_AT = 4;
 	private final String TITLE = "LOGO-Interpreter";
 	
 	private final Dimension WINDOW_SIZE = new Dimension( 800, 800 );
 	private final Dimension WINDOW_MINIMUM_SIZE = new Dimension( 740, 320 );
 	
+	String[] controlButtons;
+	
 	JScrollPane scrollGraph;
 	GraphPane graph;
 	JPanel controlPanel, controlButtonsPanel, fileButtonsPanel, graphOutputPanel, centerPane;
+	
 	JTextArea editor;
+	
 	JButton[] controlButton;
+	JButton[] guiButton;
+	
 	JSlider speed;
 	JLabel errorOutput;
 	GuiListener buttonListener;
@@ -48,8 +56,8 @@ public class Gui extends JFrame implements ActionListener {
 	/**
 	 * Creates the GUI with all Components ( graphic, editor, control elements, Layouts etc. )
 	 */
-	public Gui(){
-		
+	public Gui( String[] buttons ){
+		this.controlButtons = buttons;
 		//********************************************** Window
 		this.setSize( WINDOW_SIZE );
 		this.setMinimumSize( WINDOW_MINIMUM_SIZE );
@@ -97,20 +105,30 @@ public class Gui extends JFrame implements ActionListener {
 		this.controlButtonsPanel.setLayout( new FlowLayout(  ) );
 		
 
-		//********************************************** initialise Buttons -> add to Design
-		this.controlButton = new JButton[ CONTROL_BUTTONS.length ];
+		//********************************************** initialise Control Buttons -> add to Design
+		this.controlButton = new JButton[ controlButtons.length ];
 		buttonListener = new GuiListener();
 		
-		for( int i = 0; i < CONTROL_BUTTONS.length; i++ ){
+		for( int i = 0; i < controlButtons.length; i++ ){
 			this.controlButton[i] = new JButton();
-			this.controlButton[i].setText( this.CONTROL_BUTTONS[i] );
+			this.controlButton[i].setText( this.controlButtons[i] );
 			this.controlButton[i].addActionListener( this );
-			if( i < SPLITTING_BUTTONS_AT ){
+			if( i < SPLITTING_CONTROL_BUTTONS_AT ){
 				this.fileButtonsPanel.add( this.controlButton[i] );
 			}
 			else{
 				this.controlButtonsPanel.add( this.controlButton[i] );
 			}
+		}
+		
+		//********************************************** initialiseadditional GUI Buttons -> add to Design
+		this.guiButton = new JButton[ this.GUI_BUTTONS.length ];
+		
+		for( int i = 0; i < this.GUI_BUTTONS.length; i++ ){
+			this.guiButton[i] = new JButton();
+			this.guiButton[i].setText( this.GUI_BUTTONS[i] );
+			this.guiButton[i].addActionListener( this );
+			this.fileButtonsPanel.add( this.guiButton[i] );
 		}
 		 
 		//********************************************** add JSlider for Speed with Labels 
@@ -266,11 +284,19 @@ public class Gui extends JFrame implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		for( int i = 0; i < CONTROL_BUTTONS.length; i++ ){
+		for( int i = 0; i < controlButtons.length; i++ ){
 			if( e.getSource().equals( this.controlButton[i] ) ){
 				this.buttonListener.setLastPressedButton( controlButton[i].getText() );
 				synchronized( this.buttonListener ){
 					this.buttonListener.notifyAll();
+				}
+			}
+		}
+		for( int i = 0; i < this.GUI_BUTTONS.length; i++ ){
+			if ( e.getSource().equals( this.guiButton[i] ) ){
+				switch( this.GUI_BUTTONS[i] ){
+					case "Toggle Zoom": this.toggleZoom(); break;
+					default: System.out.println( "Gui Button not yet implemented" );
 				}
 			}
 		}

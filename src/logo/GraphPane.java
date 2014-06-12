@@ -6,17 +6,15 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class GraphPane extends JPanel {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private final int TURTLE_SIZE = 35;
 	private final String TURTLE_IMAGE_PATH = "icons/turtle.png";
 	private Image turtleImg = null;
@@ -166,9 +164,7 @@ public class GraphPane extends JPanel {
 		}else{
 			this.isScaling = true;
 		}
-		
 		this.repaint();
-		this.revalidate();
 	}
 	
 	/**
@@ -208,7 +204,6 @@ public class GraphPane extends JPanel {
 				zoom =  (double) ( visible.getHeight() ) / needed.getHeight() ;
 			}
 		}
-		System.out.println( "ZoomFactor:" + zoom );
 		return zoom; 
 	}
 	

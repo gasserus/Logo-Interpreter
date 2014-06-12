@@ -7,6 +7,7 @@ import logo.Interpreter.InterpreterException;
 
 public class Controller {
 	private final String NO_ERROR_STRING = "Everything is just fine.";
+	private final String[] CONTROL_COMMANDS = new String[] { "New", "Load", "Save", "Save Image", "Reset", "Run", "Step" };
 	
 	Gui gui;
 	Interpreter interpreter;
@@ -16,7 +17,7 @@ public class Controller {
 	
 	
 	public Controller(){
-		this.gui = new Gui();
+		this.gui = new Gui( CONTROL_COMMANDS );
 		this.parser = new Parser();
 		this.fileHandler = new FileHandler();
 		
@@ -66,7 +67,6 @@ public class Controller {
 								}
 								break;
 				case "New":		this.newProgram(); break;
-				case "Toggle Zoom": this.gui.toggleZoom(); break;
 				case "Save Image": this.saveImage(); break;
 				default: System.out.println( "Button: '" + button + "' is not yet Implemented.");
 			}
