@@ -7,9 +7,12 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-
 import javax.swing.JPanel;
 
+
+/**
+ * @author Marschall Steffen
+ */
 @SuppressWarnings("serial")
 public class GraphPane extends JPanel {
 	/**
@@ -25,7 +28,7 @@ public class GraphPane extends JPanel {
 	
 	int direction;
 	int actualCenter[] = new int [] { 0, 0};
-	int actualMax[] = new int[] { 0, 0 };;
+	int actualMax[] = new int[] { 0, 0 };
 	Dimension visibleSize;
 	boolean isScaling;
 	
@@ -45,17 +48,15 @@ public class GraphPane extends JPanel {
 	}
 	
 	/**
-	 * draws the whole turtle History
+	 * draws the whole turtle History on the pane
 	 */
 	public void paintComponent( Graphics g ){
 		super.paintComponent( g );
 		Graphics2D g2d=(Graphics2D)g;
 
-		
 		//**************************************************************************** scaling Output
 		Dimension needed = this.getNeededSize( this.turtlePosHistory );
 		double zoomFactor = this.calculateZoom( this.visibleSize, needed, this.isScaling);
-		
 		
 		g2d.scale( zoomFactor, zoomFactor);
 		
@@ -69,6 +70,7 @@ public class GraphPane extends JPanel {
 		
 		this.drawImage( g2d, this.getSize(), zoomFactor );
 		
+		//**************************************************************************** let scrollpane let know theres a new size
 		this.revalidate();
 	}
 	
@@ -207,6 +209,10 @@ public class GraphPane extends JPanel {
 		return zoom; 
 	}
 	
+	/**
+	 * draws the picture on a BufferedImage
+	 * @return BufferedImage
+	 */
 	public BufferedImage saveImage(){
 		Dimension size = this.getNeededSize( this.turtlePosHistory );
 		BufferedImage bImage = new BufferedImage( ( int ) size.getWidth(), ( int ) size.getHeight(), BufferedImage.TYPE_INT_ARGB );

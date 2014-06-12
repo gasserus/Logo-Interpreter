@@ -11,12 +11,22 @@ import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 
+/**
+ * @author Marschall Steffen
+ */
 public class FileHandler {
 	private final String LOGO_EXTENSION = ".logo";
 	private final String IMAGE_EXTENSION = ".png";
 	private final String[] LOGO_EXTENSIONS = new String[] { "logo", "LOGO", "Logo" };
 	private final String[] IMAGE_EXTENSIONS = new String[] { "png", "PNG", "png" };
 	
+	
+	/**
+	 * writes a file out of the content. Non existing files will be created, existing file will be overwritten ( without asking). 
+	 * Files without the defined extension are renamed to filename."'Extension'
+	 * @param f
+	 * @param content
+	 */
 	public void writeFile( File f, String[] content ){
 		if( f != null ){
 			PrintWriter writer;
@@ -44,6 +54,11 @@ public class FileHandler {
 		}
 	}
 	
+	/**
+	 * tries to read a file and returns the content as String[] each line gets a own arrayfield.
+	 * @param f
+	 * @return String[]
+	 */
 	public String loadFile( File f ){
 		String output = "";
 		String next;
@@ -70,6 +85,11 @@ public class FileHandler {
 		return output;
 	}
 
+	/**
+	 * saves the Image to the file. Closing the program before saving the whole file will end up in a only partially painted image. 
+	 * @param f
+	 * @param bImage
+	 */
 	public void saveImage( File f, BufferedImage bImage ){
 		if ( f != null ){
 			if( ! f.getName().endsWith( IMAGE_EXTENSION ) ){
@@ -86,11 +106,18 @@ public class FileHandler {
 		}
 	}
 	
-	
+	/**
+	 * returns the, in the FileHandler defined, file Extensions
+	 * @return String[]
+	 */
 	public String[] getLogoExtensions() {
 		return LOGO_EXTENSIONS;
 	}
 
+	/**
+	 * returns the, in the FileHandler defined, Picture Extensions
+	 * @return String[] 
+	 */
 	public String[] getImageExtensions() {
 		return IMAGE_EXTENSIONS;
 	}

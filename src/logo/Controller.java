@@ -26,6 +26,10 @@ public class Controller {
 		this.runningLogoInterpreter();
 	}
 	
+	
+	/**
+	 * the routine for the program start and when the new Button is clicked.
+	 */
 	public void newProgram(){
 		this.gui.setEditorText("");
 		this.removeError();
@@ -75,23 +79,32 @@ public class Controller {
 		// insert Program Routine here
 	}
 	
+	/**
+	 * runs the routine to save a Picture
+	 */
 	public void saveImage(){
-		
 		this.fileHandler.saveImage( this.gui.openFileChooser( true, this.fileHandler.getImageExtensions() ), this.gui.getImage() );
-		
 	}
 	
-	
+	/**
+	 * clears the Program (Command).
+	 */
 	public void clearProgram(){
 		
 	}
 
+	/**
+	 * resets the Program (Button)
+	 */
 	public void resetProgram(){
 		this.gui.graph.clearGraph();
 		this.resetTurtle();
 		this.moveTurtle();
 	}
 	
+	/**
+	 * informations from the Turtle object will be sent to the gui to create a new movement history entry
+	 */
 	public void moveTurtle(){
 		this.gui.moveTurtle( this.turtle.getXPos(), this.turtle.getYPos(), this.turtle.getDirection() , this.turtle.getColor(), this.turtle.getVisible() );
 	}
@@ -130,10 +143,16 @@ public class Controller {
 		return parsedCommands;
 	}
 	
+	/**
+	 * saves the content of the Editor to a file
+	 */
 	public void saveFile(){
 		this.fileHandler.writeFile( this.gui.openFileChooser( true, this.fileHandler.getLogoExtensions() ), this.gui.getEditorText() );
 	}
 	
+	/**
+	 * loads the content of a file 
+	 */
 	public void loadFile(){
 		try{
 			String content = this.fileHandler.loadFile( this.gui.openFileChooser( false, this.fileHandler.getLogoExtensions() ) );
@@ -143,42 +162,58 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * give turtle new forward/backward movement
+	 * @param steps
+	 */
 	public void move( int steps ){
 		this.turtle.move( steps );
 		this.moveTurtle();
 	}
 	
+	/**
+	 * gives the turtle a new turning ( +/- degrees)
+	 * @param degree
+	 */
 	public void turn( int degree ){
 		this.turtle.turn( degree );
 		this.moveTurtle();
 	}
 	
+	/**
+	 * changes the actual Color in the Turtle object
+	 * @param colorChoice
+	 */
 	public void changeColor( int colorChoice ){
 		this.turtle.changeColor( colorChoice );
 	}
 	
+	/**
+	 * sends a message to the error Output 
+	 * @param errorText
+	 */
 	public void sendError( String errorText ){
 		this.gui.setErrorOutput( errorText, true);
 	}	
 	
+	/**
+	 * removes the error from the error output
+	 */
 	public void removeError(){
 		this.gui.setErrorOutput( NO_ERROR_STRING , false);
 	}
 	
 	/**
-	 * 
-	 * @param isDrawing true is Drawing
+	 * sets the turtles isDrawing Variable new.
+	 * @param isDrawing 
 	 */
 	public void penDown( boolean isDrawing ){
 		this.turtle.setPen( isDrawing );
 	}
 	
-	/**
-	 * @param args
-	 */
+
 	public static void main(String[] args) {
 		@SuppressWarnings("unused")
-		
 	Controller control = new Controller();
 	}
 

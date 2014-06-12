@@ -2,6 +2,9 @@ package logo;
 
 import java.awt.Color;
 
+/**
+ * @author Marschall Steffen
+ */
 public class Turtle {
 	private final int CIRCLE_DEGREES = 360;
 	private final int STARTING_DEGREE = 90;

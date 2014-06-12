@@ -23,6 +23,9 @@ import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 
+/**
+ * @author Marschall Steffen
+ */
 @SuppressWarnings("serial")
 public class Gui extends JFrame implements ActionListener {
 	private final int MAXIMUM_SPEED = 10;
@@ -277,6 +280,11 @@ public class Gui extends JFrame implements ActionListener {
 		
 	}
 	
+	
+	/**
+	 * gets the Picture of the GraphPane as BufferedImage
+	 * @return BufferedImage
+	 */
 	public BufferedImage getImage(){
 		return this.graph.saveImage();
 	}
