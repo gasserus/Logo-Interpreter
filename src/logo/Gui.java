@@ -153,8 +153,8 @@ public class Gui extends JFrame implements ActionListener {
 		this.lineCounter = new JTextField();
 		this.lineCounter.setEditable( false );
 		this.controlButtonsPanel.add( this.lineCounter );
-		this.lineCounter.setColumns( 10 );
-		
+		this.lineCounter.setColumns( 9 );
+		this.setActualLine( 0 );
 		//********************************************** show
 		this.setVisible(true);
 	}
@@ -163,7 +163,7 @@ public class Gui extends JFrame implements ActionListener {
 
 	
 	/**
-	 * Sends the graph the turtle movement with all additional infos 
+	 * Sends the turtle movement with all additional infos to the Graph
 	 * @param xPos
 	 * @param yPos
 	 * @param direction
