@@ -37,8 +37,8 @@ public class Gui extends JFrame implements ActionListener {
 	private final int SPLITTING_CONTROL_BUTTONS_AT = 4;
 	private final String TITLE = "LOGO-Interpreter";
 	
-	private final Dimension WINDOW_SIZE = new Dimension( 800, 800 );
-	private final Dimension WINDOW_MINIMUM_SIZE = new Dimension( 740, 320 );
+	private final Dimension WINDOW_SIZE = new Dimension( 800, 600 );
+	private final Dimension WINDOW_MINIMUM_SIZE = new Dimension( 640, 320 );
 	
 	String[] controlButtons;
 	
@@ -200,7 +200,7 @@ public class Gui extends JFrame implements ActionListener {
 	/**
 	 * Opens a FileChooser for Saving or Loading a file
 	 * @param saving (true: Save, false: Load) 
-	 * @return selectedFile or null if nothing selected
+	 * @return selectedFile or null if nothing was selected
 	 */
 	public File openFileChooser( boolean saving, String[] extensions ){
 		fileChooser = new JFileChooser();
@@ -217,7 +217,7 @@ public class Gui extends JFrame implements ActionListener {
 	
 	
 	/**
-	 * 
+	 * gets the text of the last pressed Button. This method thread sleeps until a button is pressed.
 	 * @return Text of the Pressed Button (e.g. Save)
 	 */
 	public String awaitButtonClick(){
@@ -225,8 +225,8 @@ public class Gui extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * 
-	 * @return actual Speed 
+	 * Returns the speed, which is in the Speed Slider. 
+	 * @return int Speed 
 	 */
 	public int getSpeed(){
 		return this.speed.getValue();
@@ -299,6 +299,10 @@ public class Gui extends JFrame implements ActionListener {
 		return this.graph.saveImage();
 	}
 	
+	/**
+	 * sets the output of the lineCounter to "Line: 'line'".
+	 * @param line
+	 */
 	public void setActualLine( int line ){
 		this.lineCounter.setText( "Line: " + line );
 	}
