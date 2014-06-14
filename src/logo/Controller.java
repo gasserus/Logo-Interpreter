@@ -119,6 +119,9 @@ public class Controller {
 		this.turtle.setPen( true );
 	}
 	
+	public void showActualLine( int line ){
+		this.gui.setActualLine( line );
+	}
 		
 	public void startInterpreter() throws InterpreterException{
 		ArrayList<ArrayList<String>> parsedCommands;

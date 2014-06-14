@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 
@@ -46,6 +47,8 @@ public class Gui extends JFrame implements ActionListener {
 	JPanel controlPanel, controlButtonsPanel, fileButtonsPanel, graphOutputPanel, centerPane;
 	
 	JTextArea editor;
+	
+	JTextField lineCounter;
 	
 	JButton[] controlButton;
 	JButton[] guiButton;
@@ -145,6 +148,13 @@ public class Gui extends JFrame implements ActionListener {
         this.speed.setLabelTable( labels );
         this.speed.setPaintLabels( true );
 		this.fileButtonsPanel.add( this.speed );
+		
+		//********************************************** add line counter
+		this.lineCounter = new JTextField();
+		this.lineCounter.setEditable( false );
+		this.controlButtonsPanel.add( this.lineCounter );
+		this.lineCounter.setColumns( 10 );
+		
 		//********************************************** show
 		this.setVisible(true);
 	}
@@ -289,6 +299,9 @@ public class Gui extends JFrame implements ActionListener {
 		return this.graph.saveImage();
 	}
 	
+	public void setActualLine( int line ){
+		this.lineCounter.setText( "Line: " + line );
+	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
