@@ -52,7 +52,13 @@ public class Interpreter {
 			Interpreter loopInterpreter = (Interpreter) loop.get( 0 );
 			loopInterpreter.variables = this.variables;
 			
-			loopInterpreter.step();
+			try{
+				loopInterpreter.step();
+			}
+			catch (Throwable t) {
+				this.setActive( false );
+				throw new InterpreterException( t.getMessage() ); 
+			} 
 			
 			this.variables = loopInterpreter.variables;
 
@@ -75,6 +81,8 @@ public class Interpreter {
 		}
 		else {
 			int line = this.getCurrentLine();
+			
+			this.control.showActualLine( this.globalLinePosition + line + 1);
 			
 			try{
 				this.executeCommand( this.getParsedCommands().get( line ) );

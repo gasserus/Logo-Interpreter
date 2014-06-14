@@ -97,6 +97,7 @@ public class Controller {
 	 * resets the Program (Button)
 	 */
 	public void resetProgram(){
+		this.interpreter = null;
 		this.gui.graph.clearGraph();
 		this.resetTurtle();
 		this.moveTurtle();
@@ -126,7 +127,6 @@ public class Controller {
 	public void startInterpreter() throws InterpreterException{
 		ArrayList<ArrayList<String>> parsedCommands;
 		try {
-			System.out.println( "Active: " + interpreter.isActive() );
 			if( ! interpreter.isActive() ){
 				this.removeError();
 				parsedCommands = this.parser.parse( this.gui.getEditorText() );
