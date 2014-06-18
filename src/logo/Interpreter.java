@@ -129,10 +129,10 @@ public class Interpreter {
 			case "backward": 	this.backward( parameters ); break;
 			case "left": 		this.left( parameters ); break;
 			case "right": 		this.right( parameters ); break;
-			case "reset": 		this.reset(); break;
-			case "clear": 		this.clear(); break;
-			case "pendown": 	this.pendown(); break;
-			case "penup": 		this.penup(); break;
+			case "reset": 		this.reset( parameters ); break;
+			case "clear": 		this.clear( parameters ); break;
+			case "pendown": 	this.pendown( parameters ); break;
+			case "penup": 		this.penup( parameters ); break;
 			case "setcolor": 	this.setcolor( parameters ); break;
 			case "repeat":		this.repeat( parameters ); break;
 			case "let":			this.let( parameters ); break;
@@ -255,7 +255,7 @@ public class Interpreter {
 			while( inLoop > 0 && line < allCommands.size() );
 			
 			if( loopStart < 1 ){
-				throw new InterpreterException( "Can't find start of loop." + ( this.globalLinePosition + this.getCurrentLine() + 1 ) );
+				throw new InterpreterException( "Can't find start of loop. " + ( this.globalLinePosition + this.getCurrentLine() + 1 ) );
 			}
 			else if( ( line - 1 ) == loopStart ){
 				throw new InterpreterException( "Empty loop error at line " + ( this.globalLinePosition + this.getCurrentLine() + 1 ) );
@@ -315,23 +315,32 @@ public class Interpreter {
 	}
 
 
-	private void penup() {
-		this.control.penDown( false );
+	private void penup( ArrayList<String> parameter ) throws InterpreterException {
+		if( checkParameterSize( parameter, 0 ) ){
+			this.control.penDown( false );
+		}
 	}
 
 
-	private void pendown() {
-		this.control.penDown( true );
+	private void pendown( ArrayList<String> parameter ) throws InterpreterException {
+		if( checkParameterSize( parameter, 0 ) ){
+			this.control.penDown( true );
+		}
 	}
 
 
-	private void clear() {
-		this.control.clearProgram();
-	}
-
+	private void clear( ArrayList<String> parameter ) throws InterpreterException {
+		if( checkParameterSize( parameter, 0 ) ){
+			this.control.clearProgram();
 	
-	private void reset() {
-		this.control.resetTurtle();
+		}
+	}
+	
+	
+	private void reset( ArrayList<String> parameter ) throws InterpreterException {
+		if( checkParameterSize( parameter, 0 ) ){
+			this.control.resetTurtle();
+		}
 	}
 	
 	
@@ -348,10 +357,10 @@ public class Interpreter {
 				return true;
 		}
 		else if( parameterSize > size ){
-			throw new InterpreterException( "Too many parameters at line" + this.getCurrentPosition() );
+			throw new InterpreterException( "Too many parameters at line " + this.getCurrentPosition() );
 		}
 		else {
-			throw new InterpreterException( "Too less parameters at line" + this.getCurrentPosition() );
+			throw new InterpreterException( "Too less parameters at line " + this.getCurrentPosition() );
 		}
 	}
 	
