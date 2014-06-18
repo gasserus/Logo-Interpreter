@@ -130,13 +130,13 @@ public class Controller {
 			if( ! interpreter.isActive() ){
 				this.removeError();
 				parsedCommands = this.parser.parse( this.gui.getEditorText() );
-				interpreter = new Interpreter( this, parsedCommands );
+				interpreter = new Interpreter( this, parsedCommands, this.parser.getEmptyLinesBeforeCommand() );
 			}
 		}
 		catch( NullPointerException e ){
 			this.removeError();
 			parsedCommands = this.parser.parse( this.gui.getEditorText() );
-			interpreter = new Interpreter( this, parsedCommands );
+			interpreter = new Interpreter( this, parsedCommands, this.parser.getEmptyLinesBeforeCommand() );
 		}
 	}
 	

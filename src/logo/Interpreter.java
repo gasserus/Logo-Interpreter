@@ -8,6 +8,7 @@ public class Interpreter {
 	private ArrayList<ArrayList<String>> parsedCommands;
 	private ArrayList<Object> loop = new ArrayList<Object>();
 	private HashMap<String,Integer> variables = new HashMap<String,Integer>();
+	private HashMap<Integer,Integer> emptyLinesBeforeCommand;
 	private int currentLine = 0;
 	private int globalLinePosition = 0;
 	private boolean active = false;
@@ -19,8 +20,9 @@ public class Interpreter {
 	 * @param parsedCommands
 	 * @throws InterpreterException 
 	 */
-	public Interpreter( Controller control, ArrayList<ArrayList<String>> parsedCommands ) throws InterpreterException{
+	public Interpreter( Controller control, ArrayList<ArrayList<String>> parsedCommands, HashMap<Integer,Integer> emptyLinesBeforeCommand ) throws InterpreterException{
 		this.setParsedCommands( parsedCommands );
+		this.emptyLinesBeforeCommand = emptyLinesBeforeCommand;
 		this.control = control;
 		this.setActive( true );
 	}
@@ -82,7 +84,7 @@ public class Interpreter {
 		else {
 			int line = this.getCurrentLine();
 			
-			this.control.showActualLine( this.globalLinePosition + line + 1);
+			this.control.showActualLine( getCurrentPosition() );//this.globalLinePosition + line + 1);
 			
 			try{
 				this.executeCommand( this.getParsedCommands().get( line ) );
@@ -260,7 +262,7 @@ public class Interpreter {
 			}
 			
 			
-			Interpreter loopInterpreter = new Interpreter( this.control, loopCommands );
+			Interpreter loopInterpreter = new Interpreter( this.control, loopCommands, emptyLinesBeforeCommand );
 			loopInterpreter.globalLinePosition = loopStart + this.globalLinePosition;
 			this.loop.add( loopInterpreter );
 			this.loop.add( loopRuns );
@@ -445,7 +447,7 @@ public class Interpreter {
 	}
 	
 	public int getCurrentPosition(){
-		return ( this.globalLinePosition + this.getCurrentLine() ) + 1;
+		return ( this.globalLinePosition + this.getCurrentLine() ) + 1 + emptyLinesBeforeCommand.get( this.globalLinePosition + this.getCurrentLine() );
 	}
 	
 	
