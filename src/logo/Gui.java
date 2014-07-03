@@ -61,7 +61,7 @@ public class Gui extends JFrame implements ActionListener {
 	/**
 	 * Creates the GUI with all Components ( graphic, editor, control elements, Layouts etc. )
 	 */
-	public Gui( String[] buttons ){
+	public Gui( ){
 		//********************************************** Window
 		this.setSize( WINDOW_SIZE );
 		this.setMinimumSize( WINDOW_MINIMUM_SIZE );

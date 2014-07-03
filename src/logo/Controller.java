@@ -17,7 +17,7 @@ public class Controller {
 	
 	
 	public Controller(){
-		this.gui = new Gui( CONTROL_COMMANDS );
+		this.gui = new Gui();
 		this.parser = new Parser();
 		this.fileHandler = new FileHandler();
 		
