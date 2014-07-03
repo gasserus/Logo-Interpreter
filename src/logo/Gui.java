@@ -32,6 +32,7 @@ public class Gui extends JFrame implements ActionListener {
 	private final int MAXIMUM_SPEED = 10;
 	private final int MINIMUM_SPEED = 0; 
 
+	private final String[] CONTROL_BUTTONS = new String[] { "New", "Load", "Save", "Save Image", "Reset", "Run", "Step" };
 	private final String[] GUI_BUTTONS = new String[] { "Toggle Zoom" };
 	
 	private final int SPLITTING_CONTROL_BUTTONS_AT = 4;
@@ -39,9 +40,7 @@ public class Gui extends JFrame implements ActionListener {
 	
 	private final Dimension WINDOW_SIZE = new Dimension( 800, 600 );
 	private final Dimension WINDOW_MINIMUM_SIZE = new Dimension( 640, 320 );
-	
-	String[] controlButtons;
-	
+
 	JScrollPane scrollGraph;
 	GraphPane graph;
 	JPanel controlPanel, controlButtonsPanel, fileButtonsPanel, graphOutputPanel, centerPane;
@@ -63,7 +62,6 @@ public class Gui extends JFrame implements ActionListener {
 	 * Creates the GUI with all Components ( graphic, editor, control elements, Layouts etc. )
 	 */
 	public Gui( String[] buttons ){
-		this.controlButtons = buttons;
 		//********************************************** Window
 		this.setSize( WINDOW_SIZE );
 		this.setMinimumSize( WINDOW_MINIMUM_SIZE );
@@ -112,12 +110,12 @@ public class Gui extends JFrame implements ActionListener {
 		
 
 		//********************************************** initialise Control Buttons -> add to Design
-		this.controlButton = new JButton[ controlButtons.length ];
+		this.controlButton = new JButton[ CONTROL_BUTTONS.length ];
 		buttonListener = new GuiListener();
 		
-		for( int i = 0; i < controlButtons.length; i++ ){
+		for( int i = 0; i < CONTROL_BUTTONS.length; i++ ){
 			this.controlButton[i] = new JButton();
-			this.controlButton[i].setText( this.controlButtons[i] );
+			this.controlButton[i].setText( this.CONTROL_BUTTONS[i] );
 			this.controlButton[i].addActionListener( this );
 			if( i < SPLITTING_CONTROL_BUTTONS_AT ){
 				this.fileButtonsPanel.add( this.controlButton[i] );
@@ -309,7 +307,7 @@ public class Gui extends JFrame implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		for( int i = 0; i < controlButtons.length; i++ ){
+		for( int i = 0; i < CONTROL_BUTTONS.length; i++ ){
 			if( e.getSource().equals( this.controlButton[i] ) ){
 				this.buttonListener.setLastPressedButton( controlButton[i].getText() );
 				synchronized( this.buttonListener ){
