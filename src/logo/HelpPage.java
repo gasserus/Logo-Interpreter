@@ -8,6 +8,11 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+/**
+ * 
+ * @author Marschall Steffen
+ *
+ */
 
 @SuppressWarnings("serial")
 public class HelpPage extends JFrame {
@@ -34,7 +39,9 @@ public class HelpPage extends JFrame {
 			
 			private final int FRAME_HEIGHT = 30;
 			
-	
+	/**
+	 * creates and view the HelpPage Window
+	 */
 	public HelpPage(){
 		this.setSize( WINDOW_SIZE );
 		this.setTitle( TITLE );
@@ -44,6 +51,10 @@ public class HelpPage extends JFrame {
 		
 	}
 
+	
+	/**
+	 * draws the HELP - Window
+	 */
 	public void paint( Graphics g ){
 		for( int i = 0; i < COMMANDS.length; i++ ){
 			if ( i % 2 == 0){
@@ -59,6 +70,10 @@ public class HelpPage extends JFrame {
 		
 	}
 	
+	/**
+	 * calculates the Maximum height per line
+	 * @return Maximum Single-Column height
+	 */
 	private int getLineHeight(){
 		return (int) ( (double) (this.getHeight() - FRAME_HEIGHT ) / COMMANDS.length );
 	}
