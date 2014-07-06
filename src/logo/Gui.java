@@ -33,13 +33,13 @@ public class Gui extends JFrame implements ActionListener {
 	private final int MINIMUM_SPEED = 0; 		//JSlider Minimum Value
 
 	private final String[] CONTROL_BUTTONS = new String[] { "New", "Load", "Save", "Save Image", "Reset", "Run", "Step" };  // All Buttons which influence the Program
-	private final String[] GUI_BUTTONS = new String[] { "Toggle Zoom" }; //all Buttons which only influence the GUI
+	private final String[] GUI_BUTTONS = new String[] { "Toggle Zoom", "?" }; //all Buttons which only influence the GUI
 	
 	private final int SPLITTING_CONTROL_BUTTONS_AT = 4;  // a Value to split the Control Buttons from the top bar and the run-options
 	private final String TITLE = "LOGO-Interpreter";	// the title of the Frame which will be displayed
 	
 	private final Dimension WINDOW_SIZE = new Dimension( 800, 600 );  		// standard window size 
-	private final Dimension WINDOW_MINIMUM_SIZE = new Dimension( 640, 320 );	// Sets the minimum size of the window, so the buttons will be displayed correct
+	private final Dimension WINDOW_MINIMUM_SIZE = new Dimension( 700, 320 );	// Sets the minimum size of the window, so the buttons will be displayed correct
 
 	
 	//************************************************************************ GUI Graphical Elements
@@ -127,16 +127,17 @@ public class Gui extends JFrame implements ActionListener {
 			}
 		}
 		
-		//********************************************** initialiseadditional GUI Buttons -> add to Design
+		//********************************************** initialise additional GUI Buttons 
 		this.guiButton = new JButton[ this.GUI_BUTTONS.length ];
 		
 		for( int i = 0; i < this.GUI_BUTTONS.length; i++ ){
 			this.guiButton[i] = new JButton();
 			this.guiButton[i].setText( this.GUI_BUTTONS[i] );
 			this.guiButton[i].addActionListener( this );
-			this.fileButtonsPanel.add( this.guiButton[i] );
 		}
-		 
+		//********************************************** add Zoom Button ( guiButton[0] to GUI
+		this.fileButtonsPanel.add( this.guiButton[0] ); 
+		
 		//********************************************** add JSlider for Speed with Labels 
 		this.speed = new JSlider( JSlider.HORIZONTAL, this.MINIMUM_SPEED, this.MAXIMUM_SPEED, 0 );
 		this.speed.setMinorTickSpacing( 1 );
@@ -148,6 +149,9 @@ public class Gui extends JFrame implements ActionListener {
         this.speed.setLabelTable( labels );
         this.speed.setPaintLabels( true );
 		this.fileButtonsPanel.add( this.speed );
+		
+		//********************************************** add Help Button ( guiButton[1] to GUI
+		this.fileButtonsPanel.add( this.guiButton[1] ); 	
 		
 		//********************************************** add line counter
 		this.lineCounter = new JTextField();
@@ -321,6 +325,7 @@ public class Gui extends JFrame implements ActionListener {
 			if ( e.getSource().equals( this.guiButton[i] ) ){
 				switch( this.GUI_BUTTONS[i] ){
 					case "Toggle Zoom": this.toggleZoom(); break;
+					case "?": HelpPage help = new HelpPage();break;
 					default: System.out.println( "Gui Button not yet implemented" );
 				}
 			}
