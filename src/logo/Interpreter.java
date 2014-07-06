@@ -331,7 +331,7 @@ public class Interpreter {
 
 	private void clear( ArrayList<String> parameter ) throws InterpreterException {
 		if( checkParameterSize( parameter, 0 ) ){
-			this.control.clearProgram();
+			this.control.clearCommand();
 	
 		}
 	}
@@ -339,7 +339,7 @@ public class Interpreter {
 	
 	private void reset( ArrayList<String> parameter ) throws InterpreterException {
 		if( checkParameterSize( parameter, 0 ) ){
-			this.control.resetTurtle();
+			this.control.resetTurtleCommand();
 		}
 	}
 	

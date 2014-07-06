@@ -88,8 +88,9 @@ public class Controller {
 	/**
 	 * clears the Program (Command).
 	 */
-	public void clearProgram(){
-		
+	public void clearCommand(){
+		this.gui.clearGraph();
+		this.moveTurtle();
 	}
 
 	/**
@@ -98,7 +99,7 @@ public class Controller {
 	public void resetProgram(){
 		this.interpreter = null;
 		this.gui.graph.clearGraph();
-		this.resetTurtle();
+		this.resetTurtleCommand();
 		this.moveTurtle();
 	}
 	
@@ -112,7 +113,7 @@ public class Controller {
 	/**
 	 * resets Turtle to its Starting Position, without Drawing (restores also Color 0 and the StartingDirection of the turtle).
 	 */
-	public void resetTurtle(){
+	public void resetTurtleCommand(){
 		this.turtle.reset();
 		this.turtle.setPen( false );
 		this.moveTurtle();
