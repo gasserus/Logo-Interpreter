@@ -3,10 +3,7 @@ package logo;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-
 import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 /**
  * 
@@ -18,22 +15,22 @@ import javax.swing.JTextArea;
 public class HelpPage extends JFrame {
 	
 	private final String[] COMMANDS = new String[] { 
-			"forward x: Turtle moves x forward",
-			"backward x: Turtle moves x backwards",
-			"right x: Turtle rotates x degrees right",
-			"left x: Turtle rotates x degrees left",
-			"reset: Turtle returns to Center",
-			"clear: Previous painted Lines will be deleted",
-			"penup: Turtle is now drawing a line when movin (standard)",
-			"pendown: Turtle is not drawing when moving",
-			"setcolor x: changes color of the Turtle ( 0 <= x <= 3 )",
-			"repeat x [ action ]: repeats the action x times ( new Line before bracket )",
-			"let variable x: set variable to x",
-			"INFO: variable name is free ( as long it's not a number )",
-			"increment variable x: adds x to variable",
-			"decrement variable x: remove x from variable"
+			"forward x: 			Turtle moves x forward",
+			"backward x: 			Turtle moves x backwards",
+			"right x: 				Turtle rotates x degrees right",
+			"left x: 				Turtle rotates x degrees left",
+			"reset: 				Turtle returns to Center",
+			"clear: 				Previous painted Lines will be deleted",
+			"penup: 				Turtle is now drawing a line when movin (standard)",
+			"pendown: 				Turtle is not drawing when moving",
+			"setcolor x: 			changes color of the Turtle ( 0 <= x <= 3 )",
+			"repeat x [ action ]: 	repeats the action x times ( new Line before bracket )",
+			"let variable x: 		set variable to x",
+			"INFO: 					variable name is free ( as long it's not a number )",
+			"increment variable x: 	adds x to variable",
+			"decrement variable x: 	remove x from variable"
 			};
-			private final String TITLE = "HELP";
+			private final String TITLE = "Commands - Help";
 			private final Dimension WINDOW_SIZE = new Dimension( 500, 400 );
 			private final Dimension MINIMUM_WINDOW_SIZE = new Dimension( 420, 300);
 			
@@ -65,6 +62,7 @@ public class HelpPage extends JFrame {
 			int height = this.getLineHeight(); 
 			g.fillRect(0, ( ( i * height ) + FRAME_HEIGHT ), this.getWidth(), height );
 			g.setColor( Color.BLACK );
+			
 			g.drawString( COMMANDS[ i ], 10, ( ( ( i + 1 ) * height ) + ( FRAME_HEIGHT - 5 ) ) ) ;
 		}
 		
