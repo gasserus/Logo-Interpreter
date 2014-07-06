@@ -62,7 +62,7 @@ public class FileHandler {
 	public String loadFile( File f ){
 		String output = "";
 		String next;
-		if( f != null ){
+		if( f != null  && f.getName().endsWith( this.LOGO_EXTENSION ) ){
 			try {
 				Scanner in = new Scanner(new FileReader( f ));
 				while( in.hasNext() ){

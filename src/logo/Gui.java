@@ -29,18 +29,20 @@ import javax.swing.text.BadLocationException;
  */
 @SuppressWarnings("serial")
 public class Gui extends JFrame implements ActionListener {
-	private final int MAXIMUM_SPEED = 10;
-	private final int MINIMUM_SPEED = 0; 
+	private final int MAXIMUM_SPEED = 10; 		//JSlider Maximum Value
+	private final int MINIMUM_SPEED = 0; 		//JSlider Minimum Value
 
-	private final String[] CONTROL_BUTTONS = new String[] { "New", "Load", "Save", "Save Image", "Reset", "Run", "Step" };
-	private final String[] GUI_BUTTONS = new String[] { "Toggle Zoom" };
+	private final String[] CONTROL_BUTTONS = new String[] { "New", "Load", "Save", "Save Image", "Reset", "Run", "Step" };  // All Buttons which influence the Program
+	private final String[] GUI_BUTTONS = new String[] { "Toggle Zoom" }; //all Buttons which only influence the GUI
 	
-	private final int SPLITTING_CONTROL_BUTTONS_AT = 4;
-	private final String TITLE = "LOGO-Interpreter";
+	private final int SPLITTING_CONTROL_BUTTONS_AT = 4;  // a Value to split the Control Buttons from the top bar and the run-options
+	private final String TITLE = "LOGO-Interpreter";	// the title of the Frame which will be displayed
 	
-	private final Dimension WINDOW_SIZE = new Dimension( 800, 600 );
-	private final Dimension WINDOW_MINIMUM_SIZE = new Dimension( 640, 320 );
+	private final Dimension WINDOW_SIZE = new Dimension( 800, 600 );  		// standard window size 
+	private final Dimension WINDOW_MINIMUM_SIZE = new Dimension( 640, 320 );	// Sets the minimum size of the window, so the buttons will be displayed correct
 
+	
+	//************************************************************************ GUI Graphical Elements
 	JScrollPane scrollGraph;
 	GraphPane graph;
 	JPanel controlPanel, controlButtonsPanel, fileButtonsPanel, graphOutputPanel, centerPane;
