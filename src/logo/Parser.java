@@ -3,6 +3,9 @@ package logo;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * @author Gasser Marcel
+ */
 public class Parser {
 	private HashMap<Integer,Integer> emptyLinesBeforeCommand = new HashMap<Integer,Integer>();
 	
@@ -10,8 +13,10 @@ public class Parser {
 	 * This method returns always an 2D ArrayList which contains only commands and values for the interpreters.
 	 * That means: no comments(;COMMENT) and no empty lines
 	 * 
-	 * @param input		is an array which contains one editor line in each element
-	 * @return			the output 2D ArrayList
+	 * This method also fills the emptyLinesBeforeCommand HashMap
+	 * 
+	 * @param inputText		String array which contains one editor line in each element
+	 * @return
 	 */
 	public ArrayList<ArrayList<String>> parse( String[] inputText ){
 		ArrayList<ArrayList<String>> outputCommandList = new ArrayList<ArrayList<String>>();
@@ -35,8 +40,8 @@ public class Parser {
 				}
 			}
 			
-			
 			if( command.size() > 0 ){
+				// if it is a command add it to the output command list and add an entry to the emty lines ArrayList
 				outputCommandList.add( command );
 				emptyLinesBeforeCommand.put( outputCommandList.size() - 1, emptyLineCounter );
 			}
@@ -50,6 +55,11 @@ public class Parser {
 	}
 	
 	
+	/** 
+	 * Returns a HashMap which contains for each command line a number with empty lines before
+	 * 
+	 * @return		HashMap
+	 */
 	public HashMap<Integer, Integer> getEmptyLinesBeforeCommand(){
 		return emptyLinesBeforeCommand;
 	}
