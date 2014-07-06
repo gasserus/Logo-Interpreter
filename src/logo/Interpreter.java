@@ -3,8 +3,10 @@ package logo;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
-public class Interpreter {
+/**
+ * @author Gasser Marcel
+ */
+class Interpreter {
 	private ArrayList<ArrayList<String>> parsedCommands;
 	private ArrayList<Object> loop = new ArrayList<Object>();
 	private HashMap<String,Integer> variables = new HashMap<String,Integer>();
@@ -13,12 +15,15 @@ public class Interpreter {
 	private int globalLinePosition = 0;
 	private boolean active = false;
 	private Controller control;
-	
-	
+
+
 	/**
-	 * @param control
-	 * @param parsedCommands
-	 * @throws InterpreterException 
+	 * * Initialise the interpreter
+	 * 
+	 * @param control					interpreter needs a controller instance to call the methods for the turtle
+	 * @param parsedCommands			all commands line per line without empty lines and comments
+	 * @param emptyLinesBeforeCommand	for each command line there is an entry in this ArrayList which shows the amount of empty or comment lines before
+	 * @throws InterpreterException
 	 */
 	public Interpreter( Controller control, ArrayList<ArrayList<String>> parsedCommands, HashMap<Integer,Integer> emptyLinesBeforeCommand ) throws InterpreterException{
 		this.setParsedCommands( parsedCommands );
@@ -29,6 +34,8 @@ public class Interpreter {
 	
 	
 	/**
+	 * run all commands with a preset delay
+	 * 
 	 * @throws InterpreterException
 	 */
 	public void run() throws InterpreterException{
@@ -43,87 +50,108 @@ public class Interpreter {
 	}
 	
 	
-	/**
+	/** Interpret command per command
+	 * 
 	 * @throws InterpreterException
 	 */
 	public void step() throws InterpreterException{
-
+		// check if last step entered a loop
 		if( ! this.loop.isEmpty() ){
-			int runs = (Integer) loop.get( 1 );
-			
-			Interpreter loopInterpreter = (Interpreter) loop.get( 0 );
-			loopInterpreter.variables = this.variables;
-			
-			try{
-				loopInterpreter.step();
-			}
-			catch (Throwable t) {
-				this.setActive( false );
-				throw new InterpreterException( t.getMessage() ); 
-			} 
-			
-			this.variables = loopInterpreter.variables;
-
-			if( ! loopInterpreter.isActive() ){
-				runs--;
-				loopInterpreter.setActive( true );
-			}
-				
-			if( runs < 1 ){
-				// loop is finished
-				loop.clear();
-				if( this.getCurrentLine() == 0 ){
-					this.setActive( false );
-				}
-			} 
-			else {
-				// save new runs
-				loop.set( 1, runs );
-			}
+			this.executeLoopCommand();
 		}
 		else {
-			int line = this.getCurrentLine();
-			
-			this.control.showActualLine( getCurrentPosition() );//this.globalLinePosition + line + 1);
-			
-			try{
-				this.executeCommand( this.getParsedCommands().get( line ) );
-			}
-			catch (Throwable t) {
-				this.setActive( false );
-				throw new InterpreterException( t.getMessage() ); 
-			} 
-			
+			executeNormalCommand();
+		}
+	}
+	
+	/**
+	 * @throws InterpreterException
+	 */
+	private void executeLoopCommand() throws InterpreterException{
+		int runs = (Integer) loop.get( 1 );
 		
-			int lineAfterExec = this.getCurrentLine();
+		Interpreter loopInterpreter = (Interpreter) loop.get( 0 );
+		loopInterpreter.variables = this.variables;
+		
+		try{
+			loopInterpreter.step();
+		}
+		catch (Throwable t) {
+			this.setActive( false );
+			throw new InterpreterException( t.getMessage() ); 
+		} 
+		
+		this.variables = loopInterpreter.variables;
+
+		if( ! loopInterpreter.isActive() ){
+			runs--;
+			loopInterpreter.setActive( true );
+		}
 			
-			
-			line++;
-			// check if a repeat has manipulated the position
-			if( lineAfterExec > line ){
-				this.setCurrentLine( lineAfterExec +1 );
-				this.setActive( true );
+		if( runs < 1 ){
+			// loop finished
+			loop.clear();
+			if( this.getCurrentLine() == 0 ){
+				this.setActive( false );
 			}
-			else {
-				this.setCurrentLine( line );
-			}
+		} 
+		else {
+			// save new runs
+			loop.set( 1, runs );
 		}
 	}
 	
 	
 	/**
-	 * @param command
 	 * @throws InterpreterException
 	 */
-	public void executeCommand( ArrayList<String> command ) throws InterpreterException{
+	private void executeNormalCommand() throws InterpreterException{
+		int line = this.getCurrentLine();
+		
+		// send the actual global line position to the controller
+		this.control.showActualLine( getCurrentPosition() );
+		
+		try{
+			this.executeCommand( this.getParsedCommands().get( line ) );
+		}
+		catch (Throwable t) {
+			this.setActive( false );
+			throw new InterpreterException( t.getMessage() ); 
+		} 
+		
+	
+		int lineAfterExec = this.getCurrentLine();
+		
+		
+		line++;
+		// check if a repeat has manipulated the position
+		if( lineAfterExec > line ){
+			this.setCurrentLine( lineAfterExec +1 );
+			this.setActive( true );
+		}
+		else {
+			this.setCurrentLine( line );
+		}
+	}
+	
+	
+	/**
+	 * Execute the command ( call the right method)
+	 * 
+	 * @param command				command with parameters
+	 * @throws InterpreterException
+	 */
+	private void executeCommand( ArrayList<String> command ) throws InterpreterException{
 		// get the first element, because this should be the command
 		String commandName = command.get( 0 );
 		
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings( "unchecked" )
 		ArrayList<String> parameters = (ArrayList<String>) command.clone();
 		
+		// remove command from parameter list
 		parameters.remove( 0 );
 		
+		// select the right command
 		switch( commandName ){
 			case "forward": 	this.forward( parameters ); break;
 			case "backward": 	this.backward( parameters ); break;
@@ -138,7 +166,10 @@ public class Interpreter {
 			case "let":			this.let( parameters ); break;
 			case "increment":	this.increment( parameters ); break;
 			case "decrement":	this.decrement( parameters ); break;
-			
+			/* if you want more commands you can add them here and create a function which should be called
+			 * Example:
+			 * case "aslant": this.aslant( parameters ); break;
+			 */
 			default: throw new InterpreterException( "Command " + commandName + " unknown." );
 					 
 		}
@@ -146,6 +177,10 @@ public class Interpreter {
 	
 	
 	/**
+	 * move the turtle forward
+	 * only one int parameter is allowed 
+	 * forward 10
+	 * 
 	 * @param parameter
 	 * @throws InterpreterException
 	 */
@@ -158,6 +193,10 @@ public class Interpreter {
 	
 	
 	/**
+	 * move the turtle backward
+	 * only one int parameter is allowed 
+	 * backward 10
+	 * 
 	 * @param parameter
 	 * @throws InterpreterException
 	 */
@@ -315,6 +354,10 @@ public class Interpreter {
 	}
 
 
+	/**
+	 * @param parameter
+	 * @throws InterpreterException
+	 */
 	private void penup( ArrayList<String> parameter ) throws InterpreterException {
 		if( checkParameterSize( parameter, 0 ) ){
 			this.control.penDown( false );
@@ -322,6 +365,10 @@ public class Interpreter {
 	}
 
 
+	/**
+	 * @param parameter
+	 * @throws InterpreterException
+	 */
 	private void pendown( ArrayList<String> parameter ) throws InterpreterException {
 		if( checkParameterSize( parameter, 0 ) ){
 			this.control.penDown( true );
@@ -329,6 +376,10 @@ public class Interpreter {
 	}
 
 
+	/**
+	 * @param parameter
+	 * @throws InterpreterException
+	 */
 	private void clear( ArrayList<String> parameter ) throws InterpreterException {
 		if( checkParameterSize( parameter, 0 ) ){
 			this.control.clearCommand();
@@ -337,6 +388,10 @@ public class Interpreter {
 	}
 	
 	
+	/**
+	 * @param parameter
+	 * @throws InterpreterException
+	 */
 	private void reset( ArrayList<String> parameter ) throws InterpreterException {
 		if( checkParameterSize( parameter, 0 ) ){
 			this.control.resetTurtleCommand();
@@ -440,7 +495,7 @@ public class Interpreter {
 	 * @param value
 	 * @return
 	 */
-	public static boolean isNumeric( String value ){  
+	private static boolean isNumeric( String value ){  
 		try {  
 			Double.parseDouble( value );
 		}  
@@ -451,10 +506,18 @@ public class Interpreter {
 	}
 	
 
+	/** Get the current line of the actual interpreter instance
+	 * 
+	 * @return
+	 */
 	private int getCurrentLine() {
 		return currentLine;
 	}
 	
+	
+	/** Get the global line position of the LOGO program
+	 * @return
+	 */
 	public int getCurrentPosition(){
 		return ( this.globalLinePosition + this.getCurrentLine() ) + 1 + emptyLinesBeforeCommand.get( this.globalLinePosition + this.getCurrentLine() );
 	}
@@ -463,7 +526,7 @@ public class Interpreter {
 	/**
 	 * @param newCurrentLine
 	 */
-	public void setCurrentLine( int newCurrentLine ){
+	private void setCurrentLine( int newCurrentLine ){
 		if( this.getParsedCommands().size() > newCurrentLine ){
 			this.currentLine = newCurrentLine;
 		}
@@ -474,11 +537,18 @@ public class Interpreter {
 	}
 
 	
+	/**
+	 * @return
+	 */
 	private ArrayList<ArrayList<String>> getParsedCommands() {
 		return parsedCommands;
 	}
 
 	
+	/**
+	 * @param parsedCommands
+	 * @throws InterpreterException
+	 */
 	private void setParsedCommands( ArrayList<ArrayList<String>> parsedCommands ) throws InterpreterException {
 		if( parsedCommands.size() > 0 ){
 			this.parsedCommands = parsedCommands;
@@ -489,11 +559,17 @@ public class Interpreter {
 	}
 
 	
+	/**
+	 * @return
+	 */
 	public boolean isActive() {
 		return active;
 	}
 	
 	
+	/**
+	 * @param active
+	 */
 	private void setActive( boolean active ) {
 		this.active = active;
 	}
@@ -510,9 +586,11 @@ public class Interpreter {
 	}
 	
 
-	
 	@SuppressWarnings("serial")
 	public static class InterpreterException extends Exception {
+		/**
+		 * @param msg
+		 */
 		public InterpreterException( String msg ){
 			super( msg );
 		}
