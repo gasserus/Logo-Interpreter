@@ -58,7 +58,7 @@ public class Parser {
 	/** 
 	 * Returns a HashMap which contains for each command line a number with empty lines before
 	 * 
-	 * @return		HashMap
+	 * @return
 	 */
 	public HashMap<Integer, Integer> getEmptyLinesBeforeCommand(){
 		return emptyLinesBeforeCommand;

@@ -18,11 +18,11 @@ class Interpreter {
 
 
 	/**
-	 * * Initialise the interpreter
+	 * Initialize the interpreter
 	 * 
-	 * @param control					interpreter needs a controller instance to call the methods for the turtle
-	 * @param parsedCommands			all commands line per line without empty lines and comments
-	 * @param emptyLinesBeforeCommand	for each command line there is an entry in this ArrayList which shows the amount of empty or comment lines before
+	 * @param control					Interpreter needs a controller instance to call the methods for the turtle
+	 * @param parsedCommands			All commands line per line without empty lines and comments
+	 * @param emptyLinesBeforeCommand	For each command line there is an entry in this ArrayList which shows the amount of empty or comment lines before
 	 * @throws InterpreterException
 	 */
 	public Interpreter( Controller control, ArrayList<ArrayList<String>> parsedCommands, HashMap<Integer,Integer> emptyLinesBeforeCommand ) throws InterpreterException{
@@ -34,7 +34,7 @@ class Interpreter {
 	
 	
 	/**
-	 * run all commands with a preset delay
+	 * Run all commands with a preset delay
 	 * 
 	 * @throws InterpreterException
 	 */
@@ -50,7 +50,8 @@ class Interpreter {
 	}
 	
 	
-	/** Interpret command per command
+	/** 
+	 * Interpret command per command
 	 * 
 	 * @throws InterpreterException
 	 */
@@ -65,6 +66,8 @@ class Interpreter {
 	}
 	
 	/**
+	 * Handle loops (nested loops)
+	 * 
 	 * @throws InterpreterException
 	 */
 	private void executeLoopCommand() throws InterpreterException{
@@ -103,6 +106,8 @@ class Interpreter {
 	
 	
 	/**
+	 * Handle normal simple commands
+	 * 
 	 * @throws InterpreterException
 	 */
 	private void executeNormalCommand() throws InterpreterException{
@@ -119,9 +124,7 @@ class Interpreter {
 			throw new InterpreterException( t.getMessage() ); 
 		} 
 		
-	
 		int lineAfterExec = this.getCurrentLine();
-		
 		
 		line++;
 		// check if a repeat has manipulated the position
@@ -136,9 +139,9 @@ class Interpreter {
 	
 	
 	/**
-	 * Execute the command ( call the right method)
+	 * Execute commands ( call the right method)
 	 * 
-	 * @param command				command with parameters
+	 * @param command					Command with parameters
 	 * @throws InterpreterException
 	 */
 	private void executeCommand( ArrayList<String> command ) throws InterpreterException{
@@ -177,14 +180,14 @@ class Interpreter {
 	
 	
 	/**
-	 * move the turtle forward
-	 * only one int parameter is allowed 
+	 * Move the turtle forward
 	 * forward 10
 	 * 
-	 * @param parameter
+	 * @param parameter					ArrayList should contain one int value
 	 * @throws InterpreterException
 	 */
 	private void forward( ArrayList<String> parameter ) throws InterpreterException{
+		//only one int parameter is allowed 
 		if( checkParameterSize( parameter, 1 ) ){
 				int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
 				this.control.move( parameterValue );
@@ -193,14 +196,14 @@ class Interpreter {
 	
 	
 	/**
-	 * move the turtle backward
-	 * only one int parameter is allowed 
+	 * Move the turtle backward
 	 * backward 10
 	 * 
-	 * @param parameter
+	 * @param parameter					ArrayList should contain one int value
 	 * @throws InterpreterException
 	 */
 	private void backward( ArrayList<String> parameter ) throws InterpreterException{
+		// only one int parameter is allowed
 		if( checkParameterSize( parameter, 1 ) ){
 				int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
 				this.control.move( - parameterValue );
@@ -209,10 +212,13 @@ class Interpreter {
 	
 	
 	/**
-	 * @param parameter
+	 * Turn the turtle X degrees left
+	 * 
+	 * @param parameter					ArrayList should contain one int value
 	 * @throws InterpreterException
 	 */
 	private void left( ArrayList<String> parameter ) throws InterpreterException{
+		// only one int parameter is allowed
 		if( checkParameterSize( parameter, 1 ) ){
 				int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
 				this.control.turn( parameterValue );
@@ -221,7 +227,9 @@ class Interpreter {
 	
 	
 	/**
-	 * @param parameter
+	 * Turn the turtle X degrees right
+	 * 
+	 * @param parameter					ArrayList should contain one int value
 	 * @throws InterpreterException
 	 */
 	private void right( ArrayList<String> parameter ) throws InterpreterException{
@@ -233,7 +241,9 @@ class Interpreter {
 	
 	
 	/**
-	 * @param parameter
+	 * Set a draw color
+	 * 
+	 * @param parameter					ArrayList should contain one int value
 	 * @throws InterpreterException
 	 */
 	private void setcolor( ArrayList<String> parameter ) throws InterpreterException{
@@ -248,8 +258,10 @@ class Interpreter {
 	
 	
 	/**
-	 * @param parameter
-	 * @throws InterpreterException
+	 * Detect loop range and save loop
+	 * 
+	 * @param parameter					ArrayList should contain one int value
+	 * @throws InterpreterExceptionValue
 	 */
 	private void repeat( ArrayList<String> parameter ) throws InterpreterException{
 		if( checkParameterSize( parameter, 1 ) ){
@@ -264,6 +276,7 @@ class Interpreter {
 			int loopStart = 0;
 			// next line after "repeat X"
 			
+			// check if there is a wrong constellation if chars for the loop
 			if( ( allCommands.size() - 1 ) <= ( line + 1 ) ){
 				throw new InterpreterException( "Unknown looptype at line " + ( this.globalLinePosition + this.getCurrentLine() + 1 ) );
 			}
@@ -273,6 +286,7 @@ class Interpreter {
 			
 			int inLoop = 0;
 			do {
+				// get all loop chars to get the right closing char
 				if( allCommands.get( line ).get(0).equals( "[" ) ){
 					// count all [ because of innerloops
 					inLoop++;
@@ -300,7 +314,7 @@ class Interpreter {
 				throw new InterpreterException( "Empty loop error at line " + ( this.globalLinePosition + this.getCurrentLine() + 1 ) );
 			}
 			
-			
+			// create a new interpreter instance 
 			Interpreter loopInterpreter = new Interpreter( this.control, loopCommands, emptyLinesBeforeCommand );
 			loopInterpreter.globalLinePosition = loopStart + this.globalLinePosition;
 			this.loop.add( loopInterpreter );
@@ -314,10 +328,14 @@ class Interpreter {
 	
 	
 	/**
-	 * @param parameter
+	 * Set LOGO parameters
+	 * let name 10
+	 * 
+	 * @param parameter					ArrayList should contain two values first: name (e.g. testVar) second: value (e.g. 10 or var1 <= variable name if this var is aleready defined)
 	 * @throws InterpreterException
 	 */
 	private void let( ArrayList<String> parameter ) throws InterpreterException{
+		// 2 parameters allowed : first is the name second is the value ( could also be a variable )
 		if( checkParameterSize( parameter, 2 ) ){
 				String name = parameter.get( 0 );
 				int value = this.parseValueForVariables( parameter.get( 1 ) );
@@ -327,24 +345,30 @@ class Interpreter {
 	
 
 	/**
-	 * @param parameter
+	 * Increment a LOGO variable
+	 * 
+	 * @param parameter					ArrayList should contain two values first: name (e.g. testVar) second: value (e.g. 10 or var1 <= variable name if this var is aleready defined)
 	 * @throws InterpreterException
 	 */
 	private void increment( ArrayList<String> parameter ) throws InterpreterException{
 		if( checkParameterSize( parameter, 2 ) ){
-				String name = parameter.get( 0 );
-				int value = this.parseValueForVariables( parameter.get( 1 ) );
-				int variableValue = getVariableValue( name );
-				updateVariableValue( name, ( variableValue + value ) );
+			// 2 parameters allowed : first is the variable name second is the value ( could also be a variable )
+			String name = parameter.get( 0 );
+			int value = this.parseValueForVariables( parameter.get( 1 ) );
+			int variableValue = getVariableValue( name );
+			updateVariableValue( name, ( variableValue + value ) );
 		}
 	}
 	
 	
 	/**
-	 * @param parameter
+	 * Decrement a LOGO variable
+	 * 
+	 * @param parameter					ArrayList should contain two values first: name (e.g. testVar) second: value (e.g. 10 or var1 <= variable name if this var is aleready defined)
 	 * @throws InterpreterException
 	 */
 	private void decrement( ArrayList<String> parameter ) throws InterpreterException{
+		// 2 parameters allowed : first is the variable name second is the value ( could also be a variable )
 		if( checkParameterSize( parameter, 2 ) ){
 				String name = parameter.get( 0 );
 				int value = this.parseValueForVariables( parameter.get( 1 ) );
@@ -355,7 +379,9 @@ class Interpreter {
 
 
 	/**
-	 * @param parameter
+	 * Move the pen up, no line is drawn
+	 * 
+	 * @param parameter					Array list should be empty
 	 * @throws InterpreterException
 	 */
 	private void penup( ArrayList<String> parameter ) throws InterpreterException {
@@ -366,7 +392,9 @@ class Interpreter {
 
 
 	/**
-	 * @param parameter
+	 * Move pen down
+	 * 
+	 * @param parameter					Array list should be empty
 	 * @throws InterpreterException
 	 */
 	private void pendown( ArrayList<String> parameter ) throws InterpreterException {
@@ -377,7 +405,9 @@ class Interpreter {
 
 
 	/**
-	 * @param parameter
+	 * Clears the draw field
+	 * 
+	 * @param parameter					Array list should be empty
 	 * @throws InterpreterException
 	 */
 	private void clear( ArrayList<String> parameter ) throws InterpreterException {
@@ -389,7 +419,9 @@ class Interpreter {
 	
 	
 	/**
-	 * @param parameter
+	 * Reset the turtle to the start position
+	 * 
+	 * @param parameter					Array list should be empty
 	 * @throws InterpreterException
 	 */
 	private void reset( ArrayList<String> parameter ) throws InterpreterException {
@@ -400,9 +432,11 @@ class Interpreter {
 	
 	
 	/**
-	 * @param parameter
-	 * @param size
-	 * @return
+	 * Check if the right amount of parameters is passed
+	 * 
+	 * @param parameter					Passed parameters
+	 * @param size						Expected size
+	 * @return							True if size fits else throw an error
 	 * @throws InterpreterException
 	 */
 	private boolean checkParameterSize( ArrayList<String> parameter, int size ) throws InterpreterException {
@@ -421,7 +455,9 @@ class Interpreter {
 	
 	
 	/**
-	 * @param key
+	 * Create a LOGO variable
+	 * 
+	 * @param key						Variable name ( no numbers!!)
 	 * @param value
 	 * @throws InterpreterException
 	 */
@@ -442,8 +478,10 @@ class Interpreter {
 	
 
 	/**
-	 * @param key
-	 * @return
+	 * Get the value of the LOGO variable
+	 * 
+	 * @param key						LOGO variable name
+	 * @return							True else it will throw an error
 	 * @throws InterpreterException
 	 */
 	private int getVariableValue( String key ) throws InterpreterException{
@@ -457,6 +495,8 @@ class Interpreter {
 	
 	
 	/**
+	 * Detect if value is a LOGO variable
+	 * 
 	 * @param value
 	 * @return
 	 * @throws InterpreterException
@@ -477,7 +517,9 @@ class Interpreter {
 	
 	
 	/**
-	 * @param key
+	 * Set a new value for LOGO variable
+	 * 
+	 * @param key						Variable name
 	 * @param value
 	 * @throws InterpreterException
 	 */
@@ -492,6 +534,8 @@ class Interpreter {
 	
 	
 	/**
+	 * Check if the String is a number
+	 * 
 	 * @param value
 	 * @return
 	 */
@@ -515,7 +559,8 @@ class Interpreter {
 	}
 	
 	
-	/** Get the global line position of the LOGO program
+	/** 
+	 * Get the global line position of the LOGO program
 	 * @return
 	 */
 	public int getCurrentPosition(){
@@ -538,14 +583,18 @@ class Interpreter {
 
 	
 	/**
+	 * Get all commands
+	 * 
 	 * @return
 	 */
-	private ArrayList<ArrayList<String>> getParsedCommands() {
+	public ArrayList<ArrayList<String>> getParsedCommands() {
 		return parsedCommands;
 	}
 
 	
 	/**
+	 * Set the parsed commads here because this includes a check if the list is empty
+	 * 
 	 * @param parsedCommands
 	 * @throws InterpreterException
 	 */
@@ -560,7 +609,10 @@ class Interpreter {
 
 	
 	/**
-	 * @return
+	 * Get the status of the interpreter instance
+	 * 
+	 * @return		running = true
+	 *				stopped/error = false
 	 */
 	public boolean isActive() {
 		return active;
@@ -568,6 +620,8 @@ class Interpreter {
 	
 	
 	/**
+	 * Set the interpreter status
+	 * 
 	 * @param active
 	 */
 	private void setActive( boolean active ) {
@@ -589,6 +643,8 @@ class Interpreter {
 	@SuppressWarnings("serial")
 	public static class InterpreterException extends Exception {
 		/**
+		 * Send a interpreter error message
+		 * 
 		 * @param msg
 		 */
 		public InterpreterException( String msg ){
