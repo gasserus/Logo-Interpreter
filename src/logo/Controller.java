@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import logo.Interpreter.InterpreterException;
 
 
+/**
+ * @author Steffen Marschall & Marcel Gasser
+ */
 public class Controller {
 	private final String NO_ERROR_STRING = "Everything is just fine.";
 	private final double[] STARTING_POSITION = new double[] { 0.0, 0.0 };
@@ -35,13 +38,19 @@ public class Controller {
 		this.gui.graph.clearGraph();
 		this.turtle = new Turtle( STARTING_POSITION[0], STARTING_POSITION[1] );
 		this.moveTurtle();
-		
 	}
 	
+	/**
+	 * @return The actual speed set in the UI
+	 */
 	public int getProgrammSpeedinMs(){
 		return this.gui.getSpeed() * 100;
 	}
 	
+	
+	/**
+	 * 	This is the control for the buttons
+	 */
 	public void runningLogoInterpreter(){
 		String button;
 		while ( true ){
@@ -120,10 +129,17 @@ public class Controller {
 		this.turtle.setPen( true );
 	}
 	
+	
 	public void showActualLine( int line ){
 		this.gui.setActualLine( line );
 	}
 		
+	
+	/**
+	 * Start/Restart the interpreter
+	 * 
+	 * @throws InterpreterException
+	 */
 	public void startInterpreter() throws InterpreterException{
 		ArrayList<ArrayList<String>> parsedCommands;
 		try {
@@ -217,7 +233,7 @@ public class Controller {
 
 	public static void main(String[] args) {
 		@SuppressWarnings("unused")
-	Controller control = new Controller();
+		Controller control = new Controller();
 	}
 
 }

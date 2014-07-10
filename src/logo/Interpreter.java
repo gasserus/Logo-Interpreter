@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
+ * This class interprets all parsed commands and execute the fitting method in the controller class
+ * 
  * @author Gasser Marcel
  */
 class Interpreter {
@@ -497,9 +499,9 @@ class Interpreter {
 	/**
 	 * Detect if value is a LOGO variable
 	 * 
-	 * @param value
-	 * @return
-	 * @throws InterpreterException
+	 * @param 		value
+	 * @return		Value of the LOGO variable or value 
+	 * @throws 		InterpreterException
 	 */
 	private int parseValueForVariables( String value ) throws InterpreterException{
 		if( this.variables.containsKey( value ) ){
@@ -536,8 +538,8 @@ class Interpreter {
 	/**
 	 * Check if the String is a number
 	 * 
-	 * @param value
-	 * @return
+	 * @param		value
+	 * @return 		true if is a number else false
 	 */
 	private static boolean isNumeric( String value ){  
 		try {  
@@ -552,7 +554,7 @@ class Interpreter {
 
 	/** Get the current line of the actual interpreter instance
 	 * 
-	 * @return
+	 * @return	currentLine of actual instance
 	 */
 	private int getCurrentLine() {
 		return currentLine;
@@ -561,7 +563,7 @@ class Interpreter {
 	
 	/** 
 	 * Get the global line position of the LOGO program
-	 * @return
+	 * @return	globalPositon
 	 */
 	public int getCurrentPosition(){
 		return ( this.globalLinePosition + this.getCurrentLine() ) + 1 + emptyLinesBeforeCommand.get( this.globalLinePosition + this.getCurrentLine() );
@@ -585,7 +587,7 @@ class Interpreter {
 	/**
 	 * Get all commands
 	 * 
-	 * @return
+	 * @return ArrayList of all commands
 	 */
 	public ArrayList<ArrayList<String>> getParsedCommands() {
 		return parsedCommands;

@@ -19,7 +19,7 @@ public class Turtle {
 	private boolean isDrawing;
 	
 	/**
-	 * creates new Turtle object with the given StartingPosition. Starting Angle is 90°, color: 0, isDrawing: true
+	 * creates new Turtle object with the given StartingPosition. Starting Angle is 90(Degree), color: 0, isDrawing: true
 	 * @param xStartingPos
 	 * @param yStartingPos
 	 */

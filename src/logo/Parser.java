@@ -16,7 +16,7 @@ public class Parser {
 	 * This method also fills the emptyLinesBeforeCommand HashMap
 	 * 
 	 * @param inputText		String array which contains one editor line in each element
-	 * @return
+	 * @return				ArrayList containing the commands
 	 */
 	public ArrayList<ArrayList<String>> parse( String[] inputText ){
 		ArrayList<ArrayList<String>> outputCommandList = new ArrayList<ArrayList<String>>();
@@ -58,7 +58,7 @@ public class Parser {
 	/** 
 	 * Returns a HashMap which contains for each command line a number with empty lines before
 	 * 
-	 * @return
+	 * @return	HashMap with emtpyline logic
 	 */
 	public HashMap<Integer, Integer> getEmptyLinesBeforeCommand(){
 		return emptyLinesBeforeCommand;
