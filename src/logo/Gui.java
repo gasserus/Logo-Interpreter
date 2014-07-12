@@ -46,7 +46,7 @@ public class Gui extends JFrame implements ActionListener {
 			"INFO: 					variable name is free ( as long it's not a number )",
 			"increment variable x: 	adds x to variable",
 			"decrement variable x: 	remove x from variable",
-			"Kommentare: *Command* ; Comment "};
+			"Comments: *Command* ; Comment "};
 	
 	private final int MAXIMUM_SPEED = 10; 		//JSlider Maximum Value
 	private final int MINIMUM_SPEED = 0; 		//JSlider Minimum Value
