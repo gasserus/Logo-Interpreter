@@ -64,6 +64,7 @@ public class Controller {
 				case "Run":		try {
 									this.startInterpreter(); 
 									interpreter.run();
+									this.gui.setErrorOutput( "Finished", false );
 								}
 								catch (InterpreterException e) {
 									this.sendError( e.getMessage() );
@@ -73,6 +74,9 @@ public class Controller {
 				case "Step":	try {
 									this.startInterpreter();
 									interpreter.step();
+									if( interpreter.isActive() == false ){
+										this.gui.setErrorOutput( "Finished", false );
+									}
 								}
 								catch (InterpreterException e) {
 									this.sendError( e.getMessage() );
@@ -111,6 +115,7 @@ public class Controller {
 		this.gui.clearGraph();
 		this.resetTurtleCommand();
 		this.moveTurtle();
+		this.removeError();
 	}
 	
 	/**
