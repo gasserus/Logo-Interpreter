@@ -1,5 +1,11 @@
 package logo;
 
+/**
+ * This class handles the Button events, so that the Control can just await a button, instead of calling a method from the Gui directed to the Controller.
+ * 
+ * @author Poncho
+ *
+ */
 public class GuiListener {
 	private String lastPressedButton;
 	

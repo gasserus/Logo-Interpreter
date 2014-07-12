@@ -12,6 +12,7 @@ import java.util.Scanner;
 import javax.imageio.ImageIO;
 
 /**
+ * This class loads and Saves logo Programs and Images
  * @author Marschall Steffen
  */
 public class FileHandler {

@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 
 
 /**
+ * This class draws the Turtle and all other graphical elements
  * @author Marschall Steffen
  */
 @SuppressWarnings("serial")

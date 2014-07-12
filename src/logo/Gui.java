@@ -25,10 +25,28 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 
 /**
+ * This class sets the Layout of the Gui and allows User Interaction
  * @author Marschall Steffen
  */
 @SuppressWarnings("serial")
 public class Gui extends JFrame implements ActionListener {
+
+	private final String[] COMMANDS = new String[] { 
+			"forward x: 			Turtle moves x forward",
+			"backward x: 			Turtle moves x backwards",
+			"right x: 				Turtle rotates x degrees right",
+			"left x: 				Turtle rotates x degrees left",
+			"reset: 				Turtle returns to Center",
+			"clear: 				Previous painted Lines will be deleted",
+			"penup: 				Turtle is now drawing a line when movin (standard)",
+			"pendown: 				Turtle is not drawing when moving",
+			"setcolor x: 			changes color of the Turtle ( 0 <= x <= 3 )",
+			"repeat x [ action ]: 	repeats the action x times ( new Line before bracket )",
+			"let variable x: 		set variable to x",
+			"INFO: 					variable name is free ( as long it's not a number )",
+			"increment variable x: 	adds x to variable",
+			"decrement variable x: 	remove x from variable"};
+	
 	private final int MAXIMUM_SPEED = 10; 		//JSlider Maximum Value
 	private final int MINIMUM_SPEED = 0; 		//JSlider Minimum Value
 
@@ -325,7 +343,7 @@ public class Gui extends JFrame implements ActionListener {
 			if ( e.getSource().equals( this.guiButton[i] ) ){
 				switch( this.GUI_BUTTONS[i] ){
 					case "Toggle Zoom": this.toggleZoom(); break;
-					case "?": HelpPage help = new HelpPage();break;
+					case "?": HelpPage help = new HelpPage( COMMANDS );break;
 					default: System.out.println( "Gui Button not yet implemented" );
 				}
 			}

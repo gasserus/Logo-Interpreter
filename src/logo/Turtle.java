@@ -3,6 +3,7 @@ package logo;
 import java.awt.Color;
 
 /**
+ * calculates Positions, saves direction, Color and if the Turtle is Drawing.
  * @author Marschall Steffen
  */
 public class Turtle {

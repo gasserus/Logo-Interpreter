@@ -6,6 +6,7 @@ import logo.Interpreter.InterpreterException;
 
 
 /**
+ * Controls all Actions of the Program and the Programflow.
  * @author Steffen Marschall & Marcel Gasser
  */
 public class Controller {
