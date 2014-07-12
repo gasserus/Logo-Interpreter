@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
+ * Parses a String Array and remove comments ( ;comments ) and empty lines
+ * 
  * @author Gasser Marcel
  */
 public class Parser {

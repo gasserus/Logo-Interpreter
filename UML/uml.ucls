@@ -3,7 +3,7 @@
   realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
   <class id="1" language="java" name="logo.Controller" project="Logo-Interpreter" 
     file="/Logo-Interpreter/src/logo/Controller.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1038" y="818"/>    
+    <position height="-1" width="-1" x="1142" y="670"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -12,16 +12,16 @@
   </class>  
   <class id="2" language="java" name="logo.Parser" project="Logo-Interpreter" 
     file="/Logo-Interpreter/src/logo/Parser.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1901" y="608"/>    
+    <position height="-1" width="-1" x="1682" y="284"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="logo.Gui" project="Logo-Interpreter" file="/Logo-Interpreter/src/logo/Gui.java" 
-    binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="604" y="440"/>    
+  <class id="3" language="java" name="logo.FileHandler" project="Logo-Interpreter" 
+    file="/Logo-Interpreter/src/logo/FileHandler.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="878" y="174"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -30,16 +30,16 @@
   </class>  
   <class id="4" language="java" name="logo.GraphPane" project="Logo-Interpreter" 
     file="/Logo-Interpreter/src/logo/GraphPane.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="240" y="1214"/>    
+    <position height="-1" width="-1" x="220" y="284"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="5" language="java" name="logo.FileHandler" project="Logo-Interpreter" 
-    file="/Logo-Interpreter/src/logo/FileHandler.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1012" y="188"/>    
+  <class id="5" language="java" name="logo.Gui" project="Logo-Interpreter" file="/Logo-Interpreter/src/logo/Gui.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="602" y="722"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -48,7 +48,7 @@
   </class>  
   <class id="6" language="java" name="logo.GuiListener" project="Logo-Interpreter" 
     file="/Logo-Interpreter/src/logo/GuiListener.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="182" y="184"/>    
+    <position height="-1" width="-1" x="200" y="826"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -57,7 +57,7 @@
   </class>  
   <class id="7" language="java" name="logo.HelpPage" project="Logo-Interpreter" 
     file="/Logo-Interpreter/src/logo/HelpPage.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="188" y="448"/>    
+    <position height="205" width="214" x="83" y="1040"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -66,7 +66,7 @@
   </class>  
   <class id="8" language="java" name="logo.Turtle" project="Logo-Interpreter" 
     file="/Logo-Interpreter/src/logo/Turtle.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1106" y="1380"/>    
+    <position height="-1" width="-1" x="1084" y="1260"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -75,7 +75,7 @@
   </class>  
   <class id="9" language="java" name="logo.Interpreter" project="Logo-Interpreter" 
     file="/Logo-Interpreter/src/logo/Interpreter.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="781" width="403" x="1779" y="932"/>    
+    <position height="781" width="403" x="1563" y="648"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -84,7 +84,7 @@
   </class>  
   <class id="10" language="java" name="logo.Interpreter.InterpreterException" project="Logo-Interpreter" 
     file="/Logo-Interpreter/src/logo/Interpreter.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1667" y="1675"/>    
+    <position height="79" width="159" x="1563" y="1469"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -92,15 +92,15 @@
     </display>  
   </class>  
   <dependency id="11">    
-    <end type="SOURCE" refId="3"/>    
+    <end type="SOURCE" refId="5"/>    
     <end type="TARGET" refId="7"/>  
   </dependency>  
   <association id="12">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="13" name="gui"/>      
+      <attribute id="13" name="interpreter"/>      
       <multiplicity id="14" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
+    <end type="TARGET" refId="9" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="15">    
@@ -112,11 +112,11 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="18">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="19" name="interpreter"/>      
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="19" name="buttonListener"/>      
       <multiplicity id="20" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
+    <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="21">    
@@ -129,48 +129,40 @@
   </association>  
   <association id="24">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="25" name="fileHandler"/>      
+      <attribute id="25" name="gui"/>      
       <multiplicity id="26" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="27">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="28" name="graph"/>      
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="28" name="fileHandler"/>      
       <multiplicity id="29" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="30">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="31" name="graph"/>      
+      <multiplicity id="32" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="4" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <dependency id="30">    
-    <end type="SOURCE" refId="1"/>    
+  <nesting id="33">    
+    <end type="SOURCE" refId="9"/>    
     <end type="TARGET" refId="10"/>  
-  </dependency>  
-  <dependency id="31">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="4"/>  
-  </dependency>  
-  <association id="32">    
+  </nesting>  
+  <association id="34">    
     <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="33" name="control"/>      
-      <multiplicity id="34" minimum="0" maximum="1"/>    
+      <attribute id="35" name="control"/>      
+      <multiplicity id="36" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="35">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="36" name="buttonListener"/>      
-      <multiplicity id="37" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <nesting id="38">    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="10"/>  
-  </nesting>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    
