@@ -20,10 +20,11 @@ public class HelpPage extends JFrame {
 			private final Dimension MINIMUM_WINDOW_SIZE = new Dimension( 420, 300);
 			private String[] commands;
 			private final int FRAME_HEIGHT = 30;
-			
-	/**
-	 * creates and view the HelpPage Window, expects a Stringarray with Commands and descriptions
-	 */
+
+/**
+ * creates and view the HelpPage Window, expects a Stringarray with Commands and descriptions
+ * @param commands (type string[])
+ */
 	public HelpPage( String[]  commands ){
 		this.setSize( WINDOW_SIZE );
 		this.setTitle( TITLE );
