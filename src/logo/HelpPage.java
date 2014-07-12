@@ -35,9 +35,9 @@ public class HelpPage extends JFrame {
 		
 	}
 
-	
 	/**
-	 * draws the HELP - Window
+	 * Draws the background Lines and writes the commands
+	 * @param g (Graphics)
 	 */
 	public void paint( Graphics g ){
 		for( int i = 0; i < commands.length; i++ ){
