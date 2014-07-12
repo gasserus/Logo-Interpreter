@@ -1,0 +1,31 @@
+repeat 12
+
+[
+
+right 30
+
+let a 50
+
+repeat 50
+
+[
+
+repeat 18
+
+[
+
+forward a 
+
+right 20
+
+]
+
+increment a 1
+
+]
+
+
+
+]
+
+
