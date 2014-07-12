@@ -36,7 +36,7 @@ public class Controller {
 	public void newProgram(){
 		this.gui.setEditorText("");
 		this.removeError();
-		this.gui.graph.clearGraph();
+		this.gui.clearGraph();
 		this.turtle = new Turtle( STARTING_POSITION[0], STARTING_POSITION[1] );
 		this.moveTurtle();
 	}
@@ -108,7 +108,7 @@ public class Controller {
 	 */
 	public void resetProgram(){
 		this.interpreter = null;
-		this.gui.graph.clearGraph();
+		this.gui.clearGraph();
 		this.resetTurtleCommand();
 		this.moveTurtle();
 	}
