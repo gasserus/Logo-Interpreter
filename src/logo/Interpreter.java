@@ -9,10 +9,13 @@ import java.util.HashMap;
  * @author Gasser Marcel
  */
 class Interpreter {
+	/**
+	 * Parsed commands from constructor
+	 */
 	private ArrayList<ArrayList<String>> parsedCommands;
 	
 	/**
-	 * The sub interpreter
+	 * Sub interpreter
 	 */
 	private Interpreter subInterpreter = null;
 	
@@ -22,12 +25,12 @@ class Interpreter {
 	private int amountOfRuns = 1;
 	
 	/**
-	 * Save all parsed functions
+	 * All parsed functions
 	 */
 	private HashMap<String,Interpreter> function = new HashMap<String,Interpreter>();
 	
 	/**
-	 * if actual interpreter is a instance from a function save function Parameters
+	 * Function Parameters of a function instance
 	 */
 	private String[] functionParameter;
 	
@@ -37,7 +40,7 @@ class Interpreter {
 	private HashMap<String,Integer> variables = new HashMap<String,Integer>();
 	
 	/**
-	 * Save the empty line descriptor
+	 * Empty line descriptor
 	 */
 	private HashMap<Integer,Integer> emptyLinesBeforeCommand;
 	
@@ -57,7 +60,7 @@ class Interpreter {
 	private boolean active = false;
 	
 	/**
-	 * Save the controller from constructor, because later it's needed to call the turtle functions
+	 * The controller from constructor, because later it's needed to call the turtle functions
 	 */
 	private Controller control;
 
@@ -215,7 +218,6 @@ class Interpreter {
 			 * case "aslant": this.aslant( parameters ); break;
 			 */
 			default: throw new InterpreterException( "Command " + commandName + " unknown." );
-					 
 		}
 	}
 	
@@ -230,8 +232,8 @@ class Interpreter {
 	private void forward( ArrayList<String> parameter ) throws InterpreterException{
 		//only one int parameter is allowed 
 		if( checkParameterSize( parameter, 1 ) ){
-				int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
-				this.control.move( parameterValue );
+			int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
+			this.control.move( parameterValue );
 		}
 	}
 	
@@ -246,8 +248,8 @@ class Interpreter {
 	private void backward( ArrayList<String> parameter ) throws InterpreterException{
 		// only one int parameter is allowed
 		if( checkParameterSize( parameter, 1 ) ){
-				int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
-				this.control.move( - parameterValue );
+			int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
+			this.control.move( - parameterValue );
 		}
 	}
 	
@@ -261,8 +263,8 @@ class Interpreter {
 	private void left( ArrayList<String> parameter ) throws InterpreterException{
 		// only one int parameter is allowed
 		if( checkParameterSize( parameter, 1 ) ){
-				int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
-				this.control.turn( parameterValue );
+			int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
+			this.control.turn( parameterValue );
 		}
 	}
 	
@@ -275,8 +277,8 @@ class Interpreter {
 	 */
 	private void right( ArrayList<String> parameter ) throws InterpreterException{
 		if( checkParameterSize( parameter, 1 ) ){
-				int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
-				this.control.turn( - parameterValue );
+			int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
+			this.control.turn( - parameterValue );
 		}
 	}
 	
@@ -293,7 +295,7 @@ class Interpreter {
 			if( parameterValue < 0 || parameterValue > 3 ){
 				throw new InterpreterException( "Unknown color " + parameterValue +" (0-3) at line " + ( this.globalLinePosition + this.getCurrentLine() + 1 ) );
 			}
-				this.control.changeColor( parameterValue );
+			this.control.changeColor( parameterValue );
 		}
 	}
 	
@@ -310,19 +312,17 @@ class Interpreter {
 			
 			int line = this.getCurrentLine();
 			
-			
 			ArrayList<ArrayList<String>> allCommands = this.getParsedCommands();
 			ArrayList<ArrayList<String>> loopCommands = new ArrayList<ArrayList<String>>();
 		
 			int loopStart = 0;
-			// next line after "repeat X"
 			
 			// check if there is a wrong constellation if chars for the loop
 			if( ( allCommands.size() - 1 ) <= ( line + 1 ) ){
 				throw new InterpreterException( "Unknown looptype at line " + ( this.globalLinePosition + this.getCurrentLine() + 1 ) );
 			}
 			
-			
+			// jump to next line
 			line++;
 			
 			int inLoop = 0;
@@ -371,6 +371,8 @@ class Interpreter {
 	
 	/**
 	 * Call the function
+	 * let x 20
+	 * call example 10 x
 	 * 
 	 * @param parameter				First parameter have to be the function name, the others are optional parameters for the function
 	 * @throws InterpreterException
@@ -384,12 +386,16 @@ class Interpreter {
 						
 			Interpreter functionInterpreter = this.function.get( parameter.get( 0 ) );
 			
+			// set amount of sub interpreter runs
 			functionInterpreter.amountOfRuns = 1;
+			
 			int funcParameterLength = functionInterpreter.functionParameter.length;
 			
 			if( funcParameterLength != ( parameter.size() - 1 ) ){
 				throw new InterpreterException( "The function '" + parameter.get( 0 ) + "' needs " + funcParameterLength + " parameter at line " + this.getCurrentPosition() );
 			}
+			
+			// remove function name
 			parameter.remove( 0 );
 			
 			this.subInterpreter = functionInterpreter; 
@@ -411,79 +417,86 @@ class Interpreter {
 	/**
 	 * Define the function
 	 * 
+	 * function example P1 P2
+	 * [
+	 * forward P1
+	 * right P2
+	 * ]
+	 * 
 	 * @param parameter					First parameter have to be the function name, the others are optional parameters to predefine functionparameters
 	 * @throws InterpreterException
 	 */
 	private void function( ArrayList<String> parameter ) throws InterpreterException{
-			if( parameter.size() >= 1 ){
-				for( int i = 0; i < parameter.size(); i++ ){
-					if( isNumeric( parameter.get( i ) ) ){
-						throw new InterpreterException( "Don't use numbers as parameter names at line " + this.getCurrentPosition() );
+		if( parameter.size() >= 1 ){
+			for( int i = 0; i < parameter.size(); i++ ){
+				if( isNumeric( parameter.get( i ) ) ){
+					throw new InterpreterException( "Don't use numbers as parameter names at line " + this.getCurrentPosition() );
+				}
+			}
+			
+			// the first parameter is the function name
+			String functionName = parameter.get( 0 );
+			int line = this.getCurrentLine();
+			ArrayList<ArrayList<String>> allCommands = this.getParsedCommands();
+			ArrayList<ArrayList<String>> functionCommands = new ArrayList<ArrayList<String>>();
+		
+			int functionStart = 0;
+			
+			// check if there is a wrong constellation if chars for the loop
+			if( ( allCommands.size() - 1 ) <= ( line + 1 ) ){
+				throw new InterpreterException( "Unknown functiontype at line " + this.getCurrentPosition() );
+			}
+			
+			line++;
+			
+			int inFunction = 0;
+			do {
+				if( allCommands.get( line ).get(0).equals( "[" ) ){
+					// count all [
+					inFunction++;
+					if( inFunction == 1 ){
+						line++;
+						functionStart = line;
 					}
 				}
+				else if( inFunction > 0 && allCommands.get( line ).get(0).equals( "]" ) ){
+					inFunction--;
+				}
 				
-				// the first parameter is the function name
-				String functionName = parameter.get( 0 );
-				int line = this.getCurrentLine();
-				ArrayList<ArrayList<String>> allCommands = this.getParsedCommands();
-				ArrayList<ArrayList<String>> functionCommands = new ArrayList<ArrayList<String>>();
-			
-				int functionStart = 0;
-				
-				// check if there is a wrong constellation if chars for the loop
-				if( ( allCommands.size() - 1 ) <= ( line + 1 ) ){
-					throw new InterpreterException( "Unknown functiontype at line " + this.getCurrentPosition() );
+				if( inFunction > 0 ){
+					// avoid endless loops
+					if( allCommands.get( line ).get( 0 ).equals( "call" ) && allCommands.get( line ).get( 1 ).equals( functionName ) ){
+						throw new InterpreterException( "Endless loop in function '"+ functionName +"'. Line " + this.getCurrentPosition());
+					}
+					functionCommands.add( allCommands.get( line ) );
 				}
 				
 				line++;
-				
-				int inLoop = 0;
-				do {
-					if( allCommands.get( line ).get(0).equals( "[" ) ){
-						// count all [
-						inLoop++;
-						if( inLoop == 1 ){
-							line++;
-							functionStart = line;
-						}
-					}
-					else if( inLoop > 0 && allCommands.get( line ).get(0).equals( "]" ) ){
-						inLoop--;
-					}
-					
-					if( inLoop > 0 ){
-						// avoid endless loops
-						if( allCommands.get( line ).get( 0 ).equals( "call" ) && allCommands.get( line ).get( 1 ).equals( functionName ) ){
-							throw new InterpreterException( "Endless loop in function '"+ functionName +"'. Line " + this.getCurrentPosition());
-						}
-						functionCommands.add( allCommands.get( line ) );
-					}
-					
-					line++;
-				}
-				while( inLoop > 0 && line < allCommands.size() );
-						
-				if( functionStart < 1 ){
-					throw new InterpreterException( "Can't find start of function. " + this.getCurrentPosition() );
-				}
-				else if( ( line - 1 ) == functionStart ){
-					throw new InterpreterException( "Empty funtion error at line " + this.getCurrentPosition() );
-				}
-				
-				// create a new interpreter instance 
-				Interpreter functionInterpreter = new Interpreter( this.control, functionCommands, emptyLinesBeforeCommand );
-				functionInterpreter.globalLinePosition = functionStart + this.globalLinePosition;
-				functionInterpreter.functionParameter = new String[ parameter.size() - 1 ];
-				for( int i = 1; i < parameter.size(); i++ ){
-					functionInterpreter.functionParameter[ i - 1 ] = parameter.get( i );
-				}
-				
-				this.function.put( functionName , functionInterpreter );
-				
-				// set line pointer to ] of function
-				this.setCurrentLine( line - 1 );
-				this.setActive( true );
 			}
+			while( inFunction > 0 && line < allCommands.size() );
+					
+			if( functionStart < 1 ){
+				throw new InterpreterException( "Can't find start of function. " + this.getCurrentPosition() );
+			}
+			else if( ( line - 1 ) == functionStart ){
+				throw new InterpreterException( "Empty funtion error at line " + this.getCurrentPosition() );
+			}
+			
+			// create a new interpreter instance 
+			Interpreter functionInterpreter = new Interpreter( this.control, functionCommands, emptyLinesBeforeCommand );
+			functionInterpreter.globalLinePosition = functionStart + this.globalLinePosition;
+			functionInterpreter.functionParameter = new String[ parameter.size() - 1 ];
+			for( int i = 1; i < parameter.size(); i++ ){
+				functionInterpreter.functionParameter[ i - 1 ] = parameter.get( i );
+			}
+			
+			// add the interpreter object to the function ArrayList
+			this.function.put( functionName , functionInterpreter );
+			
+			// set line pointer to ] of function
+			this.setCurrentLine( line - 1 );
+			this.setActive( true );
+		}
 	}
 	
 	
@@ -497,9 +510,9 @@ class Interpreter {
 	private void let( ArrayList<String> parameter ) throws InterpreterException{
 		// 2 parameters allowed : first is the name second is the value ( could also be a variable )
 		if( checkParameterSize( parameter, 2 ) ){
-				String name = parameter.get( 0 );
-				int value = this.parseValueForVariables( parameter.get( 1 ) );
-				this.addVariable( name, value );
+			String name = parameter.get( 0 );
+			int value = this.parseValueForVariables( parameter.get( 1 ) );
+			this.addVariable( name, value );
 		}
 	}
 	
@@ -530,10 +543,10 @@ class Interpreter {
 	private void decrement( ArrayList<String> parameter ) throws InterpreterException{
 		// 2 parameters allowed : first is the variable name second is the value ( could also be a variable )
 		if( checkParameterSize( parameter, 2 ) ){
-				String name = parameter.get( 0 );
-				int value = this.parseValueForVariables( parameter.get( 1 ) );
-				int variableValue = getVariableValue( name );
-				this.updateVariableValue( name, ( variableValue - value ) );
+			String name = parameter.get( 0 );
+			int value = this.parseValueForVariables( parameter.get( 1 ) );
+			int variableValue = getVariableValue( name );
+			this.updateVariableValue( name, ( variableValue - value ) );
 		}
 	}
 
@@ -573,7 +586,6 @@ class Interpreter {
 	private void clear( ArrayList<String> parameter ) throws InterpreterException {
 		if( checkParameterSize( parameter, 0 ) ){
 			this.control.clearCommand();
-	
 		}
 	}
 	
@@ -629,7 +641,6 @@ class Interpreter {
 			else {
 				updateVariableValue( key, value );
 			}
-			
 		}
 		else {
 			throw new InterpreterException( "Variable exists or your name is a number. Line " + this.getCurrentPosition() );
@@ -811,5 +822,4 @@ class Interpreter {
 			super( msg );
 		}
 	}
-	
 }

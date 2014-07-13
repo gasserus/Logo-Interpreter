@@ -9,6 +9,9 @@ import java.util.HashMap;
  * @author Gasser Marcel
  */
 public class Parser {
+	/**
+	 * Amount of empty and command lines
+	 */
 	private HashMap<Integer,Integer> emptyLinesBeforeCommand = new HashMap<Integer,Integer>();
 	
 	/**
