@@ -336,7 +336,8 @@ class Interpreter {
 						loopStart = line;
 					}
 				}
-				else if( inLoop > 0 && allCommands.get( line ).get(0).equals( "]" ) ){
+				
+				if( inLoop > 0 && allCommands.get( line ).get(0).equals( "]" ) ){
 					inLoop--;
 				}
 				
@@ -427,6 +428,7 @@ class Interpreter {
 	 * @throws InterpreterException
 	 */
 	private void function( ArrayList<String> parameter ) throws InterpreterException{
+		System.out.println( "get function" );
 		if( parameter.size() >= 1 ){
 			for( int i = 0; i < parameter.size(); i++ ){
 				if( isNumeric( parameter.get( i ) ) ){
@@ -459,7 +461,8 @@ class Interpreter {
 						functionStart = line;
 					}
 				}
-				else if( inFunction > 0 && allCommands.get( line ).get(0).equals( "]" ) ){
+				
+				if( inFunction > 0 && allCommands.get( line ).get(0).equals( "]" ) ){
 					inFunction--;
 				}
 				
@@ -470,7 +473,6 @@ class Interpreter {
 					}
 					functionCommands.add( allCommands.get( line ) );
 				}
-				
 				line++;
 			}
 			while( inFunction > 0 && line < allCommands.size() );

@@ -1,0 +1,191 @@
+function line size
+
+[
+
+	repeat 2
+
+	[
+
+		forward size
+
+	]
+
+]
+
+
+
+function space
+
+[
+
+	penup
+
+	left 90
+
+	forward 20
+
+	left 90
+
+	pendown
+
+]
+
+
+
+function A size
+
+[
+
+	call line size
+
+	right 90
+
+	forward size
+
+	right 90
+
+	call line size
+
+	backward size
+
+	right 90
+
+	forward size
+
+	backward size
+
+	penup
+
+	left 90
+
+	forward size
+
+	pendown
+
+	call space
+
+]
+
+
+
+function H size
+
+[
+
+	call line size
+
+	penup
+
+	backward size
+
+	pendown
+
+	right 90
+
+	forward size
+
+	left 90
+
+	penup
+
+	forward size
+
+	pendown
+
+	left 180
+
+	call line size
+
+	call space
+
+]
+
+
+
+function L size
+
+[
+
+	call line size
+
+	penup
+
+	left 180
+
+	call line size
+
+	pendown
+
+	left 90
+
+	forward size
+
+	right 90
+
+	call space
+
+]
+
+
+
+function O size
+
+[
+
+	repeat 2
+
+	[
+
+		call line size
+
+		right 90
+
+		forward size
+
+		right 90
+
+	]
+
+	penup
+
+	right 90
+
+	forward size
+
+	right 90
+
+	pendown
+
+	call space
+
+]
+
+
+
+
+
+
+
+let size 50
+
+
+
+
+
+call H size
+
+
+
+call A size
+
+call L size
+
+call L size
+
+call O size
+
+
+
+
+
+
