@@ -8,6 +8,9 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Hashtable;
@@ -16,6 +19,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
@@ -86,7 +90,20 @@ public class Gui extends JFrame implements ActionListener {
 		//********************************************** Window
 		this.setSize( WINDOW_SIZE );
 		this.setMinimumSize( WINDOW_MINIMUM_SIZE );
-		this.setDefaultCloseOperation( EXIT_ON_CLOSE );
+		this.setDefaultCloseOperation( DO_NOTHING_ON_CLOSE ); //EXIT_ON_CLOSE
+		
+		// ask if 
+		WindowListener exitListener = new WindowAdapter(){
+			@Override
+			public void windowClosing( WindowEvent e ) {
+				int confirm = JOptionPane.showOptionDialog(null, "Are you sure to close this application?", "Exit", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+				if ( confirm == 0 ) {
+					System.exit( 0 );
+				}
+			}
+		};
+		this.addWindowListener( exitListener );
+		
 		this.getContentPane().setLayout( new BorderLayout() );
 		this.setTitle( TITLE );
 		
