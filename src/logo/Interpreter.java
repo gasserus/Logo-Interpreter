@@ -10,12 +10,55 @@ import java.util.HashMap;
  */
 class Interpreter {
 	private ArrayList<ArrayList<String>> parsedCommands;
-	private ArrayList<Object> loop = new ArrayList<Object>();
+	
+	/**
+	 * The sub interpreter
+	 */
+	private Interpreter subInterpreter = null;
+	
+	/**
+	 * Amount of interpreter executions
+	 */
+	private int amountOfRuns = 1;
+	
+	/**
+	 * Save all parsed functions
+	 */
+	private HashMap<String,Interpreter> function = new HashMap<String,Interpreter>();
+	
+	/**
+	 * if actual interpreter is a instance from a function save function Parameters
+	 */
+	private String[] functionParameter;
+	
+	/**
+	 * LOGO variables of the actual scope
+	 */
 	private HashMap<String,Integer> variables = new HashMap<String,Integer>();
+	
+	/**
+	 * Save the empty line descriptor
+	 */
 	private HashMap<Integer,Integer> emptyLinesBeforeCommand;
+	
+	/**
+	 * Actual line in this the actual instance
+	 */
 	private int currentLine = 0;
+	
+	/**
+	 * The global positions with all instances
+	 */
 	private int globalLinePosition = 0;
+	
+	/**
+	 * Shows if the interpreter is active or not
+	 */
 	private boolean active = false;
+	
+	/**
+	 * Save the controller from constructor, because later it's needed to call the turtle functions
+	 */
 	private Controller control;
 
 
@@ -58,51 +101,41 @@ class Interpreter {
 	 * @throws InterpreterException
 	 */
 	public void step() throws InterpreterException{
-		// check if last step entered a loop
-		if( ! this.loop.isEmpty() ){
-			this.executeLoopCommand();
+		// check if last step entered a sub interpreter
+		if( subInterpreter != null ){
+			this.executeSubInterpreter();
 		}
 		else {
 			executeNormalCommand();
 		}
 	}
 	
+	
 	/**
-	 * Handle loops (nested loops)
+	 * Execute the sub interpreter
 	 * 
 	 * @throws InterpreterException
 	 */
-	private void executeLoopCommand() throws InterpreterException{
-		int runs = (Integer) loop.get( 1 );
-		
-		Interpreter loopInterpreter = (Interpreter) loop.get( 0 );
-		loopInterpreter.variables = this.variables;
-		
+	private void executeSubInterpreter() throws InterpreterException{
 		try{
-			loopInterpreter.step();
+			subInterpreter.step();
 		}
 		catch (Throwable t) {
 			this.setActive( false );
 			throw new InterpreterException( t.getMessage() ); 
 		} 
 		
-		this.variables = loopInterpreter.variables;
-
-		if( ! loopInterpreter.isActive() ){
-			runs--;
-			loopInterpreter.setActive( true );
+		if( ! subInterpreter.isActive() ){
+			subInterpreter.amountOfRuns--;
+			subInterpreter.setActive( true );
 		}
 			
-		if( runs < 1 ){
-			// loop finished
-			loop.clear();
+		if( subInterpreter.amountOfRuns < 1 ){
+			// "delete" the subInterpreter if the amount of executions is reached
+			subInterpreter = null;
 			if( this.getCurrentLine() == 0 ){
 				this.setActive( false );
 			}
-		} 
-		else {
-			// save new runs
-			loop.set( 1, runs );
 		}
 	}
 	
@@ -127,15 +160,19 @@ class Interpreter {
 		} 
 		
 		int lineAfterExec = this.getCurrentLine();
-		
+				
 		line++;
+				
 		// check if a repeat has manipulated the position
 		if( lineAfterExec > line ){
 			this.setCurrentLine( lineAfterExec +1 );
-			this.setActive( true );
 		}
 		else {
 			this.setCurrentLine( line );
+		}
+		// if subInterpreter exist give it a chance to run
+		if( subInterpreter != null ){
+			this.setActive( true );
 		}
 	}
 	
@@ -171,6 +208,8 @@ class Interpreter {
 			case "let":			this.let( parameters ); break;
 			case "increment":	this.increment( parameters ); break;
 			case "decrement":	this.decrement( parameters ); break;
+			case "function":	this.function( parameters ); break;
+			case "call":		this.call( parameters ); break;
 			/* if you want more commands you can add them here and create a function which should be called
 			 * Example:
 			 * case "aslant": this.aslant( parameters ); break;
@@ -250,7 +289,7 @@ class Interpreter {
 	 */
 	private void setcolor( ArrayList<String> parameter ) throws InterpreterException{
 		if( checkParameterSize( parameter, 1 ) ){
-				int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
+			int parameterValue = this.parseValueForVariables( parameter.get( 0 ) );
 			if( parameterValue < 0 || parameterValue > 3 ){
 				throw new InterpreterException( "Unknown color " + parameterValue +" (0-3) at line " + ( this.globalLinePosition + this.getCurrentLine() + 1 ) );
 			}
@@ -317,15 +356,121 @@ class Interpreter {
 			}
 			
 			// create a new interpreter instance 
-			Interpreter loopInterpreter = new Interpreter( this.control, loopCommands, emptyLinesBeforeCommand );
-			loopInterpreter.globalLinePosition = loopStart + this.globalLinePosition;
-			this.loop.add( loopInterpreter );
-			this.loop.add( loopRuns );
-			
+			this.subInterpreter = new Interpreter( this.control, loopCommands, emptyLinesBeforeCommand );
+			this.subInterpreter.globalLinePosition = loopStart + this.globalLinePosition;
+			this.subInterpreter.amountOfRuns = loopRuns;
+			this.subInterpreter.variables = this.variables;
+			this.subInterpreter.function = this.function;
+
 			// set line pointer to ] of loop
 			this.setCurrentLine( line - 1);
 			this.setActive( true );
 		}
+	}
+	
+	private void call( ArrayList<String> parameter ) throws InterpreterException {
+		if( parameter.size() >= 1 ){
+					
+			if( ! this.function.containsKey( parameter.get( 0 ) ) ){
+				throw new InterpreterException( "Unknown function at line " + this.getCurrentPosition() );
+			}
+						
+			Interpreter functionInterpreter = this.function.get( parameter.get( 0 ) );
+			
+			functionInterpreter.amountOfRuns = 1;
+			int funcParameterLength = functionInterpreter.functionParameter.length;
+			
+			if( funcParameterLength != ( parameter.size() - 1 ) ){
+				throw new InterpreterException( "The function '" + parameter.get( 0 ) + "' needs " + funcParameterLength + " parameter at line " + this.getCurrentPosition() );
+			}
+			parameter.remove( 0 );
+			
+			this.subInterpreter = functionInterpreter; 
+			
+			// define the scope manuelly
+			// functions can access other functions
+			this.subInterpreter.function = this.function;
+			
+			// set parameters in the function scope
+			for( int i = 0; i < funcParameterLength; i++ ){
+				this.subInterpreter.addVariable( this.subInterpreter.functionParameter[ i ] , this.parseValueForVariables( parameter.get( i ) ) );
+			}
+
+			this.setActive( true );
+		}
+	}
+	
+	
+	private void function( ArrayList<String> parameter ) throws InterpreterException{
+			if( parameter.size() >= 1 ){
+				for( int i = 0; i < parameter.size(); i++ ){
+					if( isNumeric( parameter.get( i ) ) ){
+						throw new InterpreterException( "Don't use numbers as parameter names at line " + this.getCurrentPosition() );
+					}
+				}
+				
+				// the first parameter is the function name
+				String functionName = parameter.get( 0 );
+				int line = this.getCurrentLine();
+				ArrayList<ArrayList<String>> allCommands = this.getParsedCommands();
+				ArrayList<ArrayList<String>> functionCommands = new ArrayList<ArrayList<String>>();
+			
+				int functionStart = 0;
+				
+				// check if there is a wrong constellation if chars for the loop
+				if( ( allCommands.size() - 1 ) <= ( line + 1 ) ){
+					throw new InterpreterException( "Unknown functiontype at line " + this.getCurrentPosition() );
+				}
+				
+				line++;
+				
+				int inLoop = 0;
+				do {
+					if( allCommands.get( line ).get(0).equals( "[" ) ){
+						// count all [
+						inLoop++;
+						if( inLoop == 1 ){
+							line++;
+							functionStart = line;
+						}
+					}
+					else if( inLoop > 0 && allCommands.get( line ).get(0).equals( "]" ) ){
+						inLoop--;
+					}
+					
+					if( inLoop > 0 ){
+						// avoid endless loops
+						if( allCommands.get( line ).get( 0 ).equals( "call" ) && allCommands.get( line ).get( 1 ).equals( functionName ) ){
+							throw new InterpreterException( "Endless loop in function '"+ functionName +"'. Line " + this.getCurrentPosition());
+						}
+						functionCommands.add( allCommands.get( line ) );
+					}
+					
+					line++;
+				}
+				while( inLoop > 0 && line < allCommands.size() );
+						
+				if( functionStart < 1 ){
+					throw new InterpreterException( "Can't find start of function. " + this.getCurrentPosition() );
+				}
+				else if( ( line - 1 ) == functionStart ){
+					throw new InterpreterException( "Empty funtion error at line " + this.getCurrentPosition() );
+				}
+				
+				// create a new interpreter instance 
+				Interpreter functionInterpreter = new Interpreter( this.control, functionCommands, emptyLinesBeforeCommand );
+				functionInterpreter.globalLinePosition = functionStart + this.globalLinePosition;
+				functionInterpreter.functionParameter = new String[ parameter.size() - 1 ];
+				for( int i = 1; i < parameter.size(); i++ ){
+					functionInterpreter.functionParameter[ i - 1 ] = parameter.get( i );
+				}
+				
+				this.function.put( functionName , functionInterpreter );
+				
+				// set line pointer to ] of function
+				this.setCurrentLine( line - 1 );
+				this.setActive( true );
+			}
 	}
 	
 	
@@ -494,7 +639,7 @@ class Interpreter {
 			throw new InterpreterException( "No Variable with " + key + " found. Line " + this.getCurrentPosition() );
 		}
 	}
-	
+
 	
 	/**
 	 * Detect if value is a LOGO variable
