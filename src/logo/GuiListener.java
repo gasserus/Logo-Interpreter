@@ -10,7 +10,10 @@ public class GuiListener {
 	private String lastPressedButton;
 	
 	
-	
+	/**
+	 * 
+	 * @return the last setted String in setLastpressedButton, waits until "setlastButton" is called.
+	 */
 	public synchronized String awaitButtonClick(){
 		try{
 			this.wait();
@@ -21,6 +24,10 @@ public class GuiListener {
 		return this.lastPressedButton;
 	}
 	
+	/**
+	 * sets the last pressed button, notifies the "awaitButtinClicK" thread.
+	 * @param buttonName
+	 */
 	public void setLastPressedButton( String buttonName ){
 		this.lastPressedButton = buttonName;
 		synchronized( this ){
