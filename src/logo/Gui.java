@@ -354,9 +354,6 @@ public class Gui extends JFrame implements ActionListener {
 		for( int i = 0; i < CONTROL_BUTTONS.length; i++ ){
 			if( e.getSource().equals( this.controlButton[i] ) ){
 				this.buttonListener.setLastPressedButton( controlButton[i].getText() );
-				synchronized( this.buttonListener ){
-					this.buttonListener.notifyAll();
-				}
 			}
 		}
 		for( int i = 0; i < this.GUI_BUTTONS.length; i++ ){

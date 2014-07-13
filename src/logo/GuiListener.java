@@ -23,6 +23,10 @@ public class GuiListener {
 	
 	public void setLastPressedButton( String buttonName ){
 		this.lastPressedButton = buttonName;
+		synchronized( this ){
+			this.notifyAll();
+		}
+		
 	}
 	
 }
