@@ -92,7 +92,7 @@ public class Gui extends JFrame implements ActionListener {
 		this.setMinimumSize( WINDOW_MINIMUM_SIZE );
 		this.setDefaultCloseOperation( DO_NOTHING_ON_CLOSE ); //EXIT_ON_CLOSE
 		
-		// ask if 
+		// ask if user wants close the window
 		WindowListener exitListener = new WindowAdapter(){
 			@Override
 			public void windowClosing( WindowEvent e ) {
