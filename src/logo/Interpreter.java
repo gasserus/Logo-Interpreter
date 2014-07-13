@@ -368,6 +368,13 @@ class Interpreter {
 		}
 	}
 	
+	
+	/**
+	 * Call the function
+	 * 
+	 * @param parameter				First parameter have to be the function name, the others are optional parameters for the function
+	 * @throws InterpreterException
+	 */
 	private void call( ArrayList<String> parameter ) throws InterpreterException {
 		if( parameter.size() >= 1 ){
 					
@@ -401,6 +408,12 @@ class Interpreter {
 	}
 	
 	
+	/**
+	 * Define the function
+	 * 
+	 * @param parameter					First parameter have to be the function name, the others are optional parameters to predefine functionparameters
+	 * @throws InterpreterException
+	 */
 	private void function( ArrayList<String> parameter ) throws InterpreterException{
 			if( parameter.size() >= 1 ){
 				for( int i = 0; i < parameter.size(); i++ ){

@@ -16,7 +16,7 @@ import javax.swing.JFrame;
 public class HelpPage extends JFrame {
 
 			private final String TITLE = "Commands - Help";
-			private final Dimension WINDOW_SIZE = new Dimension( 500, 400 );
+			private final Dimension WINDOW_SIZE = new Dimension( 950, 400 );
 			private final Dimension MINIMUM_WINDOW_SIZE = new Dimension( 420, 300);
 			private String[] commands;
 			private final int FRAME_HEIGHT = 30;

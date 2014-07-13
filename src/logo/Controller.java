@@ -116,6 +116,7 @@ public class Controller {
 		this.resetTurtleCommand();
 		this.moveTurtle();
 		this.removeError();
+		this.gui.setActualLine( 0 );
 	}
 	
 	/**

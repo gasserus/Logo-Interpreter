@@ -46,6 +46,8 @@ public class Gui extends JFrame implements ActionListener {
 			"pendown: 				Turtle is not drawing when moving",
 			"setcolor x: 			changes color of the Turtle ( 0 <= x <= 3 )",
 			"repeat x [ action ]: 	repeats the action x times ( new Line before bracket )",
+			"function name par1 par2 ... [ action ]: defines a block of commands ( new Line before bracket ); parameters are optional",
+			"call functionName par1 par2 ... 	call a function; the amount of parameters should be as long as the amount of parameters defined in the function",
 			"let variable x: 		set variable to x",
 			"INFO: 					variable name is free ( as long it's not a number )",
 			"increment variable x: 	adds x to variable",
