@@ -360,7 +360,8 @@ public class Gui extends JFrame implements ActionListener {
 			if ( e.getSource().equals( this.guiButton[i] ) ){
 				switch( this.GUI_BUTTONS[i] ){
 					case "Toggle Zoom": this.toggleZoom(); break;
-					case "?": HelpPage help = new HelpPage( COMMANDS );break;
+					case "?": @SuppressWarnings("unused")
+					HelpPage help = new HelpPage( COMMANDS );break;
 					default: System.out.println( "Gui Button not yet implemented" );
 				}
 			}
